@@ -1,0 +1,16 @@
+{% set config = data.config %}
+{% set post = data.post %}
+
+Forum : {{ config.label }}
+
+
+<form>
+    <input type="hidden" name="submit" value="post">
+    <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
+    <input type="hidden" name="id" value="{{ post.id.value }}">
+    Title: <input type="text" name="title"><br>
+    Content: <input type="text" name="content"><br>
+
+    <input type="submit">
+    [ <a href="/post/{{ config.label }}">Cancel</a> ]
+</form>

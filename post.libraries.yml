@@ -1,12 +1,14 @@
-category:
+default:
   version: 1.x
-  js:
-    js/library.js: {}
-  dependencies:
-    - core/jquery
   css:
     theme:
-      css/library.base.css: {}
-      css/library.layout.css: {}
-      css/library.component.css: {}
-      css/library.state.css: {}
+      css/post.base.css: {}
+      css/post.layout.css: {}
+      css/post.component.css: {}
+      css/post.component.error.css: {}
+      css/post.component.list.css: {}
+      css/post.state.css: {}
+  js:
+    js/post.js: {}
+  dependencies:
+    - core/jquery

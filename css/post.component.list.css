@@ -1,0 +1,6 @@
+.post .list article a span {
+    display:block;
+    margin: 0.1em 0;
+    padding:.2em;
+    background-color: #f0f0f0;
+}

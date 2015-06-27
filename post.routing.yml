@@ -1,6 +1,33 @@
-library:
+post:
   path: '/post'
   defaults:
-    _controller: Drupal\post\Controller\PostController::firstPage
+    _controller: Drupal\post\Controller\PostController::postModuleIndex
+  requirements:
+    _permission: 'access content'
+post.list:
+  path: '/post/{post_config_name}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postList
+  requirements:
+    _permission: 'access content'
+
+post.add:
+  path: '/post/add/{id}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postEdit
+  requirements:
+    _permission: 'access content'
+
+post.edit:
+  path: '/post/edit/{id}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postEdit
+  requirements:
+    _permission: 'access content'
+
+post.view:
+  path: '/post/view/{id}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postView
   requirements:
     _permission: 'access content'

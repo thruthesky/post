@@ -1,0 +1,10 @@
+{% if error %}
+    <div class="error">
+        {% for code,message in error %}
+            <div class="row">
+                <div class="code">ERROR CODE : {{ code }}</div>
+                <div class="message">{{ message }}</div>
+            </div>
+        {% endfor%}
+    </div>
+{% endif %}

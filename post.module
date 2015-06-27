@@ -10,6 +10,18 @@ function post_theme()
             'variables' => [ 'data' => null ],
             'template' => 'post.index'
         ],
+        'post.list' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.list'
+        ],
+        'post.edit' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.edit'
+        ],
+        'post.view' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.view'
+        ],
     ];
 }
 

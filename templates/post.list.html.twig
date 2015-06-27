@@ -1,0 +1,38 @@
+<div class="post">
+        {% set config = data.list.config %}
+        {% set posts = data.list.posts %}
+
+        No of Posts: {{ data.list.no_of_posts }}
+
+        <a href="/post/add/{{ config.name.value }}"><span class="button">POST UPLOAD</span></a>
+
+
+
+
+    <div class="list">
+        {% for post in posts %}
+            <article>
+                <a href="/post/view/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
+                    <span>
+                        {{ post.label }}
+                        -
+                        {{ post.user_id.entity.name.value }}
+                    </span>
+                </a>
+            </article>
+        {% endfor %}
+
+        {{ data.list.navigation | raw }}
+
+        <div>
+            <form action="/post/{{ config.label }}">
+                <input type="checkbox" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}> 이름,
+                <input type="checkbox" name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}> 제목,
+                <input type="checkbox" name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}> 내용
+                <input type="text" name="q" value="{{ input.q }}">
+                <input type="submit">
+            </form>
+        </div>
+
+    </div>
+</div>
