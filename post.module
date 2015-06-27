@@ -1,0 +1,18 @@
+<?php
+
+/*for automatic routing by #theme*/
+function library_theme()
+{
+$routes = Yaml::parse(file_get_contents(drupal_get_path('module', 'library').'/library.routing.yml'));
+
+$themes = [];
+foreach($routes as $name => $info) {
+$themes[$name] = [
+'variables' => [ 'data' => null],
+'template' => $name
+];
+
+}
+
+return $themes;
+}

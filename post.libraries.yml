@@ -1,0 +1,6 @@
+library:
+  path: '/post'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::firstPage
+  requirements:
+    _permission: 'access content'
