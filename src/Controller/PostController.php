@@ -102,4 +102,15 @@ class PostController extends ControllerBase {
             ]
         ];
     }
+
+    public function postConfig($post_config_name)
+    {
+        $config = PostConfig::loadByName($post_config_name);
+        return [
+            '#theme' => 'post.config',
+            '#data' => [
+                'config' => $config,
+            ]
+        ];
+    }
 }

@@ -31,3 +31,10 @@ post.view:
     _controller: Drupal\post\Controller\PostController::postView
   requirements:
     _permission: 'access content'
+
+post.config:
+  path: '/post/config/{post_config_name}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postConfig
+  requirements:
+    _permission: 'access content'
