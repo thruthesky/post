@@ -1,6 +1,12 @@
-library:
-  path: '/post'
-  defaults:
-    _controller: Drupal\post\Controller\PostController::firstPage
-  requirements:
-    _permission: 'access content'
+category:
+  version: 1.x
+  js:
+    js/library.js: {}
+  dependencies:
+    - core/jquery
+  css:
+    theme:
+      css/library.base.css: {}
+      css/library.layout.css: {}
+      css/library.component.css: {}
+      css/library.state.css: {}

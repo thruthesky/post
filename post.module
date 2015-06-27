@@ -1,18 +1,22 @@
 <?php
 
-/*for automatic routing by #theme*/
-function library_theme()
+use Drupal\post\Post;
+use Drupal\library\Library;
+
+function post_theme()
 {
-$routes = Yaml::parse(file_get_contents(drupal_get_path('module', 'library').'/library.routing.yml'));
-
-$themes = [];
-foreach($routes as $name => $info) {
-$themes[$name] = [
-'variables' => [ 'data' => null],
-'template' => $name
-];
-
+    return [
+        'post.index' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.index'
+        ],
+    ];
 }
 
-return $themes;
+function post_preprocess( &$variables, $hook )
+{
+    debug_log("post_preprocess($hook) begins");
+    if ( post::isPostPage() ) {
+        $variables['#attached']['library'][] = 'post/default';
+    }
 }
