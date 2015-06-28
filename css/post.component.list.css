@@ -6,7 +6,7 @@
     - put only global stying in this css file.
  */
 
-.post .list article a span {
+.post .list article a > span {
     display:block;
     margin: 0.1em 0;
     padding:.2em;

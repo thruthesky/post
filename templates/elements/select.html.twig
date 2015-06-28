@@ -1,0 +1,7 @@
+{% if label %}<label for="{{ name }}">{{ label }}</label>{% endif %}
+<select id="{{ name }}" name="{{ name }}">
+    {% for k,v in options %}
+        <option value="{{ k }}"{{ k == default ? ' selected=1' }}>{{ v }}</option>
+    {% endfor %}
+</select>
+

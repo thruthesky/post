@@ -31,6 +31,8 @@ function post_theme()
 
 function post_preprocess( &$variables, $hook )
 {
+
+
     debug_log("post_preprocess($hook) begins");
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
     if ( post::isPostPage() ) {

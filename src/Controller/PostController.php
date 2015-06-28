@@ -5,7 +5,6 @@ use Drupal\library\Library;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
 use Drupal\post\Post;
-use Drupal\post\PostConfigInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -56,7 +55,7 @@ class PostController extends ControllerBase {
             $id = PostData::submitPost();
             if ( $id ) {
                 $post = PostData::load($id);
-                $config = $post->get('config_id')->entity;
+                //$config = $post->get('config_id')->entity;
 
                 return new RedirectResponse("/post/view/$id?" . $post->label());
 
@@ -88,7 +87,7 @@ class PostController extends ControllerBase {
 
     public static function postView($id)
     {
-        $post = PostData::load($id);
+        $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
         $conds = post::getSearchCondition($config->label());
         $list = PostData::collection($conds);
@@ -105,6 +104,7 @@ class PostController extends ControllerBase {
 
     public function postConfig($post_config_name)
     {
+        $config = null;
         if ( Library::isFromSubmit() ) {
             if ( $re = PostConfig::update() ) {
                 if ( Library::isError($re) ) {
@@ -118,11 +118,16 @@ class PostController extends ControllerBase {
         else {
             $config = PostConfig::loadByName($post_config_name);
         }
+        $widgets = [];
         if ( empty($config) ) Library::error(-91006, "No forum exists by that name - $post_config_name");
+        else {
+            $widgets['list'] = Post::getWidgetSelectBox('list', $config->get('widget_list')->value);
+        }
         return [
             '#theme' => 'post.config',
             '#data' => [
                 'config' => $config,
+                'widgets' => $widgets,
             ]
         ];
     }

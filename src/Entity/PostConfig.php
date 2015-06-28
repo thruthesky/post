@@ -29,7 +29,34 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
     public static function loadByName($name)
     {
         $entities = \Drupal::entityManager()->getStorage('post_config')->loadByProperties(['name'=>$name]);
-        return $entities ? reset($entities) : null;
+        $config = $entities ? reset($entities) : null;
+        self::setDefault($config);
+        return $config;
+    }
+
+    public static function setDefault(PostConfig &$config)
+    {
+        if ( empty( $config->get('widget_list')->value ) ) {
+            $config->set('widget_list', 'default');
+            $config->save();
+        }
+        if ( empty( $config->get('widget_view')->value ) ) {
+            $config->set('widget_view', 'default');
+            $config->save();
+        }
+        if ( empty( $config->get('widget_edit')->value ) ) {
+            $config->set('widget_edit', 'default');
+            $config->save();
+        }
+        if ( empty( $config->get('widget_comment')->value ) ) {
+            $config->set('widget_comment', 'default');
+            $config->save();
+        }
+        if ( empty( $config->get('widget_search')->value ) ) {
+            $config->set('widget_search', 'default');
+            $config->save();
+        }
+
     }
 
     public static function createForum() {

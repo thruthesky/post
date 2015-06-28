@@ -39,26 +39,24 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         }
 
 
-        if ( isset($conds['q']) ) {
-            if ( isset($conds['qn']) ) {
+        if ( isset($conds['q']) && $conds['q'] ) {
+            if ( isset($conds['qn']) && $conds['qn'] ) {
                 $user = user_load_by_name($conds['q']);
                 if ( $user ) {
                     $uid = $user->id();
                     $db->condition('user_id', $uid);
                 }
             }
-            else if ( isset($conds['qt']) || isset($conds['qc']) ) {
+            else if ( isset($conds['qt']) && $conds['qt'] || isset($conds['qc']) && $conds['qc'] ) {
                 $words = explode(' ', $conds['q'], 2);
                 foreach( $words as $word ) {
                     $or = $db->orConditionGroup();
-                    if ( isset($conds['qt']) ) $or->condition('title', $word, 'CONTAINS');
-                    if ( isset($conds['qc']) ) $or->condition('content_stripped__value', $word, 'CONTAINS');
+                    if ( isset($conds['qt']) || $conds['qt'] ) $or->condition('title', $word, 'CONTAINS');
+                    if ( isset($conds['qc']) || $conds['qc']) $or->condition('content_stripped__value', $word, 'CONTAINS');
                     $db->condition($or);
                 }
             }
         }
-
-
 
         return $db;
     }
@@ -72,8 +70,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     public static function search($conds) {
         $db = self::getQueryOnConds($conds);
         $page_no = Library::getPageNo();
-        $db->range(($page_no-1) * $conds['no_of_items_per_page'], $conds['no_of_items_per_page']);
-        $db->sort('created', 'DESC');
+        $start = ($page_no-1) * $conds['no_of_items_per_page'];
+        $db->range($start, $conds['no_of_items_per_page']);
+        $db->sort('id', 'DESC');
         $ids = $db->execute();
         return self::loadMultiple($ids);
     }
@@ -98,22 +97,67 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $request = \Drupal::request();
         $id = $request->get('id');
         $config_name = $request->get('post_config_name');
+        $p = [];
+        $p['title'] = $request->get('title');
+        $p['content'] = $request->get('content');
+        $p['content_stripped'] = strip_tags($request->get('content'));
+
         if ( $id && is_numeric($id) ) {
-            $post = self::load($id);
-            //$config = $post->get('config_id')->getEntity();
+            $id = self::update($id, $p);
         }
         else if ( $config_name ) {
-            $post = self::create();
-            $config = PostConfig::loadByName($config_name);
-            $post->set('config_id', $config->id());
-            $post->set('user_id', Library::myUid());
+            $id = self::insert($config_name, $p);
         }
         else {
             return Library::error(-9006, "No forum config or forum post id.");
         }
-        $post->set('title', $request->get('title'));
-        $post->set('content', $request->get('content'));
-        $post->set('content_stripped', strip_tags($request->get('content')));
+
+        return $id;
+    }
+
+    private static function update($id, $p) {
+        $post = self::load($id);
+        foreach( $p as $k => $v ) {
+            $post->set($k, $v);
+        }
+        $post->save();
+        return $post->id();
+    }
+
+    /**
+     * @param $config_name
+     * @param $p
+     * @return int|mixed|null|string
+     *
+     * @code
+            $p = [
+            'username' => 'firefox',
+            'title' => "이것은 제목입니다. $i",
+            'content' => "<h1>이것은 내용!</h1>그럼",
+            ];
+            PostData::insert('freetalk', $p);
+     * @endcode
+     *
+     */
+    public static function insert($config_name, $p) {
+        $config = PostConfig::loadByName($config_name);
+        $post = self::create();
+        $post->set('config_id', $config->id());
+        $post->set('no_of_view',  0);
+        $post->set('parent_id',  0);
+
+        if ( isset($p['user_id']) ) { }
+        else if ( isset($p['username']) ) {
+            $user = user_load_by_name($p['username']);
+            $post->set('user_id', $user->id());
+            unset($p['username']);
+        }
+        else {
+            $post->set('user_id', Library::myUid());
+        }
+        foreach( $p as $k => $v ) {
+            $post->set($k, $v);
+        }
         $post->save();
         return $post->id();
     }
@@ -143,6 +187,15 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         );
         return $list;
     }
+
+    public static function view($id) {
+        $post = PostData::load($id);
+        $no = $post->get('no_of_view')->value;
+        $post->set('no_of_view', $no + 1);
+        $post->save();
+        return $post;
+    }
+
 
     /**
      * {@inheritdoc}
@@ -200,14 +253,10 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             ->setDescription(t('The UUID of the  entity.'))
             ->setReadOnly(TRUE);
 
-
-
         $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
             ->setLabel(t('Drupal User ID'))
             ->setDescription(t('The Drupal User ID who owns the forum.'))
             ->setSetting('target_type', 'user');
-
-
 
         $fields['langcode'] = BaseFieldDefinition::create('language')
             ->setLabel(t('Language code'))
@@ -232,7 +281,15 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
         $fields['parent_id'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('Parent ID'))
-            ->setDescription(t('The parent entity id of the Entity'));
+            ->setDescription(t('The parent entity id of the Entity'))
+            ->setDefaultValue(0);
+
+
+
+        $fields['no_of_view'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('No of view'))
+            ->setDescription(t('The no of view of the Entity'))
+            ->setDefaultValue(0);
 
 
         $fields['title'] = BaseFieldDefinition::create('string')

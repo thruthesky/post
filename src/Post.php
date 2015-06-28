@@ -3,6 +3,10 @@ namespace Drupal\post;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
 
+define('DIR_POST', 'modules/post');
+define('DIR_POST_TEMPLATES', 'modules/post/templates');
+
+
 
 /**
  *
@@ -68,6 +72,25 @@ class Post {
             'qc' => Post::getSearchFieldContent()
         ];
         return $conds;
+    }
+
+    public static function getWidgets($widget) {
+        $widgets = [];
+        foreach(  glob(DIR_POST_TEMPLATES . "/widgets/$widget.*") as $filename ) {
+            list($trash, $ex ) = explode("/widgets/$widget.", $filename);
+            $ex = str_replace(".html.twig", '', $ex);
+            $widgets[$ex] = $ex;
+        }
+        return $widgets;
+    }
+
+    public static function getWidgetSelectBox($widget, $default=null) {
+        $widgets = self::getWidgets($widget);
+        $twig = DIR_POST_TEMPLATES . "/elements/select.html.twig";
+        $template = @file_get_contents($twig);
+        $name = "widget_$widget";
+        $markup = \Drupal::service('twig')->renderInline($template, ['name'=>$name, 'options'=>$widgets, 'default'=>$default]);
+        return $markup;
     }
 
 }
