@@ -49,6 +49,37 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
 
     }
 
+    public static function update() {
+        $request = \Drupal::request();
+        $name = $request->get('name');
+        if ( self::validateName($name) ) return Library::error(-9108, "Wrong forum name");
+        $id = $request->get('id');
+        $config = self::load($id);
+        if ( empty($config) ) {
+            return Library::error(-9107, "There is no forum by that ID.");
+        }
+        $config->set('name', $name);
+        $config->set('description', $request->get('description'));
+        $config->set('widget_list', $request->get('widget_list'));
+        $config->set('widget_view', $request->get('widget_view'));
+        $config->set('widget_edit', $request->get('widget_edit'));
+        $config->set('widget_comment', $request->get('widget_comment'));
+        $config->set('widget_search', $request->get('widget_search'));
+        $config->save();
+        return $config;
+    }
+
+    /**
+     * Returns true if there is error.
+     * @param $name - configuration name
+     * @return bool -
+     */
+    private static function validateName($name) {
+        $re = preg_match("/^[a-zA-Z0-9\-_]+$/", $name);
+        if ( $re ) return false;
+        else return true;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -132,6 +163,50 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             ->setSettings(array(
                 'default_value' => '',
                 'max_length' => 255,
+            ));
+
+        $fields['description'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Description'))
+            ->setDescription(t('Description of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 2048,
+            ));
+
+        $fields['widget_list'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('List widget'))
+            ->setDescription(t('List widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+        $fields['widget_view'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('View widget'))
+            ->setDescription(t('View widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+        $fields['widget_edit'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Edit widget'))
+            ->setDescription(t('Edit widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+        $fields['widget_comment'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Comment widget'))
+            ->setDescription(t('Comment widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+        $fields['widget_search'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Search widget'))
+            ->setDescription(t('Search widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
             ));
 
 

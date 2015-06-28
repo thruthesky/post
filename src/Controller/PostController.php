@@ -105,7 +105,20 @@ class PostController extends ControllerBase {
 
     public function postConfig($post_config_name)
     {
-        $config = PostConfig::loadByName($post_config_name);
+        if ( Library::isFromSubmit() ) {
+            if ( $re = PostConfig::update() ) {
+                if ( Library::isError($re) ) {
+                    $config = PostConfig::loadByName($post_config_name);
+                }
+                else {
+                    $config = $re;
+                }
+            }
+        }
+        else {
+            $config = PostConfig::loadByName($post_config_name);
+        }
+        if ( empty($config) ) Library::error(-91006, "No forum exists by that name - $post_config_name");
         return [
             '#theme' => 'post.config',
             '#data' => [

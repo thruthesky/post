@@ -1,4 +1,64 @@
-post config
+{% set config = data.config %}
+<section role='page'>
+    <section role="header">
+        <h2>This is title</h2>
+        This is header
+    </section>
+    {% include 'modules/post/templates/error.html.twig' %}
+    <section role='content' class="list">
+        <form>
+            <fieldset>
+                <legend>Settings</legend>
+                <input type="hidden" name="submit" value="config_submit">
+                <input type="hidden" name="id" value="{{ config.id.value }}">
+
+                <div class='row data-set name'>
+                    <div class='caption'>Name</div>
+                    <div class='text'><input type="text" name="name" value="{{ config.name.value }}"></div>
+                </div>
 
 
-{{ dump(data.config) }}
+                <div class="row data-set description">
+                    <div class="caption">Description</div>
+                    <div class="value"><textarea name="description">{{ config.description.value }}</textarea></div>
+                </div>
+
+
+                <div class="row data-set widget_list">
+                    <div class="caption">Widget List</div>
+                    <div class='text'><input type="text" name="widget_list" value="{{ config.widget_list.value }}"></div>
+                </div>
+
+                <div class="row data-set widget_view">
+                    <div class="caption">Widget View</div>
+                    <div class='text'><input type="text" name="widget_view" value="{{ config.widget_view.value }}"></div>
+                </div>
+
+                <div class="row data-set widget_edit">
+                    <div class="caption">Widget Edit</div>
+                    <div class='text'><input type="text" name="widget_edit" value="{{ config.widget_edit.value }}"></div>
+                </div>
+
+                <div class="row data-set widget_comment">
+                    <div class="caption">Widget Comment</div>
+                    <div class='text'><input type="text" name="widget_comment" value="{{ config.widget_comment.value }}"></div>
+                </div>
+
+
+                <div class="row data-set widget_search">
+                    <div class="caption">Widget Search</div>
+                    <div class='text'><input type="text" name="widget_search" value="{{ config.widget_search.value }}"></div>
+                </div>
+
+
+                <nav role="button-group">
+                    <input type="submit" role="button" value="UPDATE">
+                    <a href="/post" role="button">CANCEL</a>
+                </nav>
+            </fieldset>
+        </form>
+    </section>
+    <section role="footer">
+        This is footer
+    </section>
+</section>
