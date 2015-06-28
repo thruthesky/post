@@ -6,9 +6,23 @@ default:
       css/post.layout.css: {}
       css/post.component.css: {}
       css/post.component.error.css: {}
+      css/post.component.button.css: {}
       css/post.component.list.css: {}
+      css/post.component.navigator.css: {}
+      css/post.component.comment.css: {}
       css/post.state.css: {}
   js:
     js/post.js: {}
   dependencies:
     - core/jquery
+
+list:
+  js:
+    js/post.list.js: {}
+edit:
+  js:
+    js/post.edit.js: {}
+view:
+  js:
+    js/post.list.js: {}
+    js/post.view.js: {}

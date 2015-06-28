@@ -33,46 +33,46 @@ class PostController extends ControllerBase {
 
     public static function postListPage($post_config_name)
     {
-
-
         $conds = post::getSearchCondition($post_config_name);
         $list = PostData::collection($conds);
-
-        return [
+        $render_array = [
             '#theme' => 'post.list',
             '#data' => [
                 'list' => $list,
-            ]
+            ],
         ];
+        $render_array['#attached']['library'][] = 'post/list';
+        return $render_array;
     }
 
 
 
 
-    public static function postEdit($id)
+    public static function postEdit($post_config_name=null, $id=null)
     {
         if ( \Drupal::request()->get('submit') == 'post' ) {
             $id = PostData::submitPost();
             if ( $id ) {
                 $post = PostData::load($id);
-                //$config = $post->get('config_id')->entity;
+                $config = $post->get('config_id')->entity;
+                $config_name = $config->label();
 
-                return new RedirectResponse("/post/view/$id?" . $post->label());
+                return new RedirectResponse("/post/$config_name/$id?" . $post->label());
 
                 // return self::postListPage($config->label());
             }
         }
-        return self::postEditPage($id);
+        return self::postEditPage($post_config_name, $id);
     }
 
 
-    private static function postEditPage($id) {
+    private static function postEditPage($post_config_name, $id) {
         if ( is_numeric($id) ) {
             $post = PostData::load($id);
             $config = $post->get('config_id')->entity;
         }
         else {
-            $config = PostConfig::loadByName($id);
+            $config = PostConfig::loadByName($post_config_name);
             $post = null;
         }
         return [
@@ -87,19 +87,24 @@ class PostController extends ControllerBase {
 
     public static function postView($id)
     {
+
         $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
         $conds = post::getSearchCondition($config->label());
         $list = PostData::collection($conds);
+        $comments = PostData::comments($id);
 
-        return [
+        $render_array = [
             '#theme' => 'post.view',
             '#data' => [
                 'config' => $config,
                 'post' => $post,
+                'comments' => $comments,
                 'list' => $list,
             ]
         ];
+        $render_array['#attached']['library'][] = 'post/view';
+        return $render_array;
     }
 
     public function postConfig($post_config_name)
@@ -130,5 +135,21 @@ class PostController extends ControllerBase {
                 'widgets' => $widgets,
             ]
         ];
+    }
+
+    public static function postCommentSubmit()
+    {
+        $request = \Drupal::request();
+        $parent_id = $request->get('parent_id');
+        $parent = PostData::load($parent_id);
+        $p = [];
+        $p['config_id'] = $parent->get('config_id')->entity->id();
+        $p['parent_id'] = $parent->id();
+        $p['content'] = $request->get('content');
+        $id = PostData::insert($p);
+        $config_name = $parent->get('config_id')->entity->label();
+        $root = PostData::getRoot($parent_id);
+        $root_id = $root->id();
+        return new RedirectResponse("/post/$config_name/$root_id#$id");
     }
 }

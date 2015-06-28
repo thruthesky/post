@@ -1,3 +1,4 @@
 {% set config = data.list.config %}
 {% set posts = data.list.posts %}
 {% include 'modules/post/templates/widgets/list.' ~ config.widget_list.value ~ '.html.twig' %}
+{% include 'modules/post/templates/widgets/search.' ~ config.widget_search.value ~ '.html.twig' %}

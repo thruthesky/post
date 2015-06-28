@@ -3,10 +3,6 @@ namespace Drupal\post;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
 
-define('DIR_POST', 'modules/post');
-define('DIR_POST_TEMPLATES', 'modules/post/templates');
-
-
 
 /**
  *

@@ -3,6 +3,12 @@
 use Drupal\post\Post;
 use Drupal\library\Library;
 
+
+define('DIR_POST', 'modules/post');
+define('DIR_POST_TEMPLATES', 'modules/post/templates');
+define('URL_POST', '/modules/post');
+define('URL_POST_TEMPLATES', '/modules/post/templates');
+
 function post_theme()
 {
     return [
@@ -34,6 +40,9 @@ function post_preprocess( &$variables, $hook )
 
 
     debug_log("post_preprocess($hook) begins");
+    $variables['url_post_templates'] = URL_POST_TEMPLATES;
+    $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
+
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
     if ( post::isPostPage() ) {
         $variables['#attached']['library'][] = 'post/default';

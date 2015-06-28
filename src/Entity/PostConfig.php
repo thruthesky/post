@@ -33,6 +33,11 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
         self::setDefault($config);
         return $config;
     }
+    public static function loadById($id) {
+        $config = self::load($id);
+        self::setDefault($config);
+        return $config;
+    }
 
     public static function setDefault(PostConfig &$config)
     {

@@ -26,6 +26,35 @@ use Drupal\user\UserInterface;
  */
 class PostData extends ContentEntityBase implements PostDataInterface {
 
+
+    /**
+     *
+     * @param $id
+     * @return mixed
+     *
+     */
+    public static function getRoot($id) {
+        $paths = self::loadParents($id);
+        $reversed = array_reverse($paths);
+        return reset($reversed);
+    }
+
+    public static function loadParents($id) {
+        $entity = self::load($id);
+        $rows = [];
+        if ( $entity ) {
+            $rows[] = $entity;
+            $pid = $entity->parent_id->value;
+            if ( $pid ) {
+                $returns = self::loadParents($pid);
+                $rows = array_merge($rows, $returns);
+            }
+        }
+        return $rows;
+    }
+
+
+
     public static function getQueryOnConds($conds)
     {
         $config = null;
@@ -47,7 +76,14 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                     $db->condition('user_id', $uid);
                 }
             }
-            else if ( isset($conds['qt']) && $conds['qt'] || isset($conds['qc']) && $conds['qc'] ) {
+            else {
+                if ( isset($conds['qt']) && $conds['qt'] || isset($conds['qc']) && $conds['qc'] ) {
+
+                }
+                else { // if there is no option selected on title and content filter.
+                    $conds['qt'] = 'y';
+                    $conds['qc'] = 'y';
+                }
                 $words = explode(' ', $conds['q'], 2);
                 foreach( $words as $word ) {
                     $or = $db->orConditionGroup();
@@ -56,6 +92,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                     $db->condition($or);
                 }
             }
+        }
+        else {
+            $db->condition('parent_id', 0);
         }
 
         return $db;
@@ -106,7 +145,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $id = self::update($id, $p);
         }
         else if ( $config_name ) {
-            $id = self::insert($config_name, $p);
+            $config = PostConfig::loadByName($config_name);
+            $p['config_id'] = $config->id();
+            $id = self::insert($p);
         }
         else {
             return Library::error(-9006, "No forum config or forum post id.");
@@ -131,6 +172,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      *
      * @code
             $p = [
+     *      'config_id' => 1,
             'username' => 'firefox',
             'title' => "이것은 제목입니다. $i",
             'content' => "<h1>이것은 내용!</h1>그럼",
@@ -138,11 +180,21 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             PostData::insert('freetalk', $p);
      * @endcode
      *
+     * @code How To Add A Comment
+            $request = \Drupal::request();
+            $parent_id = $request->get('parent_id');
+            $parent = PostData::load($parent_id);
+            $p = [];
+            $p['config_id'] = $parent['config_id'];
+            $p['parent_id'] = $parent['id'];
+            $p['content'] = $request->get('content');
+            PostData::insert($p);
+     * @endcode
+     *
+     *
      */
-    public static function insert($config_name, $p) {
-        $config = PostConfig::loadByName($config_name);
+    public static function insert($p) {
         $post = self::create();
-        $post->set('config_id', $config->id());
         $post->set('no_of_view',  0);
         $post->set('parent_id',  0);
 
@@ -155,6 +207,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         else {
             $post->set('user_id', Library::myUid());
         }
+
         foreach( $p as $k => $v ) {
             $post->set($k, $v);
         }
@@ -194,6 +247,18 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('no_of_view', $no + 1);
         $post->save();
         return $post;
+    }
+
+    public static function comments($id,$depth=0) {
+        $comments = \Drupal::entityManager()->getStorage('post_data')->loadByProperties(['parent_id'=>$id]);
+        $rows = [];
+        foreach( $comments as $c ) {
+            $c->depth = $depth;
+            $rows[] = $c;
+            $returns = self::comments( $c->id(), $depth + 1 );
+            if( $returns ) $rows = array_merge($rows,$returns);
+        }
+        return $rows;
     }
 
 
@@ -312,6 +377,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
         return $fields;
     }
+
 
 
 

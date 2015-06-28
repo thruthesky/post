@@ -1,18 +1,22 @@
-.post .button {
-    display:inline-block;
-    padding:4px 8px;
-    border-radius: 2px;
-    background-color:#d3e8f4;
+/** overriding drupal defaults */
+.post .caption > * {
+    border:0;
 }
 
 
-nav.navigation-bar a {
-    display:inline-block;
-    margin:0 1px;
-    padding:4px 6px;
-    background-color: #d3e8f4;
-    border-radius: 2px;
+
+
+/** global stying for form and elements */
+
+.post form input[type='text'],
+.post form textarea,
+.post form select {
+    margin:0;
+    padding:.4em 0.5em;
+    box-sizing: border-box;
+    width:100%;
 }
-nav.navigation-bar a.selected {
-    background-color: white;
+
+.post form textarea {
+    min-height:6em;
 }

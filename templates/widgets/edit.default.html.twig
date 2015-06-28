@@ -1,8 +1,22 @@
-<section role="page">
+<style>
+    .post.edit h2 {
+        margin:0;
+        padding:0;
+        font-size:1.5em;
+    }
 
-    <section role="header">{{ config.label }}</section>
+    .post.edit form [name='title'] {
+    }
+    .post.edit form [name='content'] {
+    }
+</style>
+<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<section role='page' class="post edit">
+    <section role="header">
+        <h2>{{ config.label }}</h2>
+    </section>
     <section role="content">
-        <form>
+        <form method="post">
             <fieldset>
                 <legend>POST UPDATE</legend>
                 <input type="hidden" name="submit" value="post">
@@ -10,11 +24,33 @@
                 <input type="hidden" name="id" value="{{ post.id.value }}">
                 <div class="row data-set title">
                     <div class="caption">Title</div>
-                    <div class="value"><input type="text" name="title"></div>
+                    <div class="value"><input type="text" name="title" value="{{ post.label }}" placeholder="{{ language=='ko' ? "제목을 입력하십시오." : "Input Title..." }}"></div>
                 </div>
                 <div class="row data-set content">
                     <div class="caption">Content</div>
-                    <div class="value"><textarea name="content"></textarea></div>
+                    <div class="value">
+                        <textarea id="contentEditor" name="content" placeholder="{{ language=='ko' ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
+                        <script>
+                            CKEDITOR.replace( 'contentEditor', {
+                                uiColor: '#f9f9f9',
+                                toolbar :
+                                        [
+                                            [
+                                                'Bold', 'Italic', 'Underline', 'Strike', "TextColor", "BGColor",
+                                                'NumberedList', 'BulletedList',
+                                                'Cut', 'Copy', 'Paste', 'Undo', 'Redo',
+                                                "Outdent", "Indent", "Blockquote", "Link", "Unlink", 'HorizontalRule',
+                                                "Table",
+                                                "Smiley",
+                                                'Source',
+                                                "Maximize",
+                                                'Font', 'FontSize',
+                                                'Format', 'Styles'
+                                            ]
+                                        ]
+                            } );
+                        </script>
+                    </div>
                 </div>
                 <input type="submit">
                 [ <a href="/post/{{ config.label }}">Cancel</a> ]
@@ -22,6 +58,5 @@
         </form>
     </section>
     <section role="footer">
-
     </section>
 </section>

@@ -1,102 +1,4 @@
-<style>
-    section[role='page'] h2 {
-        margin:0;
-        padding:0.4em;
-        background-color:#f0f0ff;
-    }
-    .post-list-menu > div {
-        padding:.6em 0;
-    }
-    .post .list article.post {
-        margin:0.15em 0;
-        background-color:#f0f8fd;
-    }
-    .post .list article.post:after {
-        display:block;
-        clear:both;
-        content:'';
-    }
-    .post .list article.post span {
-        display:block;
-        float:left;
-        padding:1em .5em;
-        overflow: hidden;
-        box-sizing: border-box;
-        background-color:transparent;
-    }
-
-    .post .list article.post.caption {
-        background-color:#f6f6fb;
-    }
-
-    article.post .title {
-        width:50%;
-    }
-    article.post .date {
-        padding:0.2em;
-        width:15%;
-        text-align:center;
-    }
-    article.post .no-of-view {
-        width:10%;
-        text-align:center;
-    }
-    article.post .author {
-        width:25%;
-    }
-    @media all and (min-width: 480px) {
-        .post .list article.post a > span {
-            padding: 1em;
-        }
-        article.post .title {
-            width:60%;
-        }
-        article.post .date {
-            padding:0.2em;
-            width:10%;
-        }
-        article.post .no-of-view {
-            width:10%;
-        }
-        article.post .author {
-            width:20%;
-        }
-    }
-    @media all and (min-width: 760px) {
-        .post-list-menu {
-
-        }
-        .post-list-menu:after {
-            display:block;
-            clear:both;
-            content:'';
-        }
-
-        .post-list-menu .left {
-            float:left;
-            padding-top:1.2em;
-        }
-        .post-list-menu .right {
-            float:right;
-            padding-top:1em;
-        }
-
-
-        article.post .title {
-            width:66%;
-        }
-        article.post .date {
-            padding:0.2em;
-            width:8%;
-        }
-        article.post .no-of-view {
-            width:8%;
-        }
-        article.post .author {
-            width:18%;
-        }
-    }
-</style>
+<link type='text/css' href='{{ url_post_templates }}/widgets/list.default.css' rel='stylesheet' />
 <section role='page' class="post">
     <section role="header">
         <h2>{{ config.label }}</h2>
@@ -106,20 +8,20 @@
                 No of Posts: {{ data.list.no_of_posts }}
             </div>
             <div class="right">
-                <a href="/post/add/{{ config.name.value }}"><span class="button">POST UPLOAD</span></a>
+                <a href="/post/{{ config.name.value }}/add"><span class="button">POST UPLOAD</span></a>
             </div>
         </div>
     </section>
     <section role="content" class="list">
         <article class="post caption">
-            <span class="title">제목</span>
-            <span class="date">날짜</span>
-            <span class="no-of-view">조회</span>
-            <span class="author">글쓴이</span>
+            <span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</span>
+            <span class="date">{{ language == 'ko' ? '날짜' : 'Date' }}</span>
+            <span class="no-of-view">{{ language == 'ko' ? '조회' : 'View' }}</span>
+            <span class="author">{{ language == 'ko' ? '글쓴이' : 'Author' }}</span>
         </article>
         {% for post in posts %}
             <article class="post">
-                <a href="/post/view/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
+                <a href="/post/{{ config.label }}/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
                         <span class="title">
                             {% if post.label | length > 40 %}
                                     {{ post.label | slice(0, 40) }} ...
@@ -140,14 +42,8 @@
             </article>
         {% endfor %}
         {{ data.list.navigation | raw }}
-        <div>
-            <form action="/post/{{ config.label }}">
-                <input type="checkbox" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}> 이름,
-                <input type="checkbox" name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}> 제목,
-                <input type="checkbox" name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}> 내용
-                <input type="text" name="q" value="{{ input.q }}">
-                <input type="submit">
-            </form>
-        </div>
+    </section>
+    <section role="footer">
+
     </section>
 </section>

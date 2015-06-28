@@ -12,21 +12,21 @@ post.list:
     _permission: 'access content'
 
 post.add:
-  path: '/post/add/{id}'
+  path: '/post/{post_config_name}/add'
   defaults:
     _controller: Drupal\post\Controller\PostController::postEdit
   requirements:
     _permission: 'access content'
 
 post.edit:
-  path: '/post/edit/{id}'
+  path: '/post/{post_config_name}/edit/{id}'
   defaults:
     _controller: Drupal\post\Controller\PostController::postEdit
   requirements:
     _permission: 'access content'
 
 post.view:
-  path: '/post/view/{id}'
+  path: '/post/{config_post_name}/{id}'
   defaults:
     _controller: Drupal\post\Controller\PostController::postView
   requirements:
@@ -36,5 +36,13 @@ post.config:
   path: '/post/config/{post_config_name}'
   defaults:
     _controller: Drupal\post\Controller\PostController::postConfig
+  requirements:
+    _permission: 'access content'
+
+
+post.comment_submit:
+  path: '/post/comment/submit'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postCommentSubmit
   requirements:
     _permission: 'access content'
