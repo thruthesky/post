@@ -58,7 +58,7 @@ class PostController extends ControllerBase {
                 $post = PostData::load($id);
                 $config = $post->get('config_id')->entity;
 
-                return new RedirectResponse('/post/' . $config->label());
+                return new RedirectResponse("/post/view/$id?" . $post->label());
 
                 // return self::postListPage($config->label());
             }

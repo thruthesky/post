@@ -1,0 +1,27 @@
+<section role="page">
+
+    <section role="header">{{ config.label }}</section>
+    <section role="content">
+        <form>
+            <fieldset>
+                <legend>POST UPDATE</legend>
+                <input type="hidden" name="submit" value="post">
+                <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
+                <input type="hidden" name="id" value="{{ post.id.value }}">
+                <div class="row data-set title">
+                    <div class="caption">Title</div>
+                    <div class="value"><input type="text" name="title"></div>
+                </div>
+                <div class="row data-set content">
+                    <div class="caption">Content</div>
+                    <div class="value"><textarea name="content"></textarea></div>
+                </div>
+                <input type="submit">
+                [ <a href="/post/{{ config.label }}">Cancel</a> ]
+            </fieldset>
+        </form>
+    </section>
+    <section role="footer">
+
+    </section>
+</section>

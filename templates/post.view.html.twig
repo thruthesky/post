@@ -1,20 +1,3 @@
 {% set config = data.config %}
 {% set post = data.post %}
-<div class="post view">
-
-
-
-    게시판 : {{ config.label }} |
-    <a href="/post/{{ config.label }}"><span class="button">맨 처음 목록</span></a>
-
-    <br>
-
-    제목 : {{ data.post.label }}
-
-    <br>
-
-    내용 : {{ data.post.content.value }}
-
-</div>
-
-{% include 'modules/post/templates/post.list.html.twig' %}
+{% include 'modules/post/templates/widgets/view.' ~ config.widget_view.value ~ '.html.twig' %}
