@@ -1,0 +1,23 @@
+.post-comment {
+
+}
+
+.post-comment .list form {
+    display:none;
+}
+
+.post-comment .comment {
+    margin:.4em;
+    padding:.8em;
+    background-color:#d3e8f4;
+}
+
+.post-comment [depth='1'] {
+    margin-left:2em;
+}
+.post-comment [depth='2'] {
+    margin-left:4em;
+}
+.post-comment [depth='3'] {
+    margin-left:6em;
+}

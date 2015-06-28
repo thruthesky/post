@@ -1,0 +1,53 @@
+<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script>
+    function loadCKEditor(id) {
+        CKEDITOR.replace( id, {
+            uiColor: '#f9f9f9',
+            toolbar :
+                    [
+                        [
+                            'Bold', 'Italic', 'Underline', 'Strike', "TextColor", "BGColor",
+                            'NumberedList', 'BulletedList',
+                            'Cut', 'Copy', 'Paste', 'Undo', 'Redo',
+                            "Outdent", "Indent", "Blockquote", "Link", "Unlink", 'HorizontalRule',
+                            "Table",
+                            "Smiley",
+                            'Source',
+                            "Maximize",
+                            'Font', 'FontSize',
+                            'Format', 'Styles'
+                        ]
+                    ]
+        } );
+    }
+    function loadCommentCKEditor(id) {
+        var $ = jQuery;
+        $("#"+id).parent().show();
+        loadCKEditor(id);
+    }
+</script>
+<section role="comment" class="post-comment">
+    <div class="reply">
+        <form action="/post/comment/submit" method="post">
+            <input type="hidden" name="parent_id" value="{{ post.id.value }}">
+            <textarea id="contentEditor" name="content" onclick="loadCKEditor('contentEditor');"></textarea>
+            <input type="submit">
+        </form>
+    </div>
+    <div class="list">
+        {% for comment in data.comments %}
+            <a name="{{ comment.id.value }}"></a>
+            <div id="comment{{ comment.id.value }}" class="comment" depth="{{ comment.depth }}">
+                <div onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
+                    comment... {{ comment.id.value }} Reply... depth: {{ comment.depth }}
+                </div>
+                {{ comment.content.value | raw }}
+            </div>
+            <form action="/post/comment/submit" method="post">
+                <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
+                <textarea id="contentEditor{{ comment.id.value }}" name="content"></textarea>
+                <input type="submit">
+            </form>
+        {% endfor %}
+    </div>
+</section>

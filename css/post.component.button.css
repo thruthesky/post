@@ -1,0 +1,10 @@
+section.post .button {
+    display:inline-block;
+    padding:4px 8px;
+    border:0;
+    border-radius: 2px;
+    background: #d3e8f4 none;
+}
+section.post .button:hover {
+    background: #c3d8e4;
+}

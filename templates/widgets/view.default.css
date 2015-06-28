@@ -1,0 +1,14 @@
+.view nav > div {
+    margin: 1em 0;
+}
+.view h3 {
+    font-size:1.4em;
+}
+
+.view .content {
+    margin-bottom: 1em;
+    padding:1em;
+    box-sizing: border-box;
+    background-color:#f7f7f7;
+    border-radius: 2px;
+}

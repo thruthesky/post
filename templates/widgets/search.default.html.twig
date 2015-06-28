@@ -1,0 +1,17 @@
+<section role="search" class="post">
+    <form action="/post/{{ config.label }}">
+        <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
+        <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label>,
+        <input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
+        <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>,
+        <input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
+        <label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
+        <input type="text" name="q" value="{{ input.q }}">
+        <input type="submit">
+    </form>
+</section>
+<style>
+    section.post[role='search'] label {
+        display:inline;
+    }
+</style>
