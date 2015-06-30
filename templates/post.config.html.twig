@@ -25,29 +25,37 @@
 
 
                 <div class="row data-set widget_list">
-                    <div class="caption">Widget List</div>
+                    <label for="widget_list" class="caption">Widget List</label>
                     <div class='text'>{{ data.widgets.list | raw }}</div>
                 </div>
 
+
+
+                <div class="row data-set widget_search_box">
+                    <label for="widget_search_box" class="caption">Widget Search Box on List</label>
+                    <div class='text'>{{ data.widgets.search_box | raw }}</div>
+                </div>
+
+
                 <div class="row data-set widget_view">
-                    <div class="caption">Widget View</div>
-                    <div class='text'><input type="text" name="widget_view" value="{{ config.widget_view.value }}"></div>
+                    <label for="widget_view" class="caption">Widget View</label>
+                    <div class='text'>{{ data.widgets.view | raw }}</div>
                 </div>
 
                 <div class="row data-set widget_edit">
-                    <div class="caption">Widget Edit</div>
-                    <div class='text'><input type="text" name="widget_edit" value="{{ config.widget_edit.value }}"></div>
+                    <label for="widget_edit" class="caption">Widget Edit</label>
+                    <div class='text'>{{ data.widgets.edit | raw }}</div>
                 </div>
 
                 <div class="row data-set widget_comment">
-                    <div class="caption">Widget Comment</div>
-                    <div class='text'><input type="text" name="widget_comment" value="{{ config.widget_comment.value }}"></div>
+                    <label for="widget_comment" class="caption">Widget Comment</label>
+                    <div class='text'>{{ data.widgets.comment | raw }}</div>
                 </div>
 
 
                 <div class="row data-set widget_search">
-                    <div class="caption">Widget Search</div>
-                    <div class='text'><input type="text" name="widget_search" value="{{ config.widget_search.value }}"></div>
+                    <label for="widget_search" class="caption">Widget Search</label>
+                    <div class='text'>{{ data.widgets.search | raw }}</div>
                 </div>
 
 

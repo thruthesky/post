@@ -32,16 +32,24 @@ function post_theme()
             'variables' => [ 'data' => null ],
             'template' => 'post.config'
         ],
+        'post.search' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.search'
+        ],
+        'post.admin' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.admin'
+        ],
     ];
 }
 
 function post_preprocess( &$variables, $hook )
 {
 
-
-    debug_log("post_preprocess($hook) begins");
+    // debug_log("post_preprocess($hook) begins");
     $variables['url_post_templates'] = URL_POST_TEMPLATES;
     $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
+    $variables['global_config'] = Library::getGroupConfig('post_global_config');
 
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
     if ( post::isPostPage() ) {

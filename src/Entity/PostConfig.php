@@ -30,12 +30,12 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
     {
         $entities = \Drupal::entityManager()->getStorage('post_config')->loadByProperties(['name'=>$name]);
         $config = $entities ? reset($entities) : null;
-        self::setDefault($config);
+        if ( $config ) self::setDefault($config);
         return $config;
     }
     public static function loadById($id) {
         $config = self::load($id);
-        self::setDefault($config);
+        if ( $config ) self::setDefault($config);
         return $config;
     }
 
@@ -57,8 +57,8 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             $config->set('widget_comment', 'default');
             $config->save();
         }
-        if ( empty( $config->get('widget_search')->value ) ) {
-            $config->set('widget_search', 'default');
+        if ( empty( $config->get('widget_search_box')->value ) ) {
+            $config->set('widget_search_box', 'default');
             $config->save();
         }
 
@@ -78,7 +78,6 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             $config->set('name', $name);
             return $config->save();
         }
-
     }
 
     public static function update() {
@@ -233,6 +232,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 64,
             ));
+        /*
         $fields['widget_search'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Search widget'))
             ->setDescription(t('Search widget of Forum.'))
@@ -240,11 +240,14 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 64,
             ));
-
-
+        */
+        $fields['widget_search_box'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Search Box widget'))
+            ->setDescription(t('Search Box widget of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
         return $fields;
     }
-
-
-
 }

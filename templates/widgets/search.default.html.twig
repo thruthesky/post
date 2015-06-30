@@ -1,17 +1,28 @@
-<section role="search" class="post">
-    <form action="/post/{{ config.label }}">
-        <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
-        <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label>,
-        <input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
-        <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>,
-        <input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
-        <label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
-        <input type="text" name="q" value="{{ input.q }}">
-        <input type="submit">
-    </form>
+<section role='page' class="post search">
+    <section role="header">
+        <h2>Post Search</h2>
+        {% include 'modules/post/templates/widgets/search_box.default.html.twig' %}
+        <div>Result : {{ data.list.no_of_posts }}</div>
+    </section>
+
+    <section role="content" class="list">
+        {% for post in data.list.posts %}
+            <article class="{{ post.parent_id.value == 0 ? 'post' : 'comment' }}">
+                    <a href="/post/{{ post.config_id.entity.label }}" target="_blank">{{ post.config_id.entity.label }}</a>
+
+                    <a href="/post/{{ post.config_id.entity.label }}/{{ post.id.value }}" target="_blank">
+                        {% if post.parent_id.value == 0 %}
+                            {{ post.label }}
+                        {% else %}
+                            {{ post.content_stripped.value | slice(0,99) }}
+                        {% endif %}
+                    </a>
+            </article>
+        {% endfor %}
+    </section>
+    {{ data.list.navigation | raw }}
+
+    <section role="footer">
+
+    </section>
 </section>
-<style>
-    section.post[role='search'] label {
-        display:inline;
-    }
-</style>

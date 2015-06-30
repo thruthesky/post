@@ -1,0 +1,19 @@
+.post.search .list {
+
+}
+.post.search .list article {
+    display:block;
+    margin:0;
+    padding:0;
+}
+
+.post.search .list article a {
+    display:inline-block;
+    margin:.2em;
+    padding:1em;
+    background-color: #eef0f8;
+}
+
+.post.search .list article.comment a {
+    background-color: #f3f6f8;
+}

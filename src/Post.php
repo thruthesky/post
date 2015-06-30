@@ -58,15 +58,24 @@ class Post {
         return \Drupal::request()->get('qc');
     }
 
-    public static function getSearchCondition($post_config_name) {
-        $config = PostConfig::loadByName($post_config_name);
+    public static function getSearchCondition($post_config_name=null) {
+
         $conds = [
-            'post_config_name'=>$config->label(),
             'q' => Post::getSearchQuery(),
             'qn' => Post::getSearchFieldName(),
             'qt' => Post::getSearchFieldTitle(),
             'qc' => Post::getSearchFieldContent()
         ];
+
+        if ( $post_config_name ) {
+            $config = PostConfig::loadByName($post_config_name);
+            $conds['post_config_name'] = $config->label();
+        }
+
+        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = state('post_global_config.no_of_item_in_list');
+        if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = state('post_global_config.no_of_page_in_navigator');
+
+
         return $conds;
     }
 

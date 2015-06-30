@@ -46,8 +46,6 @@ class PostController extends ControllerBase {
     }
 
 
-
-
     public static function postEdit($post_config_name=null, $id=null)
     {
         if ( \Drupal::request()->get('submit') == 'post' ) {
@@ -85,8 +83,17 @@ class PostController extends ControllerBase {
     }
 
 
-    public static function postView($id)
+    public static function postView($config_post_name, $id)
     {
+        /**
+         * Redirects to the root post if $id is a comment.
+         */
+        if ( $id ) {
+            $root_id = PostData::getRootID($id);
+            if ( $id != $root_id ) {
+                return new RedirectResponse("/post/$config_post_name/$root_id#$id");
+            }
+        }
 
         $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
@@ -127,6 +134,11 @@ class PostController extends ControllerBase {
         if ( empty($config) ) Library::error(-91006, "No forum exists by that name - $post_config_name");
         else {
             $widgets['list'] = Post::getWidgetSelectBox('list', $config->get('widget_list')->value);
+            $widgets['search_box'] = Post::getWidgetSelectBox('search_box', $config->get('widget_search_box')->value);
+            $widgets['view'] = Post::getWidgetSelectBox('view', $config->get('widget_view')->value);
+            $widgets['edit'] = Post::getWidgetSelectBox('edit', $config->get('widget_edit')->value);
+            $widgets['comment'] = Post::getWidgetSelectBox('comment', $config->get('widget_comment')->value);
+            $widgets['search'] = Post::getWidgetSelectBox('search', $config->get('widget_search')->value);
         }
         return [
             '#theme' => 'post.config',
@@ -152,4 +164,36 @@ class PostController extends ControllerBase {
         $root_id = $root->id();
         return new RedirectResponse("/post/$config_name/$root_id#$id");
     }
+
+    public static function postSearch()
+    {
+
+        $conds = post::getSearchCondition();
+        $list = PostData::collection($conds);
+        $render_array = [
+            '#theme' => 'post.search',
+            '#data' => [
+                'list'=>$list
+            ]
+        ];
+        $render_array['#attached']['library'][] = 'post/search';
+        return $render_array;
+    }
+
+    public static function postAdmin()
+    {
+        if ( Library::isFromSubmit() ) Library::saveFormSubmit('post_global_config');
+
+        $post_global_config = Library::getGroupConfig('post_global_config');
+
+
+
+        return [
+            '#theme' => 'post.admin',
+            '#data' => [
+                'post_global_config' =>  $post_global_config,
+            ]
+        ];
+    }
+
 }

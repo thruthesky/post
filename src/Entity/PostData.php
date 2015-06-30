@@ -39,6 +39,10 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         return reset($reversed);
     }
 
+    public static function getRootID($id) {
+        $root = self::getRoot($id);
+        return $root->id();
+    }
     public static function loadParents($id) {
         $entity = self::load($id);
         $rows = [];
@@ -54,11 +58,63 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     }
 
 
-
+    /**
+     * @param $conds
+     *
+     * @return \Drupal\Core\Database\Query\Select
+     */
     public static function getQueryOnConds($conds)
     {
+
         $config = null;
-        $db = \Drupal::entityQuery('post_data');
+        $and = [];
+        if ( ! empty($conds['post_config_name']) ) {
+            $config = PostConfig::loadByName($conds['post_config_name']);
+            $and[] = 'config_id=' . $config->id();
+        }
+
+        if ( ! empty($conds['q']) ) {
+            if ( ! empty($conds['qn']) ) {
+                $user = user_load_by_name($conds['q']);
+                if ( $user ) $ands[] = 'user_id=' . $user->id();
+            }
+            else if ( ! empty($conds['qt']) || ! empty($conds['qc']) ) {
+                $words = explode(' ', $conds['q'], 2);
+                foreach( $words as $word ) {
+                    $or = [];
+                    if ( ! empty($conds['qt']) ) $or[] = "`title` LIKE '%$word%'";
+                    if ( ! empty($conds['qc']) ) $or[] = "content_stripped__value LIKE '%$word%'";
+                    $and[] = '(' . implode(' OR ', $or) .')';
+                }
+            }
+            else {
+                // no filtering
+                $words = explode(' ', $conds['q'], 2);
+                foreach( $words as $word ) {
+                    $or = [];
+                    $or[] = "`title` LIKE '%$word%'";
+                    $or[] = "content_stripped__value LIKE '%$word%'";
+                    $and[] = '(' . implode(' OR ', $or) .')';
+                }
+            }
+        }
+        else {
+            $and[] = 'parent_id=0';
+        }
+
+
+
+        if ( $and ) return "WHERE " . implode(' AND ', $and);
+        else return null;
+
+
+
+        /*
+         * $config = null;
+        //$db = \Drupal::entityQuery('post_data');
+         $db = db_select('post_data');
+
+
         if ( isset($conds['post_config_name']) ) {
             $config = PostConfig::loadByName($conds['post_config_name']);
             $db->condition('config_id', $config->id());
@@ -67,28 +123,30 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             // is it error? or if it's a full search for all the forum?
         }
 
-
-        if ( isset($conds['q']) && $conds['q'] ) {
-            if ( isset($conds['qn']) && $conds['qn'] ) {
+        if ( ! empty($conds['q']) ) {
+            if ( ! empty($conds['qn']) ) {
                 $user = user_load_by_name($conds['q']);
                 if ( $user ) {
                     $uid = $user->id();
                     $db->condition('user_id', $uid);
                 }
             }
-            else {
-                if ( isset($conds['qt']) && $conds['qt'] || isset($conds['qc']) && $conds['qc'] ) {
-
-                }
-                else { // if there is no option selected on title and content filter.
-                    $conds['qt'] = 'y';
-                    $conds['qc'] = 'y';
-                }
+            else if ( ! empty($conds['qt']) || ! empty($conds['qc']) ) {
                 $words = explode(' ', $conds['q'], 2);
                 foreach( $words as $word ) {
                     $or = $db->orConditionGroup();
-                    if ( isset($conds['qt']) || $conds['qt'] ) $or->condition('title', $word, 'CONTAINS');
-                    if ( isset($conds['qc']) || $conds['qc']) $or->condition('content_stripped__value', $word, 'CONTAINS');
+                    if ( ! empty($conds['qt']) ) $or->condition('title', "%$word%", 'LIKE');
+                    if ( ! empty($conds['qc']) ) $or->condition('content_stripped__value', "%$word%", 'LIKE');
+                    $db->condition($or);
+                }
+            }
+            else {
+                // no filtering
+                $words = explode(' ', $conds['q'], 2);
+                foreach( $words as $word ) {
+                    $or = $db->orConditionGroup();
+                    $or->condition('title', "%$word%", 'LIKE');
+                    $or->condition('content_stripped__value', "%$word%", 'LIKE');
                     $db->condition($or);
                 }
             }
@@ -98,6 +156,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         }
 
         return $db;
+        */
     }
     /**
      * Returns the searched of posts
@@ -105,15 +164,54 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      * @param $conds - is the condition array
      *
      * @return static[]
+     *
      */
     public static function search($conds) {
+        $where = self::getQueryOnConds($conds);
+
+        $page_no = Library::getPageNo();
+        $offset = ($page_no-1) * $conds['no_of_items_per_page'];
+        $limit = $conds['no_of_items_per_page'];
+
+
+        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $limit OFFSET $offset";
+        $result = db_query($q);
+        Library::log("PostData::search : $q");
+
+
+        $rows = $result->fetchAll(\PDO::FETCH_NUM);
+        if ( $rows ) {
+            $ids = [];
+            foreach($rows as $row) {
+                $ids[] = $row[0];
+            }
+            return self::loadMultiple($ids);
+        }
+        return false;
+
+        /**
+         * @deprecated
+         *
         $db = self::getQueryOnConds($conds);
+        $db->fields(null, ['id']);
         $page_no = Library::getPageNo();
         $start = ($page_no-1) * $conds['no_of_items_per_page'];
         $db->range($start, $conds['no_of_items_per_page']);
-        $db->sort('id', 'DESC');
-        $ids = $db->execute();
-        return self::loadMultiple($ids);
+        $db->orderBy('id', 'DESC');
+        $result = $db->execute();
+        Library::log("search() begins");
+        Library::log( $result->getQueryString() );
+        $rows = $result->fetchAll(\PDO::FETCH_NUM);
+        if ( $rows ) {
+            $ids = [];
+            foreach($rows as $row) {
+                $ids[] = $row[0];
+            }
+            return self::loadMultiple($ids);
+        }
+        return false;
+         *
+         */
     }
 
 
@@ -126,10 +224,23 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function count($conds) {
 
+        $where = self::getQueryOnConds($conds);
+        $result = db_query("SELECT COUNT(*) FROM post_data $where");
+        $count = $result->fetchField();
+        return $count;
+
+
+
+        /**
+         * @deprecated code
+         *
         $db = self::getQueryOnConds($conds);
-        $db->count();
-        $no = $db->execute();
+        $db->addExpression('COUNT(*)');
+        $result = $db->execute();
+        $no = $result->fetchField();
         return $no;
+        */
+
     }
 
     public static function submitPost() {
@@ -139,7 +250,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $p = [];
         $p['title'] = $request->get('title');
         $p['content'] = $request->get('content');
-        $p['content_stripped'] = strip_tags($request->get('content'));
 
         if ( $id && is_numeric($id) ) {
             $id = self::update($id, $p);
@@ -160,6 +270,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post = self::load($id);
         foreach( $p as $k => $v ) {
             $post->set($k, $v);
+            if ( $k == 'content' ) {
+                $post->set('content_stripped', strip_tags($v));
+            }
         }
         $post->save();
         return $post->id();
@@ -198,6 +311,14 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('no_of_view',  0);
         $post->set('parent_id',  0);
 
+        // post config
+        if ( isset($p['post_config_name']) ) {
+            $config = PostConfig::loadByName($p['post_config_name']);
+            $p['config_id'] = $config->id();
+            unset($p['post_config_name']);
+        }
+
+        // user id
         if ( isset($p['user_id']) ) { }
         else if ( isset($p['username']) ) {
             $user = user_load_by_name($p['username']);
@@ -208,6 +329,11 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $post->set('user_id', Library::myUid());
         }
 
+
+        // content
+
+        $p['content_stripped'] = strip_tags($p['content']);
+
         foreach( $p as $k => $v ) {
             $post->set($k, $v);
         }
@@ -215,20 +341,28 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         return $post->id();
     }
 
+    /**
+     * @param $conds
+     * @return array
+     *      - list['config'] - is the config of the post if it is not seach
+     *      - list['no_of_posts'] - is the number of posts
+     *      - list['posts'] - is the posts
+     *      - list['navigation'] - is the navigation bar
+     */
     public static function collection($conds) {
         $list = [];
-        if ( ! isset($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = 10;
-        if ( ! isset($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = 10;
-        if ( isset($conds['post_config_name'])) {
-            $list['config'] = PostConfig::loadByName($conds['post_config_name']);
+        //        else eturn Library::error(-9100, "No post_config_name provided");
+
+        if ( empty($conds['post_config_name'])) {
+            $path = '/post/search';
         }
         else {
-            Library::error(-9100, "No post_config_name provided");
-            return [];
+            $list['config'] = PostConfig::loadByName($conds['post_config_name']);
+            $path = "/post/" . $conds['post_config_name'];
         }
-
         $list['posts'] = PostData::search($conds);
         $list['no_of_posts'] = PostData::count($conds);
+
         $list['navigation'] = Library::paging(
             Library::getPageNo(),
             $list['no_of_posts'],
@@ -236,7 +370,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             null,
             $conds['no_of_pages_in_navigation_bar'],
             null,
-            "/post/" . $conds['post_config_name']
+            $path
         );
         return $list;
     }

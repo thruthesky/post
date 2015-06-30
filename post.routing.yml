@@ -46,3 +46,17 @@ post.comment_submit:
     _controller: Drupal\post\Controller\PostController::postCommentSubmit
   requirements:
     _permission: 'access content'
+post.search:
+  path: '/post/search'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postSearch
+  requirements:
+    _permission: 'access content'
+
+
+post.admin:
+  path: '/post/admin'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postAdmin
+  requirements:
+    _permission: 'access content'

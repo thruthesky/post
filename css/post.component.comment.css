@@ -21,3 +21,37 @@
 .post-comment [depth='3'] {
     margin-left:6em;
 }
+.post-comment [depth='4'] {
+    margin-left:7em;
+}
+.post-comment [depth='5'] {
+    margin-left:7.6em;
+}
+.post-comment [depth='6'] {
+    margin-left:8.2em;
+}
+.post-comment [depth='7'] {
+    margin-left:8.8em;
+}
+.post-comment [depth='8'] {
+    margin-left:9.4em;
+}
+.post-comment [depth='9'] {
+    margin-left:10em;
+}
+.post-comment [depth='10'],
+.post-comment [depth='11'],
+.post-comment [depth='12'],
+.post-comment [depth='13'],
+.post-comment [depth='14'],
+.post-comment [depth='15'],
+.post-comment [depth='16'],
+.post-comment [depth='17'],
+.post-comment [depth='18'],
+.post-comment [depth='19'],
+.post-comment [depth='20'],
+.post-comment [depth='21'],
+.post-comment [depth='22']
+{
+    margin-left:10.6em;
+}

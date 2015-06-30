@@ -7,7 +7,6 @@ default:
       css/post.component.css: {}
       css/post.component.error.css: {}
       css/post.component.button.css: {}
-      css/post.component.list.css: {}
       css/post.component.navigator.css: {}
       css/post.component.comment.css: {}
       css/post.state.css: {}
@@ -17,6 +16,9 @@ default:
     - core/jquery
 
 list:
+  css:
+    theme:
+      css/post.component.list.css: {}
   js:
     js/post.list.js: {}
 edit:
@@ -26,3 +28,9 @@ view:
   js:
     js/post.list.js: {}
     js/post.view.js: {}
+search:
+  css:
+    theme:
+      css/post.component.search.css: {}
+  js:
+    js/post.search.js: {}

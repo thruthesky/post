@@ -1,0 +1,17 @@
+{% set config = data.post_global_config %}
+
+<h1>ADMIN</h1>
+
+<h2>Global Configuration</h2>
+
+<form>
+    <input type="hidden" name="mode" value="submit">
+
+    skin for search: <input type="text" name="widget_search" value="{{ config.widget_search }}"><br>
+    no of items in list : <input type="text" name="no_of_item_in_list" value="{{ config.no_of_item_in_list }}"><br>
+    no of pages in navigator : <input type="text" name="no_of_page_in_navigator" value="{{ config.no_of_page_in_navigator }}"><br>
+
+    <input type="submit">
+</form>
+
+
