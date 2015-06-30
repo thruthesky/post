@@ -2,15 +2,66 @@
 
 }
 
+.post-comment .reply form {
+
+}
+
+
+.post-comment .reply form [name='content'] {
+    width:100%;
+}
+
+.post-comment .reply form [type='submit'] {
+    display:none;
+    margin:1em 0;
+    padding:1em;
+    width:100%;
+}
+
+
+.post-comment .list form [type='submit'] {
+    margin:1em 0;
+    padding:1em;
+    width:100%;
+}
+
+
+.comment-reply-button {
+    display:inline-block;
+    padding:.4em .8em;
+    background-color:#f9f9f9;
+    border:1px solid #f0f0f0;
+    cursor:pointer;
+}
+
+
+
+
+
 .post-comment .list form {
     display:none;
 }
 
 .post-comment .comment {
-    margin:.4em;
+    margin:.4em 0;
     padding:.8em;
-    background-color:#d3e8f4;
+    background-color:white;
+    border:1px solid #e3e3e3;
+    border-radius: 2px;
 }
+
+.post-comment .comment:hover {
+    border:1px solid #999999;
+}
+
+
+
+.comment-header span {
+    display:inline-block;
+    padding:0.2em 0.8em 0.2em 0;
+}
+
+
 
 .post-comment [depth='1'] {
     margin-left:2em;

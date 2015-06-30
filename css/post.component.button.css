@@ -1,10 +1,11 @@
-section.post .button {
+.post .button {
     display:inline-block;
-    padding:4px 8px;
+    padding:.4em .8em;
     border:0;
     border-radius: 2px;
     background: #d3e8f4 none;
 }
-section.post .button:hover {
-    background: #c3d8e4;
+.post .button:hover {
+    background: #6d9ad0;
+    color:white;
 }

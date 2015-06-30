@@ -51,6 +51,8 @@ function post_preprocess( &$variables, $hook )
     $variables['url_post_templates'] = URL_POST_TEMPLATES;
     $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
     $variables['global_config'] = Library::getGroupConfig('post_global_config');
+    $variables['error'] = Library::getError();
+
 
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
     if ( post::isPostPage() ) {

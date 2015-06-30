@@ -1,4 +1,10 @@
 {% set config = data.list.config %}
 {% set posts = data.list.posts %}
-{% include 'modules/post/templates/widgets/list.' ~ config.widget_list.value ~ '.html.twig' %}
-{% include 'modules/post/templates/widgets/search_box.' ~ config.widget_search_box.value ~ '.html.twig' %}
+{% if error %}
+    {% include 'modules/post/templates/error.html.twig' %}
+{% else %}
+    <div class="post list">
+        {% include 'modules/post/templates/widgets/list.' ~ config.widget_list.value ~ '.html.twig' %}
+        {% include 'modules/post/templates/widgets/search_box.' ~ config.widget_search_box.value ~ '.html.twig' %}
+    </div>
+{% endif %}

@@ -25,6 +25,10 @@ edit:
   js:
     js/post.edit.js: {}
 view:
+  css:
+    theme:
+      css/post.component.view.css: {}
+      css/post.component.comment.css: {}
   js:
     js/post.list.js: {}
     js/post.view.js: {}

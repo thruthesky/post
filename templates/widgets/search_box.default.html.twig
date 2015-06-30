@@ -1,4 +1,4 @@
-<section role="search" class="post">
+<section role="search" class="search-box">
     <form action="/post/search">
         <input type="hidden" name="post_config_name" value="{{ config.label }}">
         <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
@@ -12,7 +12,31 @@
     </form>
 </section>
 <style>
-    section.post[role='search'] label {
+    section.search-box label {
         display:inline;
     }
+    section.search-box [type='submit'] {
+        display:inline-block;
+        margin:.2em 0;
+        padding:.8em;
+        box-sizing: border-box;
+        width:100%;
+    }
 </style>
+<script>
+    window.onload = function() {
+        var $ = jQuery;
+        $(".search-box [name='qn']").click(function(){
+            if ( $(this).prop('checked') ) {
+                $(".search-box [name='qt']").prop('checked', false);
+                $(".search-box [name='qc']").prop('checked', false);
+            }
+        });
+        $(".search-box [name='qt'],.search-box [name='qc']").click(function(){
+            if ( $(this).prop('checked') ) {
+                $(".search-box [name='qn']").prop('checked', false);
+            }
+        });
+
+    }
+</script>

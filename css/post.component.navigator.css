@@ -1,8 +1,11 @@
-
+nav.navigation-bar {
+    margin-top:.8em;
+    text-align: center;
+}
 nav.navigation-bar a {
     display:inline-block;
-    margin:0 1px;
-    padding:4px 6px;
+    margin:0 .2em .8em;
+    padding:.5em .7em;
     background-color: #d3e8f4;
     border-radius: 2px;
 }

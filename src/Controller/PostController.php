@@ -34,7 +34,10 @@ class PostController extends ControllerBase {
     public static function postListPage($post_config_name)
     {
         $conds = post::getSearchOptions($post_config_name);
-        $list = PostData::collection($conds);
+        if ( Library::getError() ) {
+            $list = [];
+        }
+        else $list = PostData::collection($conds);
         $render_array = [
             '#theme' => 'post.list',
             '#data' => [

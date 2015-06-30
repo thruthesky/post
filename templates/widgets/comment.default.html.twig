@@ -1,8 +1,10 @@
-<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script src="/modules/post/etc/ckeditor/ckeditor.js"></script>
 <script>
     function loadCKEditor(id) {
-        CKEDITOR.replace( id, {
+        var editor = CKEDITOR.replace( id, {
             uiColor: '#f9f9f9',
+            startupFocus : true,
+            height:'12em',
             toolbar :
                     [
                         [
@@ -19,6 +21,19 @@
                         ]
                     ]
         } );
+
+        CKEDITOR.on("instanceReady", function(event) {
+            var range = editor.createRange();
+            range.moveToElementEditablePosition( editor.editable(), true );
+            editor.getSelection().selectRanges( [ range ] );
+        });
+
+
+    }
+    function loadReplyCKEditor() {
+        var $ = jQuery;
+        $(".reply form [type='submit']").show();
+        loadCKEditor('contentEditor');
     }
     function loadCommentCKEditor(id) {
         var $ = jQuery;
@@ -30,23 +45,33 @@
     <div class="reply">
         <form action="/post/comment/submit" method="post">
             <input type="hidden" name="parent_id" value="{{ post.id.value }}">
-            <textarea id="contentEditor" name="content" onclick="loadCKEditor('contentEditor');"></textarea>
-            <input type="submit">
+            <textarea id="contentEditor" name="content" onclick="loadReplyCKEditor();" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
+            <input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
         </form>
     </div>
     <div class="list">
         {% for comment in data.comments %}
             <a name="{{ comment.id.value }}"></a>
             <div id="comment{{ comment.id.value }}" class="comment" depth="{{ comment.depth }}">
-                <div onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
-                    comment... {{ comment.id.value }} Reply... depth: {{ comment.depth }}
+                <div class="comment-header">
+                    <a href="#"><span class="author">{{ comment.user_id.entity.name.value }}</span></a>
+                    <a href="#"><span class="date">{{ comment.created.value | date('Y-m-d H:i') }}</span></a>
+                    <a href="#"><span class="cid">No. {{ comment.id.value }}</span></a>
                 </div>
-                {{ comment.content.value | raw }}
+
+                <div class='comment-content'>{{ comment.content.value | raw }}</div>
+                <div class="comment-footer">
+                    <span class="comment-reply-button" onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
+                        {{ ko ? '댓글달기' : 'Reply' }}
+                    </span>
+                </div>
+
             </div>
             <form action="/post/comment/submit" method="post">
                 <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
-                <textarea id="contentEditor{{ comment.id.value }}" name="content"></textarea>
-                <input type="submit">
+                <textarea id="contentEditor{{ comment.id.value }}" name="content">Reply To: {{ comment.user_id.entity.name.value }}...
+</textarea>
+                <input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
             </form>
         {% endfor %}
     </div>

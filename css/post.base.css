@@ -1,0 +1,14 @@
+/** global stying for form and elements */
+
+.post form input[type='text'],
+.post form textarea,
+.post form select {
+    margin:0;
+    padding:.4em 0.5em;
+    box-sizing: border-box;
+    width:100%;
+}
+
+.post form textarea {
+    min-height:6em;
+}

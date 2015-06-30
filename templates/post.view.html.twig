@@ -1,3 +1,6 @@
 {% set config = data.config %}
 {% set post = data.post %}
-{% include 'modules/post/templates/widgets/view.' ~ config.widget_view.value ~ '.html.twig' %}
+<div class="post view">
+    {% include 'modules/post/templates/widgets/view.' ~ config.widget_view.value ~ '.html.twig' %}
+</div>
+
