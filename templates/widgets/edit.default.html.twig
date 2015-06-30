@@ -22,17 +22,22 @@
                 <input type="hidden" name="submit" value="post">
                 <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
                 <input type="hidden" name="id" value="{{ post.id.value }}">
-                <div class="row data-set title">
-                    <div class="caption">Title</div>
-                    <div class="value"><input type="text" name="title" value="{{ post.label }}" placeholder="{{ language=='ko' ? "제목을 입력하십시오." : "Input Title..." }}"></div>
-                </div>
+
+                {% if post.parent_id.value == 0 %}
+                    <div class="row data-set title">
+                        <div class="caption">Title</div>
+                        <div class="value"><input type="text" name="title" value="{{ post.label }}" placeholder="{{ language=='ko' ? "제목을 입력하십시오." : "Input Title..." }}"></div>
+                    </div>
+                {% endif %}
+
                 <div class="row data-set content">
                     <div class="caption">Content</div>
                     <div class="value">
-                        <textarea id="contentEditor" name="content" placeholder="{{ language=='ko' ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
+                        <textarea id="contentEditor" name="content" placeholder="{{ ko ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
                         <script>
                             CKEDITOR.replace( 'contentEditor', {
                                 uiColor: '#f9f9f9',
+                                height: '26em',
                                 toolbar :
                                         [
                                             [

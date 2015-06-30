@@ -25,6 +25,21 @@ post.edit:
   requirements:
     _permission: 'access content'
 
+
+post.delete:
+  path: '/post/{post_config_name}/delete/{id}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postDelete
+  requirements:
+    _permission: 'access content'
+
+post.force_delete:
+  path: '/post/{post_config_name}/force/delete/{id}'
+  defaults:
+    _controller: Drupal\post\Controller\PostController::postForceDelete
+  requirements:
+    _permission: 'access content'
+
 post.view:
   path: '/post/{config_post_name}/{id}'
   defaults:

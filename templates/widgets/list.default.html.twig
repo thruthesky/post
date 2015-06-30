@@ -22,11 +22,15 @@
         {% for post in posts %}
             <article class="post">
                 <a href="/post/{{ config.label }}/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
-                        <span class="title">
-                            {% if post.label | length > 40 %}
+                        <span class="title{{ post.deleted.value ? ' deleted' }}">
+                            {% if post.deleted.value %}
+                                {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+                            {% else %}
+                                {% if post.label | length > 40 %}
                                     {{ post.label | slice(0, 40) }} ...
                                 {% else %}
                                     {{ post.label }}
+                                {% endif %}
                             {% endif %}
                         </span>
                         <span class="date">

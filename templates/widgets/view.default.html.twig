@@ -7,16 +7,29 @@
                 No.: {{ post.id.value }}
             </div>
             <div class="right">
-                <a href="/post/{{ config.name.value }}/add"><span class="button">POST UPLOAD</span></a>
-                <a href="/post/{{ config.label }}"><span class="button">LIST</span></a>
-                <a href="/post/{{ config.label }}/edit/{{ post.id.value }}"><span class="button">EDIT</span></a>
+                <a href="/post/{{ config.name.value }}/add"><span class="button">{{ ko ? '글쓰기' : 'POST UPLOAD' }}</span></a>
+                <a href="/post/{{ config.label }}"><span class="button">{{ ko ? '목록' : 'LIST' }}</span></a>
+                <a href="/post/{{ config.label }}/edit/{{ post.id.value }}"><span class="button">{{ ko ? '수정' : 'EDIT' }}</span></a>
+                <a href="/post/{{ config.label }}/delete/{{ post.id.value }}"><span class="button">{{ ko ? '삭제' : 'DELETE' }}</span></a>
+                <a href="/post/{{ config.label }}/force/delete/{{ post.id.value }}"><span class="button">{{ ko ? '강제삭제' : 'Force Delete Thread'}}</span></a>
             </div>
         </nav>
     </section>
 
-    <h3>{{ data.post.label }}</h3>
+    <h3 class='title{{ post.deleted.value ? ' deleted' }}'>
+        {% if post.deleted.value %}
+            {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+        {% else %}
+            {{ data.post.label }}
+        {% endif %}
+    </h3>
+
     <section role="content" class="content">
-        {{ data.post.content.value | raw }}
+        {% if post.deleted.value %}
+            {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+        {% else %}
+            {{ data.post.content.value | raw }}
+        {% endif %}
     </section>
     <section role="footer">
 

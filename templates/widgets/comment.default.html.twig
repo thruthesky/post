@@ -57,9 +57,21 @@
                     <a href="#"><span class="author">{{ comment.user_id.entity.name.value }}</span></a>
                     <a href="#"><span class="date">{{ comment.created.value | date('Y-m-d H:i') }}</span></a>
                     <a href="#"><span class="cid">No. {{ comment.id.value }}</span></a>
+                    <a href="/post/{{ config.label }}/edit/{{ comment.id.value }}"><span class="edit button">{{ ko ? '수정' : 'EDIT' }}</span></a>
+                    <a href="/post/{{ config.label }}/delete/{{ comment.id.value }}"><span class="button">{{ ko ? '삭제' : 'DELETE' }}</span></a>
                 </div>
 
-                <div class='comment-content'>{{ comment.content.value | raw }}</div>
+
+
+                <div class='comment-content{{ comment.deleted.value ? ' deleted' }}'>
+                    {% if comment.deleted.value %}
+                        {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+                    {% else %}
+                        {{ comment.content.value | raw }}
+                    {% endif %}
+                </div>
+
+
                 <div class="comment-footer">
                     <span class="comment-reply-button" onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
                         {{ ko ? '댓글달기' : 'Reply' }}
@@ -70,7 +82,7 @@
             <form action="/post/comment/submit" method="post">
                 <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
                 <textarea id="contentEditor{{ comment.id.value }}" name="content">Reply To: {{ comment.user_id.entity.name.value }}...
-</textarea>
+<p>&nbsp;</p></textarea>
                 <input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
             </form>
         {% endfor %}

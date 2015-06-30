@@ -6,21 +6,22 @@
 
 ## 남은 기능
 * 글 삭제
-* 코멘트 수정/삭제
+* 코멘트 삭제
+* 파일업로드
 * 위젯(스킨)기능의 안정화. 
 * 전체검색 
-* 파일업로드
 * id of first images
 * no of comment
 * vote good/bad
 * 비밀게시판 ( secret )
+* 글 이동
+* 카테고리 기능. 카테고리 하나당 게시판 하나. 게시판 설정에 카테고리를 두는 것이 아니라, 여러 게시판을 library 의 category 기능으로 그룹으로 묶는 기능을 통해서 카테고리 관리를 한다.
 * 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
 * RSS
 * Web API For IFrame
 * 블라인드/차단
 
 ## 안내
-
 
 
 드루팔 버젼 8 의 기본 Forum 모듈은 한국형 게시판이 아닙니다.
@@ -44,6 +45,10 @@
 
 
 # 개발자 도움말
+
+## 의존성
+본 모듈은 Withcenter Library 모듈이 필요합니다.
+https://github.com/thruthesky/library 를 참고하십시오.
 
 ## Entity
 

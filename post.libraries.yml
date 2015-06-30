@@ -38,3 +38,4 @@ search:
       css/post.component.search.css: {}
   js:
     js/post.search.js: {}
+

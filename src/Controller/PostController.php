@@ -49,6 +49,18 @@ class PostController extends ControllerBase {
     }
 
 
+    public static function postErrorPage() {
+        $render_array = [
+            '#theme' => 'post.error',
+            '#data' => [
+            ],
+        ];
+        //$render_array['#attached']['library'][] = 'post/error';
+        return $render_array;
+    }
+
+
+
     public static function postEdit($post_config_name=null, $id=null)
     {
         if ( \Drupal::request()->get('submit') == 'post' ) {
@@ -58,7 +70,15 @@ class PostController extends ControllerBase {
                 $config = $post->get('config_id')->entity;
                 $config_name = $config->label();
 
-                return new RedirectResponse("/post/$config_name/$id?" . $post->label());
+                if ( $post->parent_id->value ) {
+                    $root_id = PostData::getRootID($id);
+                    return new RedirectResponse("/post/$config_name/$root_id#$id");
+                }
+                else {
+                    return new RedirectResponse("/post/$config_name/$id?" . $post->label());
+                }
+
+
 
                 // return self::postListPage($config->label());
             }
@@ -88,6 +108,7 @@ class PostController extends ControllerBase {
 
     public static function postView($config_post_name, $id)
     {
+        if ( ! Post::exist($id) ) return self::postErrorPage();
         /**
          * Redirects to the root post if $id is a comment.
          */
@@ -158,13 +179,15 @@ class PostController extends ControllerBase {
         $parent_id = $request->get('parent_id');
         $parent = PostData::load($parent_id);
         $p = [];
+
         $p['config_id'] = $parent->get('config_id')->entity->id();
         $p['parent_id'] = $parent->id();
         $p['content'] = $request->get('content');
+
         $id = PostData::insert($p);
+
         $config_name = $parent->get('config_id')->entity->label();
-        $root = PostData::getRoot($parent_id);
-        $root_id = $root->id();
+        $root_id = PostData::getRootID($parent_id);
         return new RedirectResponse("/post/$config_name/$root_id#$id");
     }
 
@@ -189,14 +212,58 @@ class PostController extends ControllerBase {
 
         $post_global_config = Library::getGroupConfig('post_global_config');
 
-
-
         return [
             '#theme' => 'post.admin',
             '#data' => [
                 'post_global_config' =>  $post_global_config,
             ]
         ];
+    }
+
+
+    /**
+     *
+     * Delete a post or all of the thread.
+     *
+     * @param null $post_config_name
+     * @param null $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     */
+    public static function postDelete($post_config_name=null, $id=null)
+    {
+        if ( ! Post::exist($id) ) return self::postErrorPage();
+        PostData::deletePost($id);
+        $post = PostData::load($id);
+        if ( $post ) {
+            $config = $post->get('config_id')->entity;
+            $config_name = $config->label();
+            if ( $post->parent_id->value ) {
+                $root_id = PostData::getRootID($id);
+                return new RedirectResponse("/post/$config_name/$root_id#$id");
+            }
+            else {
+                return new RedirectResponse("/post/$config_name/$id?" . $post->label());
+            }
+        }
+        return new RedirectResponse("/post/$post_config_name");
+    }
+
+    /**
+     * @todo Let only admin do this!!
+     * @param $post_config_name
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public static function postForceDelete($post_config_name, $id) {
+        if ( Library::isAdmin() ) {
+            PostData::forceDeleteThread($id);
+            return new RedirectResponse("/post/$post_config_name");
+        }
+        else {
+            Library::error(-94040, "You are not admin. Only admin can force-delete a whole thread.");
+            return self::postErrorPage();
+        }
     }
 
 }

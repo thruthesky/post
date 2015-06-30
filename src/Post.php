@@ -120,4 +120,17 @@ class Post {
         return $markup;
     }
 
+    /**
+     * Returns true if the post exists Or return false with error information.
+     *
+     * @param $id
+     * @return bool
+     */
+    public static function exist($id) {
+        $post = PostData::load($id);
+        if ( $post ) return true;
+        Library::error(-98001, "Post not found by that ID. The post may be deleted. Please search for what you want.");
+        return false;
+    }
+
 }

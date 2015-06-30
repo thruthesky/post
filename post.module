@@ -40,6 +40,10 @@ function post_theme()
             'variables' => [ 'data' => null ],
             'template' => 'post.admin'
         ],
+        'post.error' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.error'
+        ],
     ];
 }
 

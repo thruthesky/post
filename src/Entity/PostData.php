@@ -382,6 +382,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         return $post;
     }
 
+    /**
+     * Returns all comments of a Post ID.
+     * @param $id
+     * @param int $depth
+     * @return array
+     */
     public static function comments($id,$depth=0) {
         $comments = \Drupal::entityManager()->getStorage('post_data')->loadByProperties(['parent_id'=>$id]);
         $rows = [];
@@ -392,6 +398,90 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             if( $returns ) $rows = array_merge($rows,$returns);
         }
         return $rows;
+    }
+    public static function getChildren($id) {
+        return self::comments($id);
+    }
+
+    /**
+     *
+     * This only marks as 'deleted' for one(1) post or comment.
+     *
+     * @Attention This does not delete a post or comment. it marks as deleted.
+     *
+     * @param $id
+     * @return bool
+     */
+    public static function deletePost($id) {
+        $post = self::load($id);
+        if ( empty($post) ) return Library::error(-94008, "No post to delete by that ID - $id in PostData::deletePost()");
+        $post->set('title','');
+        $post->set('content','');
+        $post->set('content_stripped','');
+        $post->set('deleted', true);
+        $post->save();
+        self::deleteFiles($id);
+        PostData::deleteThreadIfAllDeleted($id);
+    }
+
+    /**
+     *
+     * This deletes all comments and the original post only if all comments and original post is deleted.
+     *
+     * @param $id - is a post id or comment id. If it is a comment id, it looks up for the post id and check if all comments are deleted.
+     *
+     *
+     */
+    public static function deleteThreadIfAllDeleted($id) {
+        Library::log("deleteThread($id) begins");
+        $root = self::getRoot($id);
+        if ( $root->deleted->value == 0 ) return;
+        $children = self::getChildren($root->id());
+        $deleted_all = true;
+        foreach( $children as $child ) {
+            if ( $child->deleted->value == 0 ) {
+                Library::log($child->id->value . " is not deleted.");
+                $deleted_all = false;
+                break;
+            }
+        }
+        if ( $deleted_all ) {
+            Library::log("ALL deleted...!!");
+            self::forceDeleteThread($root->id());
+        }
+    }
+
+    /**
+     *
+     *
+     * @param $id - is a post id to delete the whole thread. It may be a comment id but never tested.
+     */
+    public static function forceDeleteThread($id) {
+        Library::log("deleteThreadComplete($id) begins");
+        $children = self::getChildren($id);
+        foreach( $children as $child ) {
+            self::deletePostComplete($child->id());
+        }
+        self::deletePostComplete($id);
+    }
+
+    /**
+     * This actually DELETE a file. It completely remove the record of the post or comment from post_data table.
+     * It also delete related files of each post(comment)
+     * @param $id
+     */
+    private static function deletePostComplete($id) {
+        Library::log("deletePostComplete($id) begins");
+        $post = self::load($id);
+        $post->delete();
+        self::deleteFiles($id);
+    }
+
+    /**
+     * @param $id
+     * @todo delete files.
+     */
+    private static function deleteFiles($id) {
     }
 
 
@@ -519,6 +609,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             ->setLabel(t('Blind'))
             ->setDescription(t('The status of blind of the Entity'))
             ->setDefaultValue(0);
+
+        $fields['deleted'] = BaseFieldDefinition::create('boolean')
+            ->setLabel(t('Deleted'))
+            ->setDescription(t('The status of deleted of the Entity'))
+            ->setDefaultValue(0);
+
 
 
 
