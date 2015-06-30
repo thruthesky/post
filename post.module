@@ -47,6 +47,7 @@ function post_preprocess( &$variables, $hook )
 {
 
     // debug_log("post_preprocess($hook) begins");
+    $variables['url_site'] = Library::getSiteUrl();
     $variables['url_post_templates'] = URL_POST_TEMPLATES;
     $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
     $variables['global_config'] = Library::getGroupConfig('post_global_config');

@@ -33,7 +33,7 @@ class PostController extends ControllerBase {
 
     public static function postListPage($post_config_name)
     {
-        $conds = post::getSearchCondition($post_config_name);
+        $conds = post::getSearchOptions($post_config_name);
         $list = PostData::collection($conds);
         $render_array = [
             '#theme' => 'post.list',
@@ -97,7 +97,7 @@ class PostController extends ControllerBase {
 
         $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
-        $conds = post::getSearchCondition($config->label());
+        $conds = post::getSearchOptions($config->label());
         $list = PostData::collection($conds);
         $comments = PostData::comments($id);
 
@@ -168,7 +168,7 @@ class PostController extends ControllerBase {
     public static function postSearch()
     {
 
-        $conds = post::getSearchCondition();
+        $conds = post::getSearchOptions();
         $list = PostData::collection($conds);
         $render_array = [
             '#theme' => 'post.search',

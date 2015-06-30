@@ -1,5 +1,6 @@
 <?php
 namespace Drupal\post;
+use Drupal\library\Library;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
 
@@ -58,7 +59,10 @@ class Post {
         return \Drupal::request()->get('qc');
     }
 
-    public static function getSearchCondition($post_config_name=null) {
+    public static function getSearchOptions($post_config_name=null) {
+
+        $request = \Drupal::request();
+
 
         $conds = [
             'q' => Post::getSearchQuery(),
@@ -67,14 +71,32 @@ class Post {
             'qc' => Post::getSearchFieldContent()
         ];
 
+
+
+
+        if ( empty($post_config_name) ) $post_config_name = $request->get('post_config_name');
+
         if ( $post_config_name ) {
             $config = PostConfig::loadByName($post_config_name);
-            $conds['post_config_name'] = $config->label();
+            if ( empty($config) ) {
+                Library::error(-91017, "Forum name $post_config_name does not exists.");
+            }
+            else {
+                $conds['post_config_name'] = $config->label();
+            }
         }
 
         if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = state('post_global_config.no_of_item_in_list');
         if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = state('post_global_config.no_of_page_in_navigator');
 
+
+        /**
+         * @note Use 'offset' and 'limit' to do the navigation or block extraction.
+         *          Do not use no_of_items_per_page.
+         */
+        $page_no = Library::getPageNo();
+        $conds['offset'] = ($page_no-1) * $conds['no_of_items_per_page'];
+        $conds['limit'] = $conds['no_of_items_per_page'];
 
         return $conds;
     }

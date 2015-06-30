@@ -70,7 +70,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $and = [];
         if ( ! empty($conds['post_config_name']) ) {
             $config = PostConfig::loadByName($conds['post_config_name']);
-            $and[] = 'config_id=' . $config->id();
+            if ( empty($config) ) {
+                // @note This is an error But it is already handled in getSearchOptions()
+            }
+            else {
+                $and[] = 'config_id=' . $config->id();
+            }
         }
 
         if ( ! empty($conds['q']) ) {
@@ -169,15 +174,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     public static function search($conds) {
         $where = self::getQueryOnConds($conds);
 
-        $page_no = Library::getPageNo();
-        $offset = ($page_no-1) * $conds['no_of_items_per_page'];
-        $limit = $conds['no_of_items_per_page'];
-
-
-        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $limit OFFSET $offset";
+        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $conds[limit] OFFSET $conds[offset]";
         $result = db_query($q);
         Library::log("PostData::search : $q");
-
 
         $rows = $result->fetchAll(\PDO::FETCH_NUM);
         if ( $rows ) {
@@ -489,6 +488,39 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             ->setLabel(t('No of view'))
             ->setDescription(t('The no of view of the Entity'))
             ->setDefaultValue(0);
+
+        $fields['no_of_comment'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('No of comment'))
+            ->setDescription(t('The no of comment of the Entity'))
+            ->setDefaultValue(0);
+
+        $fields['fid_of_first_image'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('FID of first image'))
+            ->setDescription(t('The FID of first image of the Entity'))
+            ->setDefaultValue(0);
+
+
+        $fields['vote_good'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('Vote Good'))
+            ->setDescription(t('Vote Good of the Entity'))
+            ->setDefaultValue(0);
+
+        $fields['vote_bad'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('Vote Bad'))
+            ->setDescription(t('Vote Bad of the Entity'))
+            ->setDefaultValue(0);
+
+        $fields['secret'] = BaseFieldDefinition::create('boolean')
+            ->setLabel(t('Secret'))
+            ->setDescription(t('The status of secret of the Entity'))
+            ->setDefaultValue(0);
+
+        $fields['blind'] = BaseFieldDefinition::create('boolean')
+            ->setLabel(t('Blind'))
+            ->setDescription(t('The status of blind of the Entity'))
+            ->setDefaultValue(0);
+
+
 
 
         $fields['title'] = BaseFieldDefinition::create('string')

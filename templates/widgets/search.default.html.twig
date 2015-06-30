@@ -1,6 +1,7 @@
 <section role='page' class="post search">
     <section role="header">
         <h2>Post Search</h2>
+        {% include 'modules/post/templates/error.html.twig' %}
         {% include 'modules/post/templates/widgets/search_box.default.html.twig' %}
         <div>Result : {{ data.list.no_of_posts }}</div>
     </section>
@@ -8,15 +9,24 @@
     <section role="content" class="list">
         {% for post in data.list.posts %}
             <article class="{{ post.parent_id.value == 0 ? 'post' : 'comment' }}">
-                    <a href="/post/{{ post.config_id.entity.label }}" target="_blank">{{ post.config_id.entity.label }}</a>
 
-                    <a href="/post/{{ post.config_id.entity.label }}/{{ post.id.value }}" target="_blank">
-                        {% if post.parent_id.value == 0 %}
-                            {{ post.label }}
-                        {% else %}
-                            {{ post.content_stripped.value | slice(0,99) }}
-                        {% endif %}
+                {% if post.parent_id.value == 0 %}
+                    <a class='title' href="/post/{{ post.config_id.entity.label }}/{{ post.id.value }}" target="_blank">
+                        {{ post.label }}
                     </a>
+                {% endif %}
+
+                <a class='content' href="/post/{{ post.config_id.entity.label }}/{{ post.id.value }}" target="_blank">
+                    {{ post.content_stripped.value | slice(0,255) }}
+                </a>
+
+                <div class="info">
+                    <span class="author">Author: {{ post.user_id.entity.name.value }}</span>
+                    <span class="date">Date: {{ post.created.value | date('Y-m-d H:i') }}</span>
+                    <span class="url">URL: {{ url_site }}/post/{{ post.config_id.entity.label }}/{{ post.id.value }}</span>
+                    <span class="forum"><a href="/post/{{ post.config_id.entity.label }}" target="_blank">{{ post.config_id.entity.label }}</a></span>
+                </div>
+
             </article>
         {% endfor %}
     </section>

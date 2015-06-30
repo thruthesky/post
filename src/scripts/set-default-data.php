@@ -6,20 +6,26 @@ use Drupal\post\Post;
 
 
 Post::emptyData();
-$config = PostConfig::create()
-    ->set('name', 'freetalk');
-$config->save();
+PostConfig::create()->set('name', 'freetalk')->save();
+PostConfig::create()->set('name', 'job')->save();
 
-/**
-$config = PostConfig::loadByName('freetalk');
-Library::loginUser('root');
- */
 
 for( $i=0; $i<999; $i++ ) {
     $p = [
         'post_config_name' => 'freetalk',
+        'username' => 'admin',
+        'title' => "이것은 자유게시판의 제목입니다. $i",
+        'content' => "<h1>이것은 내용!</h1>그럼",
+    ];
+    PostData::insert($p);
+}
+
+
+for( $i=0; $i<999; $i++ ) {
+    $p = [
+        'post_config_name' => 'job',
         'username' => 'firefox',
-        'title' => "이것은 제목입니다. $i",
+        'title' => "이것은 구인 구직 게시판의 제목입니다. $i",
         'content' => "<h1>이것은 내용!</h1>그럼",
     ];
     PostData::insert($p);
