@@ -174,7 +174,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     public static function search($conds) {
         $where = self::getQueryOnConds($conds);
 
-        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $conds[limit] OFFSET $conds[offset]";
+        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $conds[offset],$conds[limit]";
         $result = db_query($q);
         Library::log("PostData::search : $q");
 

@@ -90,6 +90,13 @@ class Post {
         if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = state('post_global_config.no_of_page_in_navigator');
 
 
+	
+	// Sets 10 as default even if its 
+        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = 10;
+        if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = 10;
+
+
+
         /**
          * @note Use 'offset' and 'limit' to do the navigation or block extraction.
          *          Do not use no_of_items_per_page.
