@@ -1,5 +1,6 @@
 {% if error %}
     <div class="error">
+        <h3>Error</h3>
         {% for code,message in error %}
             <div class="row">
                 <div class="message">Error ( {{ code }} ) : {{ message }}</div>

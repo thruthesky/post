@@ -70,7 +70,7 @@ post.search:
 
 
 post.admin:
-  path: '/post/admin'
+  path: '/post/admin/global'
   defaults:
     _controller: Drupal\post\Controller\PostController::postAdmin
   requirements:

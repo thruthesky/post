@@ -62,6 +62,7 @@ class Post {
     public static function getSearchOptions($post_config_name=null) {
 
         $request = \Drupal::request();
+        $g = Post::getGlobalConfig();
 
 
         $conds = [
@@ -86,8 +87,8 @@ class Post {
             }
         }
 
-        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = state('post_global_config.no_of_item_in_list');
-        if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = state('post_global_config.no_of_page_in_navigator');
+        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = $g['no_of_item_in_list'];
+        if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = $g['no_of_pages_in_navigation_bar'];
 
 
 	
@@ -137,6 +138,21 @@ class Post {
         $post = PostData::load($id);
         if ( $post ) return true;
         Library::error(-98001, "Post not found by that ID. The post may be deleted. Please search for what you want.");
+        return false;
+    }
+
+    public static function getGlobalConfig() {
+        $g = Library::getGroupConfig('post_global_config');
+        if ( empty($g['widget_search']) ) $g['widget_search'] = 'default';
+        if ( empty($g['no_of_pages_in_navigation_bar']) ) $g['no_of_pages_in_navigation_bar'] = 10;
+        if ( empty($g['no_of_items_per_page']) ) $g['no_of_items_per_page'] = 10;
+        return $g;
+    }
+
+    public static function checkPermission($post) {
+        if ( empty($post) ) return false;
+        if ( Library::isAdmin() ) return true;
+        if ( $post->user_id->target_id == Library::myUid() ) return true;
         return false;
     }
 

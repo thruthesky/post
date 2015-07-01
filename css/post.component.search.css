@@ -1,42 +1,42 @@
-.post.search .list {
+.post .search .list {
 
 }
-.post.search .list article {
+.post .search .list article {
     display:block;
     margin:1em 0;
     padding:0;
 }
-.post.search .list article a {
+.post .search .list article a {
     border:0;
     color:#191919;
     text-decoration:none;
 }
 
-.post.search .list article {
+.post .search .list article {
     background-color: #eef0f8;
 }
 
-.post.search .list article.comment {
+.post .search .list article.comment {
     background-color: #f9f9f8;
 }
 
 
-.post.search article .title {
+.post .search article .title {
     display:block;
     margin:.2em;
     padding:1em;
 }
 
-.post.search article .content {
+.post .search article .content {
     display:block;
     margin:.2em 0 0 2em;
     padding:1em;
 }
 
-.post.search article .info {
+.post .search article .info {
     padding: 0 1em;
 }
-.post.search article .info > span {
+.post .search article .info > span {
     display:inline-block;
     padding:1em .4em;
 }

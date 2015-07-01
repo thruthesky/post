@@ -1,12 +1,12 @@
-{% include dir_post_templates ~ '/elements/begin.html.twig' %}
+{% if is_admin %}
+    <a href="/post/admin/global"<div class="button">Global Configuration</div></a>
     <form>
         <input type="hidden" name="submit" value="config_create">
         Create a forum :
         <input type="text" name="name" value="">
         <input type="submit">
     </form>
-
-    {{ error_message | raw }}
+{% endif %}
 
     <div class="list">
         {% for config in data.configs %}
@@ -17,4 +17,3 @@
             </div>
         {% endfor %}
     </div>
-{% include dir_post_templates ~ '/elements/end.html.twig' %}

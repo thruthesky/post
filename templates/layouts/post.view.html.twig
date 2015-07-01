@@ -1,0 +1,4 @@
+{% set config = data.config %}
+{% set post = data.post %}
+
+    {% include dir_post_templates ~ '/widgets/view.' ~ config.widget_view.value ~ '.html.twig' %}

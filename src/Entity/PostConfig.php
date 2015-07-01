@@ -95,7 +95,6 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
         $config->set('widget_view', $request->get('widget_view'));
         $config->set('widget_edit', $request->get('widget_edit'));
         $config->set('widget_comment', $request->get('widget_comment'));
-        $config->set('widget_search', $request->get('widget_search'));
         $config->save();
         return $config;
     }

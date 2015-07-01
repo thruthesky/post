@@ -1,0 +1,10 @@
+<section class="post">
+    <div class="{{ data.page }}">
+        {% if data.page %}
+            {{ error_message | raw }}
+            {% include dir_post_templates ~ '/layouts/post.' ~ data.page ~ '.html.twig' %}
+        {% else %}
+            {{ ko ? '잘못된 접근 : 페이지 값이 없습니다.' : 'Wrong access : No page code.' }}
+        {% endif %}
+    </div>
+</section>

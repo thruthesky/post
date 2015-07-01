@@ -12,6 +12,11 @@ define('URL_POST_TEMPLATES', '/modules/post/templates');
 function post_theme()
 {
     return [
+        'post.layout' => [
+            'variables' => [ 'data' => null ],
+            'template' => 'post.layout'
+        ],
+        /*
         'post.index' => [
             'variables' => [ 'data' => null ],
             'template' => 'post.index'
@@ -44,7 +49,9 @@ function post_theme()
             'variables' => [ 'data' => null ],
             'template' => 'post.error'
         ],
+        */
     ];
+
 }
 
 function post_preprocess( &$variables, $hook )
@@ -55,7 +62,7 @@ function post_preprocess( &$variables, $hook )
     $variables['url_post_templates'] = URL_POST_TEMPLATES;
     $variables['dir_post'] = DIR_POST;
     $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
-    $variables['global_config'] = Library::getGroupConfig('post_global_config');
+    $variables['global_config'] = Post::getGlobalConfig();
     $variables['error'] = Library::getError();
 
     Library::parseErrorMessage($variables, "modules/post/templates/elements/error.html.twig");
@@ -66,3 +73,5 @@ function post_preprocess( &$variables, $hook )
         $variables['#attached']['library'][] = 'post/default';
     }
 }
+
+

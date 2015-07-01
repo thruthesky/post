@@ -15,8 +15,9 @@ class PostController extends ControllerBase {
         $configs = PostConfig::loadMultiple();
 
         return [
-            '#theme' => 'post.index',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'index',
                 'configs' => $configs,
             ]
         ];
@@ -33,14 +34,20 @@ class PostController extends ControllerBase {
 
     public static function postListPage($post_config_name)
     {
+        $config = PostConfig::loadByName($post_config_name);
+        if ( empty($config) ) return self::errorPage(-94119, "Forum not exists by that name");
+
         $conds = post::getSearchOptions($post_config_name);
         if ( Library::getError() ) {
             $list = [];
         }
         else $list = PostData::collection($conds);
+
+
         $render_array = [
-            '#theme' => 'post.list',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'list',
                 'list' => $list,
             ],
         ];
@@ -49,10 +56,12 @@ class PostController extends ControllerBase {
     }
 
 
-    public static function postErrorPage() {
+    public static function errorPage($code=0, $message=null) {
+        Library::error($code, $message);
         $render_array = [
-            '#theme' => 'post.error',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'error',
             ],
         ];
         //$render_array['#attached']['library'][] = 'post/error';
@@ -77,12 +86,10 @@ class PostController extends ControllerBase {
                 else {
                     return new RedirectResponse("/post/$config_name/$id?" . $post->label());
                 }
-
-
-
                 // return self::postListPage($config->label());
             }
         }
+
         return self::postEditPage($post_config_name, $id);
     }
 
@@ -90,25 +97,41 @@ class PostController extends ControllerBase {
     private static function postEditPage($post_config_name, $id) {
         if ( is_numeric($id) ) {
             $post = PostData::load($id);
-            $config = $post->get('config_id')->entity;
+            if ( $post ) { // is Edit?
+                if ( Post::checkPermission($post) ) {
+                    $config = $post->get('config_id')->entity;
+                    return [
+                        '#theme' => 'post.layout',
+                        '#data' => [
+                            'page' => 'edit',
+                            'config' => $config,
+                            'post' => $post
+                        ]
+                    ];
+                }
+                else return self::errorPage(-94103, "You do not have permission to edit this post.");
+            }
+            else return self::errorPage(-94102, "No post exists by that ID.");
         }
-        else {
+        else { // is New Posting
+
             $config = PostConfig::loadByName($post_config_name);
-            $post = null;
+            return [
+                '#theme' => 'post.layout',
+                '#data' => [
+                    'page' => 'edit',
+                    'config' => $config,
+                    'post' => null
+                ]
+            ];
+            //return self::errorPage(-94101, "Post ID is not numeric.");
         }
-        return [
-            '#theme' => 'post.edit',
-            '#data' => [
-                'config' => $config,
-                'post' => $post
-            ]
-        ];
     }
 
 
     public static function postView($config_post_name, $id)
     {
-        if ( ! Post::exist($id) ) return self::postErrorPage();
+        if ( ! Post::exist($id) ) return self::errorPage();
         /**
          * Redirects to the root post if $id is a comment.
          */
@@ -119,6 +142,7 @@ class PostController extends ControllerBase {
             }
         }
 
+
         $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
         $conds = post::getSearchOptions($config->label());
@@ -126,8 +150,9 @@ class PostController extends ControllerBase {
         $comments = PostData::comments($id);
 
         $render_array = [
-            '#theme' => 'post.view',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'view',
                 'config' => $config,
                 'post' => $post,
                 'comments' => $comments,
@@ -152,6 +177,7 @@ class PostController extends ControllerBase {
             }
         }
         else {
+
             $config = PostConfig::loadByName($post_config_name);
         }
         $widgets = [];
@@ -162,11 +188,11 @@ class PostController extends ControllerBase {
             $widgets['view'] = Post::getWidgetSelectBox('view', $config->get('widget_view')->value);
             $widgets['edit'] = Post::getWidgetSelectBox('edit', $config->get('widget_edit')->value);
             $widgets['comment'] = Post::getWidgetSelectBox('comment', $config->get('widget_comment')->value);
-            $widgets['search'] = Post::getWidgetSelectBox('search', $config->get('widget_search')->value);
         }
         return [
-            '#theme' => 'post.config',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'config',
                 'config' => $config,
                 'widgets' => $widgets,
             ]
@@ -197,8 +223,9 @@ class PostController extends ControllerBase {
         $conds = post::getSearchOptions();
         $list = PostData::collection($conds);
         $render_array = [
-            '#theme' => 'post.search',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'search',
                 'list'=>$list
             ]
         ];
@@ -213,8 +240,9 @@ class PostController extends ControllerBase {
         $post_global_config = Library::getGroupConfig('post_global_config');
 
         return [
-            '#theme' => 'post.admin',
+            '#theme' => 'post.layout',
             '#data' => [
+                'page' => 'admin-global',
                 'post_global_config' =>  $post_global_config,
             ]
         ];
@@ -232,9 +260,11 @@ class PostController extends ControllerBase {
      */
     public static function postDelete($post_config_name=null, $id=null)
     {
-        if ( ! Post::exist($id) ) return self::postErrorPage();
+        if ( ! Post::exist($id) ) return self::errorPage();
+
         PostData::deletePost($id);
         $post = PostData::load($id);
+        if ( ! Post::checkPermission($post) ) return self::errorPage(-94109, "You cannot delete this post. You do not have permission.");
         if ( $post ) {
             $config = $post->get('config_id')->entity;
             $config_name = $config->label();
@@ -250,6 +280,7 @@ class PostController extends ControllerBase {
     }
 
     /**
+     *
      * @todo Let only admin do this!!
      * @param $post_config_name
      * @param $id
@@ -262,7 +293,7 @@ class PostController extends ControllerBase {
         }
         else {
             Library::error(-94040, "You are not admin. Only admin can force-delete a whole thread.");
-            return self::postErrorPage();
+            return self::errorPage();
         }
     }
 
