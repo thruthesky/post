@@ -1,6 +1,10 @@
 {% set config = data.post_global_config %}
-
+{% include dir_post_templates ~ '/elements/begin.html.twig' %}
 <h1>ADMIN</h1>
+
+
+{{ error_message }}
+
 
 <h2>Global Configuration</h2>
 
@@ -15,3 +19,4 @@
 </form>
 
 
+{% include dir_post_templates ~ '/elements/end.html.twig' %}

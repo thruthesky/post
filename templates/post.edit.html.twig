@@ -1,5 +1,5 @@
 {% set config = data.config %}
 {% set post = data.post %}
-<div class="post edit">
+{% include dir_post_templates ~ '/elements/begin.html.twig' %}
     {% include 'modules/post/templates/widgets/edit.' ~ config.widget_edit.value ~ '.html.twig' %}
-</div>
+{% include dir_post_templates ~ '/elements/end.html.twig' %}

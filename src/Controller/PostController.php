@@ -10,14 +10,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends ControllerBase {
     public static function postModuleIndex() {
-
         if ( $submit = \Drupal::request()->get('submit') ) self::$submit();
 
+        $configs = PostConfig::loadMultiple();
 
         return [
             '#theme' => 'post.index',
             '#data' => [
-                'configs' => PostConfig::loadMultiple()
+                'configs' => $configs,
             ]
         ];
     }

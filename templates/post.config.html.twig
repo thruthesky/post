@@ -1,10 +1,12 @@
 {% set config = data.config %}
-<section role='page'>
+{% include dir_post_templates ~ '/elements/begin.html.twig' %}
     <section role="header">
         <h2>This is title</h2>
         This is header
     </section>
-    {% include 'modules/post/templates/error.html.twig' %}
+
+    {{ error_message }}
+
     <section role='content' class="list">
         <form>
             <fieldset>
@@ -69,4 +71,4 @@
     <section role="footer">
         This is footer
     </section>
-</section>
+{% include dir_post_templates ~ '/elements/end.html.twig' %}

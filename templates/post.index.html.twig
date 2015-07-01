@@ -1,6 +1,4 @@
-<div class="post index">
-
-
+{% include dir_post_templates ~ '/elements/begin.html.twig' %}
     <form>
         <input type="hidden" name="submit" value="config_create">
         Create a forum :
@@ -8,10 +6,9 @@
         <input type="submit">
     </form>
 
-    {% include 'modules/post/templates/error.html.twig' %}
+    {{ error_message | raw }}
+
     <div class="list">
-
-
         {% for config in data.configs %}
             <div class="row">
                 {{ config.name.value }}
@@ -20,4 +17,4 @@
             </div>
         {% endfor %}
     </div>
-</div>
+{% include dir_post_templates ~ '/elements/end.html.twig' %}
