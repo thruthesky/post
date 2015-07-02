@@ -1,26 +1,29 @@
 <link type='text/css' href='{{ url_post_templates }}/widgets/list.simple.css' rel='stylesheet' />
 <section role='page'>
-    <section role="header">
-        <h2>{{ config.label }}</h2>
-        <div class="post-list-menu">
-            <div class="left">
-                Page: {{ input.page_no }}
-                No of Posts: {{ data.list.no_of_posts }}
-            </div>
-            <div class="right">
-                <a href="/post/{{ config.name.value }}/add"><span class="button">POST UPLOAD</span></a>
-            </div>
-        </div>
+    <section class='clearfix' role="header">
+		<div class='left'>
+			<div class='label'>{{ config.label }}</div>
+		</div>
+		<div class="right">			
+			<a href="/post/{{ config.name.value }}/add">			
+				<span class="button">	<img src='/modules/post/templates/widgets/simple_list_write_icon.png'/>POST</span>
+			</a>
+		</div>        
     </section>
-    <section role="content" class="list">
-        <article class="post caption">
+	<div class="post-list-menu">            
+		Page: {{ input.page_no }}
+		No of Posts: {{ data.list.no_of_posts }}
+	</div>
+    <section role="content clearfix" class="list">
+        <article class="post caption clearfix">
             <span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</span>
-            <span class="date">{{ language == 'ko' ? '날짜' : 'Date' }}</span>
-            <span class="no-of-view">{{ language == 'ko' ? '조회' : 'View' }}</span>
-            <span class="author">{{ language == 'ko' ? '글쓴이' : 'Author' }}</span>
+			<span class="author">{{ language == 'ko' ? '글쓴이' : 'Author' }}</span>
+			<span class="no-of-view">{{ language == 'ko' ? '조회' : 'Views' }}</span>
+			<span class="no-of-comment">{{ language == 'ko' ? 'Comments' : 'Comments' }}</span>
+            <span class="date">{{ language == 'ko' ? '날짜' : 'Date' }}</span>            
         </article>
         {% for post in posts %}
-            <article class="post">
+            <article class="post clearfix">
                 <a href="/post/{{ config.label }}/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
                         <span class="title{{ post.deleted.value ? ' deleted' }}">
                             {% if post.deleted.value %}
@@ -33,15 +36,21 @@
                                 {% endif %}
                             {% endif %}
                         </span>
-                        <span class="date">
-                            {% if 'now' | date ('Ymd') == post.created.value | date('Ymd') %}
-                                {{ post.created.value | date('H:i') }}
-                            {% else %}
-                                {{ post.created.value | date('m/d') }}
-                            {% endif %}
-                        </span>
+					{% if post.user_id.target_id == 0 %}
+						{% set name = 'Anonymous' %}
+					{% else %}
+						{% set name = post.user_id.entity.name.value %}
+					{% endif %}
+					<span class="author">{{ name }}</span>
                     <span class="no-of-view">{{ post.no_of_view.value }}</span>
-                    <span class="author">{{ post.user_id.entity.name.value }}</span>
+                    <span class="no-of-comment"> XX </span>
+					 <span class="date">
+						{% if 'now' | date ('Ymd') == post.created.value | date('Ymd') %}
+							{{ post.created.value | date('H:i') }}
+						{% else %}
+							{{ post.created.value | date('m/d') }}
+						{% endif %}
+					</span>
                 </a>
             </article>
         {% endfor %}

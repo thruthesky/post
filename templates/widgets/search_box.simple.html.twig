@@ -1,16 +1,16 @@
 <section class="grid">
     <div class="a">
         <section role="search" class="search-box">
-            <form action="/post/search">
-                <input type="hidden" name="post_config_name" value="{{ config.label }}">
+            <form class='clearfix' action="/post/search">                
+                <input type="text" name="q" value="{{ input.q }}">
+                <input type="image" src='/modules/post/templates/widgets/simple_search_button.png'>
+				<input type="hidden" name="post_config_name" value="{{ config.label }}">
                 <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
-                <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label>,
+                <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label><br>
                 <input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
-                <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>,
+                <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>
                 <input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
                 <label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
-                <input type="text" name="q" value="{{ input.q }}">
-                <input type="submit">
             </form>
         </section>
     </div>
@@ -19,16 +19,74 @@
     </div>
 </section>
 <style>
-    section.search-box label {
+	.post.list .grid{
+		background-color:#cbcaca;
+		margin-bottom:10px;
+	}
+
+    .post section.search-box{
+		/*height:50px;*/
+		padding:9px 10px;		
+		box-sizing:border-box;
+	}
+	
+    .post section.search-box label {
         display:inline;
     }
-    section.search-box [type='submit'] {
+	
+    .post section.search-box [type='text'], .post section.search-box [type='image'] {
+		float:left;
         display:inline-block;
-        margin:.2em 0;
-        padding:.8em;
+		height:30px;
+        margin:0;
+        padding:0;
+		border:0;
         box-sizing: border-box;
-        width:100%;
     }
+	
+    .post section.search-box [type='checkbox'] {
+		position:relative;
+		top:2px;
+    }
+	
+    .post section.search-box [type='text'] {
+		width:50%;
+		border-top-left-radius: 2px;
+		border-bottom-left-radius: 2px;
+    }
+	
+    .post section.search-box [type='image'] {
+		padding:5px 10px;
+		margin-right:10px;
+		width:41px;
+		border-left:1px solid #cbcaca;
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+		background-color:#fff;
+    }
+	
+	.post .navigation-bar{
+		/*height:50px;*/
+		padding:10px;
+		margin-top:0;		
+		box-sizing:border-box;
+	}
+	
+	.post .navigation-bar a{
+		margin-bottom:0;
+		background-color:#fff;
+		border:1px solid #dddddd;
+		border-radius:2px;		
+	}
+	
+	.post .navigation-bar a.selected{
+		background-color:#7997ab;
+		color:#fff;
+	}
+	
+	.post .navigation-bar a:hover{
+		border:1px solid #67a4ce;
+	}
 </style>
 <script>
     window.onload = function() {
