@@ -6,13 +6,11 @@
 
 ## 남은 기능
 
-* 위젯(스킨)기능의 안정화. CSS 와 Javascript 를 별도의 libries.yml 에 기록하고 cache 할 수 있는 방법.
-* id of first images
-* no of comment
 * vote good/bad
 * 비밀게시판 ( secret )
 * 글 이동
 * 파일업로드/삭제
+* id of first images
 * 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
 * RSS
 * Web API For IFrame
