@@ -3,8 +3,7 @@ namespace Drupal\post\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\library\Library;
-use Drupal\post\PostVoteHistoryInterface;
+use Drupal\post\PostHistoryInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -12,18 +11,18 @@ use Drupal\user\UserInterface;
  *
  *
  * @ContentEntityType(
- *   id = "post_vote_history",
- *   label = @Translation("Post Vote History entity"),
- *   base_table = "post_vote_history",
+ *   id = "post_history",
+ *   label = @Translation("Post History entity"),
+ *   base_table = "post_history",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "name",
+ *     "label" = "ip",
  *     "uuid" = "uuid"
  *   }
  * )
  */
-class PostVoteHistory extends ContentEntityBase implements PostVoteHistoryInterface {
+class PostHistory extends ContentEntityBase implements PostHistoryInterface {
 
 
     /**
@@ -99,14 +98,35 @@ class PostVoteHistory extends ContentEntityBase implements PostVoteHistoryInterf
             ->setLabel(t('Changed'))
             ->setDescription(t('The time that the entity was last edited.'));
 
-        $fields['name'] = BaseFieldDefinition::create('string')
-            ->setLabel(t('Name'))
-            ->setDescription(t('Name of Forum.'))
+
+        $fields['post_data_id'] = BaseFieldDefinition::create('entity_reference')
+            ->setLabel(t('Post Data ID'))
+            ->setDescription(t('The post data id of the Entity'))
+            ->setSetting('target_type', 'post_data');
+
+        $fields['ip'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('IP'))
+            ->setDescription(t('IP of the user'))
             ->setSettings(array(
                 'default_value' => '',
-                'max_length' => 255,
+                'max_length' => 15,
             ));
 
+        $fields['browser_id'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Browser ID'))
+            ->setDescription(t('Browser ID of the client'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 32,
+            ));
+
+        $fields['mode'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Mode'))
+            ->setDescription(t('mode of the history. vote good, vote bad, report'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 32,
+            ));
 
         return $fields;
     }

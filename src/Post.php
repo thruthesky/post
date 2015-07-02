@@ -42,8 +42,14 @@ class Post {
     }
 
     public static function emptyData() {
-        self::emptyEntity('post_config');
-        self::emptyEntity('post_data');
+
+        //self::emptyEntity('post_config');
+        //self::emptyEntity('post_data');
+
+        db_truncate('post_config')->execute();
+        db_truncate('post_data')->execute();
+        db_truncate('post_history')->execute();
+
     }
 
     public static function getSearchQuery() {

@@ -96,4 +96,13 @@ https://github.com/thruthesky/library 를 참고하십시오.
 * reason 은 blind 와 block 을 할 때, 그 사유를 설명
 * shortcut 은 /reminder/shortcut-name 또는 "/announce/회원 등급 변경" 과 같이 짧게 지정을 하고자 할 때 사용 할 수 있다.
    
- 
+### post_history 테이블
+
+post_history entity 의 테이블로서 게시 글에 대한 모든 종류의 행동을 기록한다.
+
+* 찬/반 투표
+* 글 신고
+* 포인트의 변화
+
+등 글에 대한 모든 정보를 기록한다.
+
