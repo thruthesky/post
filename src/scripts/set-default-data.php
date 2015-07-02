@@ -6,13 +6,13 @@ use Drupal\post\Post;
 
 
 Post::emptyData();
-PostConfig::create()->set('name', 'freetalk')->save();
+PostConfig::create()->set('name', 'discussion')->save();
 PostConfig::create()->set('name', 'job')->save();
 
 
 for( $i=0; $i<999; $i++ ) {
     $p = [
-        'post_config_name' => 'freetalk',
+        'post_config_name' => 'discussion',
         'username' => 'admin',
         'title' => "이것은 자유게시판의 제목입니다. $i",
         'content' => "<h1>이것은 내용!</h1>그럼",

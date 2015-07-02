@@ -278,8 +278,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     }
 
     /**
-     * @param $config_name
-     * @param $p
+     *
+     * This inserts a post or a comment.
+     *
+     *
+     * @param $p - post information
+     *
      * @return int|mixed|null|string
      *
      * @code
@@ -307,8 +311,16 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function insert($p) {
         $post = self::create();
-        $post->set('no_of_view',  0);
+
+        $post->set('root_id',  0);
         $post->set('parent_id',  0);
+        $post->set('no_of_view',  0);
+        $post->set('no_of_comment',  0);
+        $post->set('vote_good',  0);
+        $post->set('vote_bad',  0);
+        $post->set('secret',  false);
+        $post->set('blind',  false);
+        $post->set('deleted',  false);
 
         // post config
         if ( isset($p['post_config_name']) ) {
@@ -321,7 +333,10 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         if ( isset($p['user_id']) ) { }
         else if ( isset($p['username']) ) {
             $user = user_load_by_name($p['username']);
-            $post->set('user_id', $user->id());
+            if ( $user ) {
+                $post->set('user_id', $user->id());
+            }
+            else $post->set('user_id', 0);
             unset($p['username']);
         }
         else {
@@ -330,13 +345,26 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
 
         // content
-
-        $p['content_stripped'] = strip_tags($p['content']);
+        if ( isset($p['content']) ) $p['content_stripped'] = strip_tags($p['content']);
 
         foreach( $p as $k => $v ) {
             $post->set($k, $v);
         }
+
+
+
+        /**
+         * This is a comment.
+         */
+        if ( ! empty($p['parent_id']) ) {
+            $root_id = self::getRootID($p['parent_id']);
+            $post->set('root_id', $root_id);
+        }
         $post->save();
+
+        if ( ! empty($root_id) ) {
+            self::updateRoot($root_id);
+        }
         return $post->id();
     }
 
@@ -484,6 +512,20 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     private static function deleteFiles($id) {
     }
 
+    public static function updateRoot($root_id) {
+        Library::log("updateRoot($root_id) begin");
+        $no_of_comment = self::countComment($root_id);
+        Library::log("no_of_comment: $no_of_comment");
+        self::load($root_id)->set('no_of_comment', $no_of_comment)->save();
+    }
+
+    private static function countComment($root_id) {
+        return \Drupal::entityQuery('post_data')
+            ->count()
+            ->condition('root_id', $root_id)
+            ->execute();
+    }
+
 
     /**
      * {@inheritdoc}
@@ -534,7 +576,8 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $fields['id'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('ID'))
             ->setDescription(t('The ID of the  entity.'))
-            ->setReadOnly(TRUE);
+            ->setReadOnly(TRUE)
+            ->setSetting('unsigned', TRUE);
 
         $fields['uuid'] = BaseFieldDefinition::create('uuid')
             ->setLabel(t('UUID'))
@@ -566,54 +609,67 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
 
 
+        $fields['root_id'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('Root ID'))
+            ->setDescription(t('The root id of the post. This field is used to indicate to which original post that comment post belongs to.'))
+            ->setSettings(array(
+                'default_value' => 0,
+                ))
+            ->setSetting('unsigned', TRUE);
+
 
         $fields['parent_id'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('Parent ID'))
             ->setDescription(t('The parent entity id of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(0)
+            ->setSetting('unsigned', TRUE);
 
 
 
         $fields['no_of_view'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('No of view'))
             ->setDescription(t('The no of view of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(0)
+            ->setSetting('unsigned', TRUE);
 
         $fields['no_of_comment'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('No of comment'))
             ->setDescription(t('The no of comment of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(0)
+            ->setSetting('unsigned', TRUE);
 
-        $fields['fid_of_first_image'] = BaseFieldDefinition::create('integer')
+        $fields['fid_of_first_image'] = BaseFieldDefinition::create('entity_reference')
             ->setLabel(t('FID of first image'))
-            ->setDescription(t('The FID of first image of the Entity'))
-            ->setDefaultValue(0);
+            ->setDescription(t('The file id of file_usage of first image of the post'))
+            ->setSetting('target_type', 'file');
 
 
         $fields['vote_good'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('Vote Good'))
             ->setDescription(t('Vote Good of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue('0')
+            ->setSetting('unsigned', TRUE);
 
         $fields['vote_bad'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('Vote Bad'))
             ->setDescription(t('Vote Bad of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(0)
+            ->setSetting('unsigned', TRUE);
 
         $fields['secret'] = BaseFieldDefinition::create('boolean')
             ->setLabel(t('Secret'))
             ->setDescription(t('The status of secret of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(false);
 
         $fields['blind'] = BaseFieldDefinition::create('boolean')
             ->setLabel(t('Blind'))
             ->setDescription(t('The status of blind of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(false);
 
         $fields['deleted'] = BaseFieldDefinition::create('boolean')
             ->setLabel(t('Deleted'))
             ->setDescription(t('The status of deleted of the Entity'))
-            ->setDefaultValue(0);
+            ->setDefaultValue(false);
 
 
 

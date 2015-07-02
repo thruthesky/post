@@ -59,6 +59,8 @@
                     <a href="#"><span class="cid">No. {{ comment.id.value }}</span></a>
                     <a href="/post/{{ config.label }}/edit/{{ comment.id.value }}"><span class="edit button">{{ ko ? '수정' : 'EDIT' }}</span></a>
                     <a href="/post/{{ config.label }}/delete/{{ comment.id.value }}"><span class="button">{{ ko ? '삭제' : 'DELETE' }}</span></a>
+                    {% set p = comment %}
+                    {% include dir_post_templates ~ '/elements/vote.html.twig' %}
                 </div>
 
 

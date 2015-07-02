@@ -64,32 +64,28 @@
 
 
 .post-comment [depth='1'] {
-    margin-left:2em;
+    margin-left:3.6em;
 }
 .post-comment [depth='2'] {
-    margin-left:4em;
+    margin-left:7.2em;
 }
 .post-comment [depth='3'] {
-    margin-left:6em;
+    margin-left:9.2em;
 }
 .post-comment [depth='4'] {
-    margin-left:7em;
+    margin-left:11.2em;
 }
 .post-comment [depth='5'] {
-    margin-left:7.6em;
+    margin-left:13em;
 }
 .post-comment [depth='6'] {
-    margin-left:8.2em;
+    margin-left:14em;
 }
 .post-comment [depth='7'] {
-    margin-left:8.8em;
+    margin-left:15em;
 }
-.post-comment [depth='8'] {
-    margin-left:9.4em;
-}
-.post-comment [depth='9'] {
-    margin-left:10em;
-}
+.post-comment [depth='8'],
+.post-comment [depth='9'],
 .post-comment [depth='10'],
 .post-comment [depth='11'],
 .post-comment [depth='12'],
@@ -104,5 +100,5 @@
 .post-comment [depth='21'],
 .post-comment [depth='22']
 {
-    margin-left:10.6em;
+    margin-left:16em;
 }
