@@ -1,8 +1,8 @@
-<span class="button">
+<span class="button api vote good" no="{{ p.id.value }}" url="/post/api/?call=vote&mode=good&id={{ p.id.value }}" selector=".api.vote.good[no='{{ p.id.value }}'] .text">
     {{ ko ? '찬성' : 'GOOD'}}
-    {{ p.vote_good.value }}
+    <span class="text">{{ p.vote_good.value }}</span>
 </span>
-<span class="button">
+<span class="button api vote bad" no="{{ p.id.value }}" url="/post/api/?call=vote&mode=bad&id={{ p.id.value }}" selector=".api.vote.bad[no='{{ p.id.value }}'] .text">
     {{ ko ? '반대' : 'BAD'}}
-    {{ p.vote_bad.value }}
+    <span class="text">{{ p.vote_bad.value }}</span>
 </span>

@@ -75,3 +75,11 @@ post.admin:
     _controller: Drupal\post\Controller\PostController::postAdmin
   requirements:
     _permission: 'access content'
+
+
+post.api:
+  path: '/post/api'
+  defaults:
+    _controller: Drupal\post\Controller\API::defaultController
+  requirements:
+    _permission: 'access content'

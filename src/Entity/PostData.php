@@ -526,6 +526,24 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             ->execute();
     }
 
+    public static function vote($id, $mode) {
+        Library::log("vote($id, $mode) begins");
+        $post = self::load($id);
+        $no = 0;
+        if ( $mode == 'good' ) {
+            $no = $post->get('vote_good')->value;
+            Library::log($no);
+            $post->set('vote_good', ++ $no);
+        }
+        else if ( $mode == 'bad' ) {
+            $no = $post->get('vote_bad')->value;
+            $post->set('vote_bad', ++ $no);
+        }
+        $post->save();
+        Library::log("return: $no");
+        return $no;
+    }
+
 
     /**
      * {@inheritdoc}
@@ -666,10 +684,80 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             ->setDescription(t('The status of blind of the Entity'))
             ->setDefaultValue(false);
 
+
+        $fields['block'] = BaseFieldDefinition::create('boolean')
+            ->setLabel(t('Block'))
+            ->setDescription(t('The status of block of the Entity'))
+            ->setDefaultValue(false);
+
+
+
+        $fields['reason'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Reason'))
+            ->setDescription(t('Reason for blind or block'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 512,
+            ));
+
+
         $fields['deleted'] = BaseFieldDefinition::create('boolean')
             ->setLabel(t('Deleted'))
             ->setDescription(t('The status of deleted of the Entity'))
             ->setDefaultValue(false);
+
+        $fields['report'] = BaseFieldDefinition::create('integer')
+            ->setLabel(t('Report'))
+            ->setDescription(t('Report of the post'))
+            ->setDefaultValue(0)
+            ->setSetting('unsigned', TRUE);
+
+        $fields['browser_id'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Web Browser ID'))
+            ->setDescription(t('Web Browser ID of the user(client)'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 32,
+            ));
+
+        $fields['ip'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('IP'))
+            ->setDescription(t('Client IP'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 15,
+            ));
+
+
+
+        $fields['domain'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Domain'))
+            ->setDescription(t('Domain of the site that this post was created'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+
+        $fields['user_agent'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('User Agent'))
+            ->setDescription(t('User agent of the browser'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 255,
+            ));
+
+
+        $fields['shortcut'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Shortcut'))
+            ->setDescription(t('shortcut for the post'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 128,
+            ));
+
+
+
+
 
 
 
@@ -683,7 +771,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                 'max_length' => 512,
             ));
 
-
         $fields['content'] = BaseFieldDefinition::create('text_long')
             ->setLabel(t('Content'))
             ->setDescription(t('Content of the entity.'));
@@ -691,6 +778,105 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $fields['content_stripped'] = BaseFieldDefinition::create('text_long')
             ->setLabel(t('Stripped Content'))
             ->setDescription(t('Stripped Content of the entity.'));
+
+
+        $fields['title_private'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Private Title'))
+            ->setDescription(t('Private Title of the entity.'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 512,
+            ));
+
+        $fields['content_private'] = BaseFieldDefinition::create('text_long')
+            ->setLabel(t('Private Content'))
+            ->setDescription(t('Private Content of the entity.'));
+
+        $fields['content_stripped_private'] = BaseFieldDefinition::create('text_long')
+            ->setLabel(t('Private Stripped Content'))
+            ->setDescription(t('Private Stripped Content of the entity.'));
+
+
+
+        $fields['country'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Country'))
+            ->setDescription(t('Country code'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+
+
+        $fields['province'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Province'))
+            ->setDescription(t('Province'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+
+        $fields['city'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('City'))
+            ->setDescription(t('City'))
+            ->setSettings(array(
+                'default_value' => '',
+                'max_length' => 64,
+            ));
+
+
+        for( $i=1; $i<=5; $i++ ) {
+            $fields["link_$i"] = BaseFieldDefinition::create('string')
+                ->setLabel(t("Link $i"))
+                ->setDescription(t('Link for the post'))
+                ->setSettings(array(
+                    'default_value' => '',
+                    'max_length' => 512,
+                ));
+        }
+
+
+        for( $i=1; $i<=10; $i++ ) {
+            $fields["category_$i"] = BaseFieldDefinition::create('entity_reference')
+                ->setLabel(t('Category $i'))
+                ->setDescription(t('The category that this post belongs to'))
+                ->setSetting('target_type', 'library_category');
+        }
+
+        for( $i=1; $i<=20; $i++ ) {
+            $fields["int_$i"] = BaseFieldDefinition::create('integer')
+                ->setLabel(t("Int $i"))
+                ->setDescription(t('Extra int field for the post'))
+                ->setDefaultValue(0);
+        }
+
+
+        for( $i=1; $i<=20; $i++ ) {
+            $fields["char_$i"] = BaseFieldDefinition::create('string')
+                ->setLabel(t("Char $i"))
+                ->setDescription(t('Extra char field for the post'))
+                ->setSettings(array(
+                    'default_value' => '',
+                    'max_length' => 1,
+                ));
+        }
+
+
+        for( $i=1; $i<=20; $i++ ) {
+            $fields["varchar_$i"] = BaseFieldDefinition::create('string')
+                ->setLabel(t("Varchar $i"))
+                ->setDescription(t('Extra string field for the post'))
+                ->setSettings(array(
+                    'default_value' => '',
+                    'max_length' => 255,
+                ));
+        }
+
+
+        for( $i=1; $i<=10; $i++ ) {
+            $fields["text_$i"] = BaseFieldDefinition::create('text_long')
+                ->setLabel(t("Text $i"))
+                ->setDescription(t('Extra long text field of the post.'));
+        }
 
 
         return $fields;

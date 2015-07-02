@@ -1,4 +1,21 @@
 # Drupal 버젼 8 게시판 모듈
+# 안내
+
+
+드루팔 버젼 8 의 기본 Forum 모듈은 한국형 게시판이 아니며 한국형 게시판에 맞도록 개조(또는 기능추가)를 하는 것 또한 코드가 매우 복잡해져 쉽지 않습니다.
+
+그래서 한국형에 맞는 새로운 게시판 모듈을 만들고자 "post" 모듈을 개발하게 되었습니다.
+
+# 저작권
+
+작성자 : 송재호
+
+연락처 : thruthesky@gmail.com 070-7529-1749
+
+저작권 : 먹고 살기 힘들어서 이용 권한을 아래와 같이 제한합니다.
+
+* 본 모듈을 사용하기 위해서는 www.witheng.com 홈페이지에서 한달 영어 공부를 해야 합니다.
+
 
 ## 작업 로그
 * 2015년 6월 30일 1차 초안 완료.
@@ -11,31 +28,24 @@
 * 글 이동
 * 파일업로드/삭제
 * id of first images
+* report. 나쁜 글을 리포팅하는 카운트 수. 찬/반 투표와 마찬가지로 로그를 가리고 두번 리포팅 못하도록 할 것.
+* browser_id 를 바탕으로 누가 글을 작성하는지 확인 할 것.
+* PostReminder entity 를 만들고, 공지사항 번호를 기록해서 각 게시판 상단에 표시 할 것. 즉, post_data 테이블에 공지사항 표시를 따로 하지 않는다. 또는 공지사항 글은 post_data 에 저장하지 않고, post_reminder 에 따로 저장을 한다.
 * 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
+* domain, user_agent, referer
+* private title, content, content_stript is for secret post, blinded post, blocked post, deleted post( undelete may be )
 * RSS
 * Web API For IFrame
-* 블라인드/차단
+* 블라인드/차단 with reason.
+* shortcut 을 활용한 /reminder/short-cut-name 그리고 "/notice/숏컷이름" 과 같이 할 것.
 * 카테고리 기능. 카테고리 하나당 게시판 하나. 게시판 설정에 카테고리를 두는 것이 아니라, 여러 게시판을 library 의 category 기능으로 그룹으로 묶는 기능을 통해서 카테고리 관리를 한다.
-이 것은 카테고리 캐시가 필요하다. 
+이 것은 카테고리 캐시가 필요하다.
+* browser_id 기록. 이것은 library 의 member entity 에서 browser_id 를 먼저 기록 해 주어야 한다. 
+* country, province, city 의 활용. 필리핀 데이터를 기본 저장.
 
-## 안내
+## 장기적으로 해결 해야 할 점.
+* 글 리스트 및 검색 속도 ( 인덱싱이 어떻게 타는지. )
 
-
-드루팔 버젼 8 의 기본 Forum 모듈은 한국형 게시판이 아닙니다.
-
-또한 한국형 게시판으로 개조하기도 매우 어렵습니다.
-
-그래서 손 쉽게 수정 및 확장 가능한 한국형 게시판을 새로 만들고자 "post" 모듈을 개발하게 되었습니다.
-
-# 저작권
-
-작성자 : 송재호
-
-연락처 : thruthesky@gmail.com 070-7529-1749
-
-저작권 : 먹고 살기 힘들어서 이용 권한을 아래와 같이 제한합니다.
-
-* 본 모듈을 사용하기 위해서는 www.witheng.com 홈페이지에서 한달 영어 공부를 해야 합니다.
 
 
 # 사용자 도움말
@@ -71,3 +81,19 @@ https://github.com/thruthesky/library 를 참고하십시오.
 ### PostConfig Entity, PostData Entity
 위와 같이 기본적으로 두개의 entity 를 사용하며 파일 업로드는 기존의 드루팔의 것을 사용합니다.
 
+
+## 데이터베이스 구조
+
+### post_data 테이블
+
+이것은 post_data entity 의 기본 테이블로서 게시글을 구성하기 위한 기본 필드 외에
+
+여유 필드가 충분히 준비되어져 있다.
+
+
+* blind 는 게시글을 안보이게 할 때 사용
+* block 은 게시글에 차단된 표시를 하고, 해당 사용자를 차단하는 경우 사용
+* reason 은 blind 와 block 을 할 때, 그 사유를 설명
+* shortcut 은 /reminder/shortcut-name 또는 "/announce/회원 등급 변경" 과 같이 짧게 지정을 하고자 할 때 사용 할 수 있다.
+   
+ 
