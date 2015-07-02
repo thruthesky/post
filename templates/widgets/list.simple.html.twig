@@ -1,5 +1,5 @@
-<link type='text/css' href='{{ url_post_templates }}/widgets/list.default.css' rel='stylesheet' />
-<section role='page' class="post">
+<link type='text/css' href='{{ url_post_templates }}/widgets/list.simple.css' rel='stylesheet' />
+<section role='page'>
     <section role="header">
         <h2>{{ config.label }}</h2>
         <div class="post-list-menu">
@@ -8,7 +8,7 @@
                 No of Posts: {{ data.list.no_of_posts }}
             </div>
             <div class="right">
-                <a href="/post/add/{{ config.name.value }}"><span class="button">POST UPLOAD</span></a>
+                <a href="/post/{{ config.name.value }}/add"><span class="button">POST UPLOAD</span></a>
             </div>
         </div>
     </section>
@@ -21,12 +21,16 @@
         </article>
         {% for post in posts %}
             <article class="post">
-                <a href="/post/view/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
-                        <span class="title">
-                            {% if post.label | length > 40 %}
-                                {{ post.label | slice(0, 40) }} ...
+                <a href="/post/{{ config.label }}/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
+                        <span class="title{{ post.deleted.value ? ' deleted' }}">
+                            {% if post.deleted.value %}
+                                {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
                             {% else %}
-                                {{ post.label }}
+                                {% if post.label | length > 40 %}
+                                    {{ post.label | slice(0, 40) }} ...
+                                {% else %}
+                                    {{ post.label }}
+                                {% endif %}
                             {% endif %}
                         </span>
                         <span class="date">
@@ -41,19 +45,6 @@
                 </a>
             </article>
         {% endfor %}
-        {{ data.list.navigation | raw }}
-        <div>
-            <form action="/post/{{ config.label }}">
-                <input type="checkbox" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
-                <span class="title">{{ language == 'ko' ? '이름' : 'Username' }}</span>,
-                <input type="checkbox" name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
-                <span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</span>,
-                <input type="checkbox" name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
-                <span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</span>
-                <input type="text" name="q" value="{{ input.q }}">
-                <input type="submit">
-            </form>
-        </div>
     </section>
     <section role="footer">
 
