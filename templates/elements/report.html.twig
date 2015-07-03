@@ -1,0 +1,4 @@
+<span class="button api report" no="{{ p.id.value }}" url="/post/api/?call=report&id={{ p.id.value }}" selector=".api.report[no='{{ p.id.value }}'] .text">
+    <span class="text">{{ p.vote_report.value }}</span>
+    {{ ko ? '신고하기' : 'REPORT' }}
+</span>

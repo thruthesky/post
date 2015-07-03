@@ -15,6 +15,7 @@
                 <a href="/post/{{ config.label }}/force/delete/{{ post.id.value }}"><span class="button">{{ ko ? '강제삭제' : 'Force Delete Thread'}}</span></a>
                 {% set p = post %}
                 {% include dir_post_templates ~ '/elements/vote.html.twig' %}
+                {% include dir_post_templates ~ '/elements/report.html.twig' %}
             </div>
         </nav>
     </section>

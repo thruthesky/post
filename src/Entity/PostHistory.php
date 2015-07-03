@@ -34,6 +34,11 @@ class PostHistory extends ContentEntityBase implements PostHistoryInterface {
         $db->fields(null, ['id']);
         $db->condition('post_data_id', $post_data_id);
         $db->condition($code, $value);
+        $db->condition(
+            db_or()
+            ->condition('mode','good')
+            ->condition('mode', 'bad')
+        );
         $result = $db->execute();
         return $result->fetchAssoc(\PDO::FETCH_ASSOC);
     }
