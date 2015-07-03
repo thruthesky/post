@@ -107,7 +107,17 @@
 		}
 	}
 	
-	@media all and (min-width: 960px) {
+	{# 
+	need to do something about having different break points when a side bar is present! 
+	THIS IS ONLY A TEMPORARY SOLUTION...
+	#}
+	{% if "mall_sonub" in dir_sub_theme %}
+		{% set first_min_width = "960px" %}
+	{% else %}
+		{% set first_min_width = "880px" %}
+	{% endif %}
+	
+	@media all and (min-width: {{ first_min_width }}) {
 		.post section.search-box{
 			float:left;
 			width:350px;
@@ -141,7 +151,7 @@
 			content:'';
 			margin-right:20px;
 		}
-	}	
+	}
 </style>
 <script>
     window.onload = function() {
