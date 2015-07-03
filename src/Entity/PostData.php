@@ -4,6 +4,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\library\Library;
+use Drupal\post\Post;
 use Drupal\post\PostDataInterface;
 use Drupal\user\UserInterface;
 
@@ -380,7 +381,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $list = [];
         //        else eturn Library::error(-9100, "No post_config_name provided");
 
-        if ( empty($conds['post_config_name'])) {
+        if ( Post::isSearchPage() ) {
             $path = '/post/search';
         }
         else {

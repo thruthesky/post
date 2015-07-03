@@ -31,6 +31,17 @@ class Post {
     }
 
 
+    public static function isSearchPage() {
+        $request = \Drupal::request();
+        $uri = $request->getRequestUri();
+        if ( strpos( $uri, '/post/search') !== FALSE ) {
+            return TRUE;
+        }
+        else return FALSE;
+    }
+
+
+
     public static function emptyEntity($entity_type)
     {
         $entities = \Drupal::entityManager()->getStorage($entity_type)->loadMultiple();
