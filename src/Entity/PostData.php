@@ -567,6 +567,29 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         return $no;
     }
 
+    public static function report($post_data_id, $user_id) {
+        Library::log("report($post_data_id, $user_id) begins");
+        if ( ! Library::login() ) return ['error'=>'Please login first.'];
+        $browser_id = Library::getBrowserID();
+        $ip = Library::clientIP();
+        if ( $re = PostHistory::checkReportAlready($post_data_id, $user_id, $browser_id, $ip) ) return ['error'=>"You reported this post already. ($re)"];
+        $post = self::load($post_data_id);
+        $no = $post->get('report')->value;
+        $no = $no + 1;
+        $post->set('report', $no);
+        $post->save();
+
+        $ph = PostHistory::create();
+        $ph->set('user_id', $user_id);
+        $ph->set('post_data_id', $post_data_id);
+        $ph->set('ip', $ip);
+        $ph->set('browser_id', $browser_id);
+        $ph->set('mode', 'report');
+        $ph->save();
+        Library::log("return: $no");
+        return ['message'=>'You have reported this post successfully.'];
+    }
+
 
     /**
      * {@inheritdoc}

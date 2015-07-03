@@ -43,6 +43,23 @@ class PostHistory extends ContentEntityBase implements PostHistoryInterface {
         return $result->fetchAssoc(\PDO::FETCH_ASSOC);
     }
 
+    public static function checkReportAlready($post_data_id, $user_id, $browser_id, $ip) {
+        if ( $row = self::getReportHistory($post_data_id, 'user_id', $user_id) ) return "U:$row[id]";// voted already by user id
+        if ( $row = self::getReportHistory($post_data_id, 'browser_id', $browser_id) ) return "B:$row[id]";//voted already by browser id
+        if ( $row = self::getReportHistory($post_data_id, 'ip', $ip) ) return "I:$row[id]";//voted already by ip
+        return null;
+    }
+
+    private static function getReportHistory($post_data_id, $code, $value) {
+        $db = db_select('post_history');
+        $db->fields(null, ['id']);
+        $db->condition('post_data_id', $post_data_id);
+        $db->condition($code, $value);
+        $db->condition('mode', 'report');
+        $result = $db->execute();
+        return $result->fetchAssoc(\PDO::FETCH_ASSOC);
+    }
+
 
     /**
      * {@inheritdoc}
