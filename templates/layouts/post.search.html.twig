@@ -1,1 +1,2 @@
-{% include dir_post_templates ~ '/widgets/search.' ~ global_config.widget_search ~ '.html.twig' %}
+{% set path_search = dir_post_templates ~ '/widgets/search.' ~ global_config.widget_search ~ '/search.' ~ global_config.widget_search ~ '.html.twig' %}
+{% include path_search %}

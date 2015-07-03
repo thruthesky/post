@@ -1,0 +1,92 @@
+<link type='text/css' href='{{ url_post_templates }}/widgets/view.simple.css' rel='stylesheet' />
+<section role='page' class='view-item post'>
+	<section role="header" class='clearfix'>
+		<div class='left'>
+			<span class='date'>{{ post.created.value | date('M d, Y H:i') }}</span>
+		</div>
+		<div class='right'>
+			<a href="/post/{{ config.label }}/edit/{{ post.id.value }}">				
+				<span class="button"><img src="{{ url_post_templates }}/widgets/edit.png"/>{{ ko ? '수정' : 'Edit' }}</span>
+			</a>
+			<a href="/post/{{ config.label }}/delete/{{ post.id.value }}">				
+				<span class="button"><img src="{{ url_post_templates }}/widgets/delete.png"/>{{ ko ? '삭제' : 'Delete' }}</span>
+			</a>
+			<a href="#">				
+				<span class="button"><img src="{{ url_post_templates }}/widgets/report.png"/>{{ ko ? 'Report' : 'Report' }}</span>
+			</a>
+		</div>
+	</section>
+	<table cellpadding=0 cellspacing=0 width='100%'>
+		<tr valign='top'>
+			<td class='td-user-info' width='228'>
+				<div class='user-info'>
+					<div class='author'>
+						{% if post.user_id.entity.name.value %}
+							{% set name = post.user_id.entity.name.value %}
+							{% set temp_photo = "temp_primary_photo.png" %}
+						{% else %}
+							{% set name = "Anonymous User" %}
+								{% set temp_photo = "no_primary_photo.png" %}
+						{% endif %}
+						{{ name }}
+					</div>
+					<div class='photo'>
+						<img src="{{ url_post_templates }}/widgets/{{ temp_photo }}"/>
+					</div>
+					<div class='info'>
+						<table cellpadding=0 cellspacing=0 width="100%">
+							<tr>
+								<td width='80'>Join Date:</td>
+								<td>{{ post.user_id.entity.created.value | date('M Y') }}</td>
+							</tr>
+							<tr>
+								<td>Location:</td>
+								<td>XX</td>
+							</tr>
+							<tr>
+								<td>Posts:</td>
+								<td>XX</td>
+							</tr>
+							<tr>
+								<td>Level:</td>
+								<td>XX</td>
+							</tr>
+						</table>
+					</div>
+					<div class='send-message'>
+						<img src="{{ url_post_templates }}/widgets/message.png"/>Send a Message
+					</div>
+				</div>				
+			</td>
+			<td>
+				<div class='title{{ post.deleted.value ? ' deleted' }}'>
+					{% if post.deleted.value %}
+						{{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+					{% else %}
+						{{ data.post.label }}
+					{% endif %}
+				</div>
+				<section role="content" class="content">
+					{% if post.deleted.value %}
+						{{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+					{% else %}
+						{{ data.post.content.value | raw }}
+					{% endif %}
+				</section>
+			</td>
+		</tr>
+	</table>
+    <section role="footer">
+		<span class="button">{{ ko ? '댓글달기' : 'Reply' }}</span>		
+		{% set p = post %}
+		{% include dir_post_templates ~ '/elements/vote.html.twig' %}		
+    </section>
+</section>
+
+<div class="reply">
+	<form action="/post/comment/submit" method="post">
+		<input type="hidden" name="parent_id" value="{{ post.id.value }}">
+		<textarea id="contentEditor" name="content" onclick="loadReplyCKEditor();" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
+		<input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+	</form>
+</div>

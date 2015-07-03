@@ -1,4 +1,6 @@
 {% set config = data.config %}
 {% set post = data.post %}
-
-    {% include dir_post_templates ~ '/widgets/view.' ~ config.widget_view.value ~ '.html.twig' %}
+{% include dir_post_templates ~ '/widgets/view.' ~ config.widget_view.value ~ '/view.' ~ config.widget_view.value ~ '.html.twig' %}
+{% include dir_post_templates ~ '/widgets/comment.' ~ config.widget_comment.value ~ '/comment.' ~ config.widget_comment.value ~ '.html.twig' %}
+{% set path_list = dir_post_templates ~ '/layouts/post.list.html.twig' %}
+{% include path_list %}

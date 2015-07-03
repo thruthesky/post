@@ -1,10 +1,7 @@
 {% set config = data.list.config %}
 {% set posts = data.list.posts %}
-{% if error %}
-    {% include 'modules/post/templates/error.html.twig' %}
-{% else %}
-    <div class="post list">
-        {% include 'modules/post/templates/widgets/list.' ~ config.widget_list.value ~ '.html.twig' %}
-        {% include 'modules/post/templates/widgets/search_box.' ~ config.widget_search_box.value ~ '.html.twig' %}
-    </div>
-{% endif %}
+<div class="post list">
+    {% include 'modules/post/templates/widgets/list.' ~ config.widget_list.value ~ '/list.' ~ config.widget_list.value ~ '.html.twig' %}
+    {% set path_search_box = 'modules/post/templates/widgets/search_box.' ~ config.widget_search_box.value ~ '/search_box.' ~ config.widget_search_box.value ~ '.html.twig' %}
+    {% include path_search_box %}
+</div>

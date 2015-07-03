@@ -93,7 +93,7 @@ class Post {
             }
         }
 
-        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = $g['no_of_item_in_list'];
+        if ( empty($conds['no_of_items_per_page']) ) $conds['no_of_items_per_page'] = $g['no_of_items_per_page'];
         if ( empty($conds['no_of_pages_in_navigation_bar']) ) $conds['no_of_pages_in_navigation_bar'] = $g['no_of_pages_in_navigation_bar'];
 
 
@@ -117,7 +117,7 @@ class Post {
 
     public static function getWidgets($widget) {
         $widgets = [];
-        foreach(  glob(DIR_POST_TEMPLATES . "/widgets/$widget.*.html.twig") as $filename ) {
+        foreach(  glob(DIR_POST_TEMPLATES . "/widgets/$widget.*", GLOB_ONLYDIR ) as $filename ) {
             list($trash, $ex ) = explode("/widgets/$widget.", $filename);
             $ex = str_replace(".html.twig", '', $ex);
             $widgets[$ex] = $ex;

@@ -149,6 +149,7 @@ class PostController extends ControllerBase {
         $list = PostData::collection($conds);
         $comments = PostData::comments($id);
 
+
         $render_array = [
             '#theme' => 'post.layout',
             '#data' => [
@@ -233,17 +234,17 @@ class PostController extends ControllerBase {
         return $render_array;
     }
 
-    public static function postAdmin()
+    public static function postAdminGlobalConfig()
     {
         if ( Library::isFromSubmit() ) Library::saveFormSubmit('post_global_config');
-
         $post_global_config = Library::getGroupConfig('post_global_config');
-
+        $search = Post::getWidgetSelectBox('search', $post_global_config['widget_search']);
         return [
             '#theme' => 'post.layout',
             '#data' => [
                 'page' => 'admin-global',
                 'post_global_config' =>  $post_global_config,
+                'search' => $search
             ]
         ];
     }

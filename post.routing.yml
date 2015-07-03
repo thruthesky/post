@@ -72,7 +72,7 @@ post.search:
 post.admin:
   path: '/post/admin/global'
   defaults:
-    _controller: Drupal\post\Controller\PostController::postAdmin
+    _controller: Drupal\post\Controller\PostController::postAdminGlobalConfig
   requirements:
     _permission: 'access content'
 

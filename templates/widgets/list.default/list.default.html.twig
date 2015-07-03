@@ -1,5 +1,4 @@
-
-<link type='text/css' href='{{ url_post_templates }}/widgets/list.default.css' rel='stylesheet' />
+<link type='text/css' href='{{ url_post_templates }}/widgets/list.default/list.default.css' rel='stylesheet' />
 <section role='page'>
     <section role="header">
         <h2>{{ config.label }}</h2>
@@ -20,7 +19,7 @@
             <span class="no-of-view">{{ language == 'ko' ? '조회' : 'View' }}</span>
             <span class="author">{{ language == 'ko' ? '글쓴이' : 'Author' }}</span>
         </article>
-        {% for post in posts %}
+        {% for post in data.list.posts %}
             <article class="post">
                 <a href="/post/{{ config.label }}/{{ post.id.value }}?{{ post.label }}&page_no={{ input.page_no }}&q={{ input.q }}&qn={{ input.qn }}&qt={{ input.qt }}&qc={{ input.qc }}">
                         <span class="title{{ post.deleted.value ? ' deleted' }}">

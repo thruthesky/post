@@ -1,0 +1,141 @@
+.post.list section[role='header']{
+	padding:0 0 0 10px;
+}
+
+.post.list section[role='header'] .label{
+	display:block;
+	margin:5px 0;
+	font-size:1.4em;
+	color:#3b3b3b;
+}
+
+.post .list article:nth-child(odd){
+	background-color:#f5f5f5;
+}
+
+.post .list article:nth-child(even){
+	background-color:#f9fcff;
+}
+
+.post .list article.post span {
+    display:block;
+    float:left;
+    padding:1em .5em;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color:transparent;
+}
+
+.post .list article.post.caption > span{
+    background-color:#f5f5f5;
+	font-size:1.1em;
+	font-weight:bold;
+}
+
+.post .list article.post .title {
+    width:50%;
+}
+.post .list article.post .date {
+    width:20%;
+    text-align:center;
+}
+.post .list article.post .no-of-view {
+    display:none;
+    text-align:center;
+}
+.post .list article.post .author {
+    width:30%;
+	text-align:center;
+}
+/*post button*/
+.post.list section[role='header'] .right .button{
+	display:inline-block;
+	position:relative;
+	padding:7px 5px 6px 32px;
+	margin-top:5px;
+	background-color:#ededed;
+	border:1px solid #bcbcbc;
+	border-radius:2px;
+	font-size:1.1em;
+	font-weight:bold;
+	color:#3b3b3b;
+}
+
+.post.list section[role='header'] .right .button:hover{
+	color:#000;
+}
+
+.post.list section[role='header'] .right .button img{	
+	position:absolute;
+	left:10px;
+	top:5px;
+}
+/*eo post button*/
+
+/*post-list-menu*/
+.post-list-menu{
+	padding:5px 10px;
+}
+/*eo post-list-menu*/
+
+.post.list section[role='header'] .left {
+	float:left;
+	padding-top:0;
+}
+.post.list section[role='header'] .right {
+	float:right;
+	padding-top:0;
+}
+
+@media all and (min-width: 480px) {
+    .post .list article.post a > span {
+        padding: 1em;
+    }
+    .post .list article.post .title {
+        width:58%;
+    }
+    .post .list article.post .date {
+        width:12%;
+    }
+    .post .list article.post .no-of-view {
+        display:block;
+        width:10%;
+    }
+    .post .list article.post .author {
+        width:20%;
+    }
+}
+@media all and (min-width: 740px) {
+    .post-list-menu {
+
+    }
+    .post-list-menu:after {
+        display:block;
+        clear:both;
+        content:'';
+    }
+	
+	/*
+    .post.list section[role='header'] .left {
+        float:left;
+        padding-top:0;
+    }
+    .post.list section[role='header'] .right {
+        float:right;
+        padding-top:0;
+    }	
+	*/
+	
+    .post .list article.post .title {
+        width:62%;
+    }
+    .post .list article.post .date {
+        width:12%;
+    }
+    .post .list article.post .no-of-view {
+        width:8%;
+    }
+    .post .list article.post .author {
+        width:18%;
+    }
+}

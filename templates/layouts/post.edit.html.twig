@@ -1,4 +1,3 @@
 {% set config = data.config %}
 {% set post = data.post %}
-
-    {% include 'modules/post/templates/widgets/edit.' ~ config.widget_edit.value ~ '.html.twig' %}
+{% include 'modules/post/templates/widgets/edit.' ~ config.widget_edit.value ~ '/edit.' ~ config.widget_edit.value ~ '.html.twig' %}
