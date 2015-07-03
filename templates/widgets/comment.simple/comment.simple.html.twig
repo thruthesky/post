@@ -51,13 +51,13 @@
 				</div>
 				<div class='right'>
 					<a href="/post/{{ config.label }}/edit/{{ comment.id.value }}">				
-						<span class="button"><img src="{{ url_post_templates }}/widgets/edit.png"/>{{ ko ? '수정' : 'Edit' }}</span>
+						<span class="button"><img src="{{ url_post_templates }}/widgets/view.simple/edit.png"/>{{ ko ? '수정' : 'Edit' }}</span>
 					</a>
 					<a href="/post/{{ config.label }}/delete/{{ comment.id.value }}">				
-						<span class="button"><img src="{{ url_post_templates }}/widgets/delete.png"/>{{ ko ? '삭제' : 'Delete' }}</span>
+						<span class="button"><img src="{{ url_post_templates }}/widgets/view.simple/delete.png"/>{{ ko ? '삭제' : 'Delete' }}</span>
 					</a>
 					<a href="#">				
-						<span class="button"><img src="{{ url_post_templates }}/widgets/report.png"/>{{ ko ? 'Report' : 'Report' }}</span>
+						<span class="button"><img src="{{ url_post_templates }}/widgets/view.simple/report.png"/>{{ ko ? 'Report' : 'Report' }}</span>
 					</a>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 								{{ name }}
 							</div>
 							<div class='photo'>
-								<img src="{{ url_post_templates }}/widgets/{{ temp_photo }}"/>
+								<img src="{{ url_post_templates }}/widgets/view.simple/{{ temp_photo }}"/>
 							</div>
 							<div class='info'>
 								<table cellpadding=0 cellspacing=0 width="100%">
@@ -99,7 +99,7 @@
 								</table>
 							</div>
 							<div class='send-message'>
-								<img src="{{ url_post_templates }}/widgets/message.png"/>Send a Message
+								<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Send a Message
 							</div>
 						</div>				
 					</td>
