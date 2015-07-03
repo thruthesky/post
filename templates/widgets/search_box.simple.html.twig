@@ -49,8 +49,8 @@
     }
 	
     .post section.search-box [type='text'] {
-		width:70%;
-		margin-left:11.5%;
+		width:50%;
+		margin-left:15%;
 		border-top-left-radius: 2px;
 		border-bottom-left-radius: 2px;
     }
@@ -90,6 +90,21 @@
 	
 	.post .navigation-bar a:hover{
 		border:1px solid #67a4ce;
+	}
+	
+
+	@media all and (min-width: 300px) {
+		.post section.search-box [type='text']{
+			width:60%;
+			margin-left:15%;
+		}
+	}
+	
+	@media all and (min-width: 400px) {
+		.post section.search-box [type='text']{
+			width:70%;
+			margin-left:11.5%;
+		}
 	}
 	
 	@media all and (min-width: 960px) {
