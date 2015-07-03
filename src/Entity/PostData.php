@@ -539,6 +539,11 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
     public static function vote($id, $mode) {
         Library::log("vote($id, $mode) begins");
+        if ( ! Library::login() ) return ['error'=>'Please login first.'];
+        $browser_id = Library::getBrowserID();
+        $ip = Library::clientIP();
+        $uid = Library::myUid();
+        if ( $re = PostHistory::checkVoteAlready($id, $uid, $browser_id, $ip, $mode) ) return ['error'=>"You voted on this post already. ($re)"];
         $post = self::load($id);
         $no = 0;
         if ( $mode == 'good' ) {
@@ -551,6 +556,13 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $post->set('vote_bad', ++ $no);
         }
         $post->save();
+        $ph = PostHistory::create();
+        $ph->set('user_id', $uid);
+        $ph->set('post_data_id', $post->id());
+        $ph->set('ip', $ip);
+        $ph->set('browser_id', $browser_id);
+        $ph->set('mode', $mode);
+        $ph->save();
         Library::log("return: $no");
         return $no;
     }

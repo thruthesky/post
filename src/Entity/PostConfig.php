@@ -79,7 +79,6 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             return $config->save();
         }
     }
-
     public static function update() {
         $request = \Drupal::request();
         $name = $request->get('name');
@@ -90,7 +89,10 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             return Library::error(-9107, "There is no forum by that ID.");
         }
         $config->set('name', $name);
+        $config->set('title', $request->get('title'));
         $config->set('description', $request->get('description'));
+        $config->set('no_of_items_per_page', $request->get('no_of_items_per_page',0));
+        $config->set('no_of_pages_in_navigation_bar', $request->get('no_of_pages_in_navigation_bar', 0));
         $config->set('widget_list', $request->get('widget_list'));
         $config->set('widget_view', $request->get('widget_view'));
         $config->set('widget_edit', $request->get('widget_edit'));
@@ -99,7 +101,6 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
         $config->save();
         return $config;
     }
-
     /**
      * Returns true if there is error.
      * @param $name - configuration name
@@ -227,12 +228,6 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             ->setLabel(t("no_of_pages_in_navigation_bar"))
             ->setDescription(t('no_of_pages_in_navigation_bar for the forum'))
             ->setDefaultValue(0);
-
-
-
-
-
-
 
         $fields['widget_list'] = BaseFieldDefinition::create('string')
             ->setLabel(t('List widget'))

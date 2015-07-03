@@ -23,6 +23,20 @@ use Drupal\user\UserInterface;
  * )
  */
 class PostHistory extends ContentEntityBase implements PostHistoryInterface {
+    public static function checkVoteAlready($post_data_id, $user_id, $browser_id, $ip, $mode) {
+        if ( $row = self::getVoteHistory($post_data_id, 'user_id', $user_id) ) return "U:$row[id]";// voted already by user id
+        if ( $row = self::getVoteHistory($post_data_id, 'browser_id', $browser_id) ) return "B:$row[id]";//voted already by browser id
+        if ( $row = self::getVoteHistory($post_data_id, 'ip', $ip) ) return "I:$row[id]";//voted already by ip
+        return null;
+    }
+    private static function getVoteHistory($post_data_id, $code, $value) {
+        $db = db_select('post_history');
+        $db->fields(null, ['id']);
+        $db->condition('post_data_id', $post_data_id);
+        $db->condition($code, $value);
+        $result = $db->execute();
+        return $result->fetchAssoc(\PDO::FETCH_ASSOC);
+    }
 
 
     /**
