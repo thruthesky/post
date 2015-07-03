@@ -66,9 +66,8 @@ function post_preprocess( &$variables, $hook )
     $variables['error'] = Library::getError();
 
     Library::parseErrorMessage($variables, "modules/post/templates/elements/error.html.twig");
-
-
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
+
     if ( post::isPostPage() ) {
         $variables['#attached']['library'][] = 'post/default';
     }
