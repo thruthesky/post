@@ -10,7 +10,7 @@ PostConfig::create()->set('name', 'discussion')->save();
 PostConfig::create()->set('name', 'job')->save();
 
 
-for( $i=0; $i<999; $i++ ) {
+for( $i=0; $i<299; $i++ ) {
     $p = [
         'post_config_name' => 'discussion',
         'username' => 'admin',
@@ -21,7 +21,7 @@ for( $i=0; $i<999; $i++ ) {
 }
 
 
-for( $i=0; $i<999; $i++ ) {
+for( $i=0; $i<299; $i++ ) {
     $p = [
         'post_config_name' => 'job',
         'username' => 'firefox',

@@ -35,6 +35,7 @@
                                     {{ post.label }}
                                 {% endif %}
                             {% endif %}
+                            ( {{ post.no_of_comment.value }} )
                         </span>
 					{% if post.user_id.target_id == 0 %}
 						{% set name = 'Anonymous' %}

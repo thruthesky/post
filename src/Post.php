@@ -117,7 +117,7 @@ class Post {
 
     public static function getWidgets($widget) {
         $widgets = [];
-        foreach(  glob(DIR_POST_TEMPLATES . "/widgets/$widget.*") as $filename ) {
+        foreach(  glob(DIR_POST_TEMPLATES . "/widgets/$widget.*.html.twig") as $filename ) {
             list($trash, $ex ) = explode("/widgets/$widget.", $filename);
             $ex = str_replace(".html.twig", '', $ex);
             $widgets[$ex] = $ex;

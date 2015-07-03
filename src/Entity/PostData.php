@@ -396,7 +396,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $conds['no_of_items_per_page'],
             null,
             $conds['no_of_pages_in_navigation_bar'],
-            null,
+            ["&lt;&lt;", "Previous <span class='bno'>(n)</span>", "Next <span class='bno'>(n)</span>", "&gt;&gt;"],
             $path
         );
         return $list;
