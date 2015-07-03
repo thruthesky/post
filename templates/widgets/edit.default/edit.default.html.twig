@@ -1,3 +1,4 @@
+{% import dir_macro ~ '/html.html.twig' as html %}
 <style>
     .post.edit h2 {
         margin:0;
@@ -24,10 +25,17 @@
                 <input type="hidden" name="id" value="{{ post.id.value }}">
 
                 {% if post.parent_id.value == 0 %}
-                    <div class="row data-set title">
-                        <div class="caption">Title</div>
-                        <div class="value"><input type="text" name="title" value="{{ post.label }}" placeholder="{{ language=='ko' ? "제목을 입력하십시오." : "Input Title..." }}"></div>
-                    </div>
+                    {{
+                        html.input({
+                            'type':'text',
+                            'name':'title',
+                            'id':'post-title',
+                            'class':'title',
+                            'value': post.label,
+                            'label': ko ? '제목' : 'Title',
+                            'placeholder': ko ? "제목을 입력하십시오." : "Input title"
+                        })
+                    }}
                 {% endif %}
 
                 <div class="row data-set content">

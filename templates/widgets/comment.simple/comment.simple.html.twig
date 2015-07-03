@@ -42,12 +42,14 @@
     }
 </script>
 {% for comment in data.comments %}
+    <a name="{{ comment.id.value }}"></a>
 	{# added a wrapper for default css compatibility #}
 	<div class='wrapper post-comment'>
 		<section role="comment" class="view-item"  depth="{{ comment.depth }}">
 		   <section role="header" class='clearfix'>
 				<div class='left'>
-					<span class='date'>{{ post.created.value | date('M d, Y H:i') }}</span>
+                    <span class='date'>{{ post.created.value | date('M d, Y H:i') }}</span>
+                    <span class='id'>No. {{ post.id.value }}</span>
 				</div>
 				<div class='right'>
 					<a href="/post/{{ config.label }}/edit/{{ comment.id.value }}">				

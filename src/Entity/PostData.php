@@ -274,6 +274,10 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                 $post->set('content_stripped', strip_tags($v));
             }
         }
+
+        $post->set('ip',  Library::clientIP());
+        $post->set('browser_id', Library::getBrowserID());
+
         $post->save();
         return $post->id();
     }
@@ -322,6 +326,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('secret',  false);
         $post->set('blind',  false);
         $post->set('deleted',  false);
+
+        $post->set('ip',  Library::clientIP());
+        $post->set('browser_id', Library::getBrowserID());
+
+
+
 
         // post config
         if ( isset($p['post_config_name']) ) {

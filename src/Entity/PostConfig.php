@@ -193,8 +193,20 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             ->setDescription(t('Name of Forum.'))
             ->setSettings(array(
                 'default_value' => '',
+                'max_length' => 128,
+            ));
+
+
+        $fields['title'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Title'))
+            ->setDescription(t('Title of Forum.'))
+            ->setSettings(array(
+                'default_value' => '',
                 'max_length' => 255,
             ));
+
+
+
 
         $fields['description'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Description'))
@@ -203,6 +215,24 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 2048,
             ));
+
+
+
+        $fields["no_of_items_per_page"] = BaseFieldDefinition::create('integer')
+            ->setLabel(t("no_of_items_per_page"))
+            ->setDescription(t('no_of_items_per_page for the forum'))
+            ->setDefaultValue(0);
+
+        $fields["no_of_pages_in_navigation_bar"] = BaseFieldDefinition::create('integer')
+            ->setLabel(t("no_of_pages_in_navigation_bar"))
+            ->setDescription(t('no_of_pages_in_navigation_bar for the forum'))
+            ->setDefaultValue(0);
+
+
+
+
+
+
 
         $fields['widget_list'] = BaseFieldDefinition::create('string')
             ->setLabel(t('List widget'))

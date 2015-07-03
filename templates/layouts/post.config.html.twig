@@ -1,3 +1,4 @@
+{% import dir_macro ~ '/html.html.twig' as html %}
 {% set config = data.config %}
 
 <section role="header">
@@ -12,51 +13,119 @@
             <input type="hidden" name="submit" value="config_submit">
             <input type="hidden" name="id" value="{{ config.id.value }}">
 
-            <div class='row data-set name'>
-                <div class='caption'>Name</div>
-                <div class='text'><input type="text" name="name" value="{{ config.name.value }}"></div>
-            </div>
+
+            {{
+            html.input({
+                'name':'name',
+                'id':'post-name',
+                'class':'name',
+                'value': config.name.value,
+                'label': ko ? '게시판 ID' : 'Forum ID',
+                'placeholder': ko ? "게시판 아이디 입력하십시오." : "Input Forum ID"
+            })
+            }}
+
+            {{
+            html.input({
+                'name':'title',
+                'id':'post-title',
+                'class':'title',
+                'value': config.title.value,
+                'label': ko ? '게시판 제목' : 'Forum Subject',
+                'placeholder': ko ? "게시판 제목 입력하십시오." : "Input Forum Subject"
+            })
+            }}
+
+            {{
+            html.textarea({
+                'name':'description',
+                'id':'post-description',
+                'class':'description',
+                'value': config.description.value,
+                'label': ko ? '게시판 설명' : 'Descriptoin',
+                'placeholder': ko ? "게시판 설명을 입력하십시오." : "Input description"
+            })
+            }}
 
 
-            <div class="row data-set description">
-                <div class="caption">Description</div>
-                <div class="value"><textarea name="description">{{ config.description.value }}</textarea></div>
-            </div>
+
+            {{
+            html.input({
+                'name':'no_of_items_per_page',
+                'id':'post-no_of_items_per_page',
+                'class':'no_of_items_per_page',
+                'value': config.no_of_items_per_page.value,
+                'label': ko ? '페이지 당 글 수' : 'No of posts in a page',
+                'placeholder': ko ? "페이지 당 글 수를 입력하세요." : "Input number of poosts in a page"
+            })
+            }}
 
 
-            <div class="row data-set widget_list">
-                <label for="widget_list" class="caption">Widget List</label>
-                <div class='text'>{{ data.widgets.list | raw }}</div>
-            </div>
+
+
+            {{
+            html.input({
+                'name':'no_of_pages_in_navigation_bar',
+                'id':'post-no_of_pages_in_navigation_bar',
+                'class':'no_of_pages_in_navigation_bar',
+                'value': config.no_of_pages_in_navigation_bar.value,
+                'label': ko ? '네비게이션 바의 페이지 수' : 'No of pages in a navigation var',
+                'placeholder': ko ? "네비게이션 바의 페이지 수를 입력하세요." : "Input number of pages in navigation bar"
+            })
+            }}
+
+            {{
+            html.row({
+                'name':'widget_list',
+                'id':'post-widget_list',
+                'class':'widget_list',
+                'value': data.widgets.list,
+                'label': ko ? '리스트 위젯' : 'Widget List',
+            })
+            }}
+
+
+            {{
+            html.row({
+                'name':'widget_search_box',
+                'id':'post-widget_search_box',
+                'class':'widget_search_box',
+                'value': data.widgets.search_box,
+                'label': ko ? '검색 박스 위젯' : 'Widget Search Box',
+            })
+            }}
 
 
 
-            <div class="row data-set widget_search_box">
-                <label for="widget_search_box" class="caption">Widget Search Box on List</label>
-                <div class='text'>{{ data.widgets.search_box | raw }}</div>
-            </div>
 
+            {{
+            html.row({
+                'name':'widget_view',
+                'id':'post-widget_view',
+                'class':'widget_view',
+                'value': data.widgets.view,
+                'label': ko ? '보기 위젯' : 'Widget View',
+            })
+            }}
+            {{
+            html.row({
+                'name':'widget_edit',
+                'id':'post-widget_edit',
+                'class':'widget_edit',
+                'value': data.widgets.edit,
+                'label': ko ? '글 작성/수정 위젯' : 'Widget create/edit',
+            })
+            }}
+            {{
+            html.row({
+                'name':'widget_comment',
+                'id':'post-widget_comment',
+                'class':'widget_comment',
+                'value': data.widgets.comment,
+                'label': ko ? '코멘트 목록/작성 위젯' : 'Widget list/create',
+            })
+            }}
 
-            <div class="row data-set widget_view">
-                <label for="widget_view" class="caption">Widget View</label>
-                <div class='text'>{{ data.widgets.view | raw }}</div>
-            </div>
-
-            <div class="row data-set widget_edit">
-                <label for="widget_edit" class="caption">Widget Edit</label>
-                <div class='text'>{{ data.widgets.edit | raw }}</div>
-            </div>
-
-            <div class="row data-set widget_comment">
-                <label for="widget_comment" class="caption">Widget Comment</label>
-                <div class='text'>{{ data.widgets.comment | raw }}</div>
-            </div>
-
-
-            <div class="row data-set widget_search_box">
-                <label for="widget_search_box" class="caption">Widget Search Box</label>
-                <div class='text'>{{ data.widgets.search_box | raw }}</div>
-            </div>
 
 
             <nav role="button-group">
