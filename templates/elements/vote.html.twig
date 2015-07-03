@@ -1,8 +1,14 @@
 <span class="button api vote good" no="{{ p.id.value }}" url="/post/api/?call=vote&mode=good&id={{ p.id.value }}" selector=".api.vote.good[no='{{ p.id.value }}'] .text">
-    {{ ko ? '찬성' : 'GOOD'}}
-    <span class="text">{{ p.vote_good.value }}</span>
+	{% if p.vote_good.value > 1 %}
+		{% set vote_good_s = "S" %}
+	{% endif %}
+	<span class="text">{{ p.vote_good.value }}</span>
+    {{ ko ? '찬성' : 'LIKE' ~ vote_good_s }}    
 </span>
 <span class="button api vote bad" no="{{ p.id.value }}" url="/post/api/?call=vote&mode=bad&id={{ p.id.value }}" selector=".api.vote.bad[no='{{ p.id.value }}'] .text">
-    {{ ko ? '반대' : 'BAD'}}
-    <span class="text">{{ p.vote_bad.value }}</span>
+	{% if p.vote_bad.value > 1 %}
+		{% set vote_bad_s = "S" %}
+	{% endif %}
+	<span class="text">{{ p.vote_bad.value }}</span>
+    {{ ko ? '반대' : 'DISLIKE' ~ vote_bad_s }}    
 </span>
