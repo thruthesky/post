@@ -1,29 +1,20 @@
-<section class="grid">
-    <div class="a">
-        <section role="search" class="search-box">
-            <form class='clearfix' action="/post/search">                
-                <input type="text" name="q" value="{{ input.q }}">
-                <input type="image" src='/modules/post/templates/widgets/simple_search_button.png'>
-				<input type="hidden" name="post_config_name" value="{{ config.label }}">
-                <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
-                <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label><br>
-                <input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
-                <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>
-                <input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
-                <label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
-            </form>
-        </section>
-    </div>
-    <div class="b">
-        {{ data.list.navigation | raw }}
-    </div>
-</section>
+<div class='wrapper clearfix'>
+	<section role="search" class="search-box">
+		<form class='clearfix' action="/post/search">                
+			<input type="text" name="q" value="{{ input.q }}">
+			<input type="image" src='/modules/post/templates/widgets/simple_search_button.png'>
+			<input type="hidden" name="post_config_name" value="{{ config.label }}">
+			<input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
+			<label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label><br>
+			<input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
+			<label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>
+			<input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
+			<label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
+		</form>
+	</section>
+	{{ data.list.navigation | raw }}
+</div>
 <style>
-	.post.list .grid{
-		background-color:#cbcaca;
-		margin-bottom:10px;
-	}
-
     .post section.search-box{
 		/*height:50px;*/
 		padding:9px 10px;		
@@ -65,8 +56,12 @@
 		background-color:#fff;
     }
 	
+	.post.list .wrapper{
+		background-color:#cbcaca;
+		margin-bottom:10px;
+	}
+	
 	.post .navigation-bar{
-		/*height:50px;*/
 		padding:10px;
 		margin-top:0;		
 		box-sizing:border-box;
@@ -86,6 +81,17 @@
 	
 	.post .navigation-bar a:hover{
 		border:1px solid #67a4ce;
+	}
+	
+	@media all and (min-width: 900px) {
+		.post section.search-box{
+			float:left;
+			width:350px;
+		}
+		
+		.post .navigation-bar{
+			float:right;
+		}
 	}
 </style>
 <script>
