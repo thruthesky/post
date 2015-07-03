@@ -23,20 +23,3 @@
         width:100%;
     }
 </style>
-<script>
-    window.onload = function() {
-        var $ = jQuery;
-        $(".search-box [name='qn']").click(function(){
-            if ( $(this).prop('checked') ) {
-                $(".search-box [name='qt']").prop('checked', false);
-                $(".search-box [name='qc']").prop('checked', false);
-            }
-        });
-        $(".search-box [name='qt'],.search-box [name='qc']").click(function(){
-            if ( $(this).prop('checked') ) {
-                $(".search-box [name='qn']").prop('checked', false);
-            }
-        });
-
-    }
-</script>
