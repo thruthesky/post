@@ -173,4 +173,13 @@ class Post {
         return false;
     }
 
+    public static function filesByType($files) {
+        if ( empty($files) ) return false;
+        $ret = [];
+        foreach( $files as $file ) {
+            $ret[ $file->type ][] = $file;
+        }
+        return $ret;
+    }
+
 }

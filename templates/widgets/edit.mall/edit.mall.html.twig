@@ -1,25 +1,46 @@
 {% import dir_macro ~ '/html.html.twig' as html %}
 <link type='text/css' href='{{ url_post_templates }}/widgets/edit.default/edit.default.css' rel='stylesheet' />
+<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
 {% include dir_post_elements ~ '/ajax-file-upload-progress-bar.html.twig' %}
-<section role="header">
-    <h2>{{ config.label }}</h2>
-</section>
+<script>
+    function callback_insert_image($form, files) {
+        console.log("callback_insert_image() begins");
+        console.log(files);
+        for( var i in files ) {
+            var file = files[i];
+            console.log('form_name: ' + file.form_name);
+        }
+    }
+</script>
 <section role="content">
-    <form name="edit" action="/post/{{ config.name.value }}/add" method="post" enctype="multipart/form-data">
+    <form name="edit" insert-image-callback='callback_insert_image' action="/post/{{ config.name.value }}/add" method="post" enctype="multipart/form-data">
         <input type="hidden" name="mode" value="submit">
         <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
         <input type="hidden" name="id" value="{{ post.id.value }}">
         <input type="hidden" name="fid" value="">
-        {% if post.parent_id.value == 0 %}
-            {% include dir_post_elements ~ '/title.html.twig' %}
-        {% endif %}
-        {% include dir_post_elements ~ '/file-upload.html.twig' %}
-        {% include dir_post_templates ~ '/elements/update-uploaded-files.html.twig' %}
-        {% include dir_post_elements ~ '/content.html.twig' %}
+
+
+        category 1,2,3<br>
+        province, city<br>
+
+
+        {% include dir_post_elements ~ '/title.html.twig' %}
+
+        <div class="row data-set file-upload">
+            <div class="caption">Primary Photo</div>
+            <div class="text"><input type='file' name='primary' onchange="jQuery(this).parent().submit();"></div>
+        </div>
+        <div class="place-holder-primary">
+
+        </div>
+
+
+
         <input type="submit" value="SUBMIT" style="position:absolute; top:-1024px; left:-1024px;">
         <section class="grid buttons">
             <div class="a"><span class="form-edit-submit">{{ ko ? '글 등록' : 'UPDATE' }}</span></div>
             <div class="b"><a href="/post/{{ config.label }}"><span>{{ ko ? '취소' : 'CANCEL' }}</span></a></div>
         </section>
+
     </form>
 </section>

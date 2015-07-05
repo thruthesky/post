@@ -122,8 +122,10 @@ class PostController extends ControllerBase {
     public static function getPostUploadTheme($post, PostConfig $config)
     {
         $files = null;
+        $filesByType = null;
         if ( $post ) {
             $files = PostData::files($post->id());
+            $filesByType = Post::filesByType($files);
         }
         $render_array = [
             '#theme' => 'post.layout',
@@ -131,7 +133,8 @@ class PostController extends ControllerBase {
                 'page' => 'edit',
                 'config' => $config,
                 'post' => $post,
-                'files' => $files
+                'files' => $files,
+                'filesByType' => $filesByType
             ]
         ];
         $render_array['#attached']['library'][] = 'post/edit';
@@ -152,15 +155,17 @@ class PostController extends ControllerBase {
             }
         }
 
-
         $post = PostData::view($id);
         $config = $post->get('config_id')->entity;
-        $conds = post::getSearchOptions($config->label());
-        $list = PostData::collection($conds);
         $comments = PostData::comments($id);
         $files = PostData::files($id);
+        $filesByType = Post::filesByType($files);
 
-
+        $list = null;
+        if ( $config->list_under_view->value == 'Y' ) {
+            $conds = post::getSearchOptions($config->label());
+            $list = PostData::collection($conds);
+        }
 
         $render_array = [
             '#theme' => 'post.layout',
@@ -169,6 +174,7 @@ class PostController extends ControllerBase {
                 'config' => $config,
                 'post' => $post,
                 'files' => $files,
+                'filesByType' => $filesByType,
                 'comments' => $comments,
                 'list' => $list,
             ]

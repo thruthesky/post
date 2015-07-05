@@ -28,6 +28,10 @@ $(function(){
 function callback_file_upload_complete($form, files) {
 
     post_edit_form_submit = true;
+    var callback = $form.attr('insert-image-callback');
+    console.log("callback: " + callback);
+    if ( typeof callback != 'undefined' && callback != '' ) return window[callback]($form, files);
+
 
     console.log("callback_file_upload_complete();");
     console.log(files);
@@ -42,6 +46,7 @@ function callback_file_upload_complete($form, files) {
         markup += "<span class='delete'>DELETE</span>";
         markup += "</div>";
         $(".uploaded-files").append(markup);
-        CKEDITOR_EDIT.insertHtml('<img src="'+file['url']+'"/>');
+        var insert = $form.attr('insert-image');
+        if ( insert != 'no' ) CKEDITOR_EDIT.insertHtml('<img src="'+file['url']+'"/>');
     }
 }

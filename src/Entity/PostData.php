@@ -600,7 +600,12 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     }
 
     private static function updateUploadedFiles($post_data_id) {
-        $ids = \Drupal::request()->get('fid');
+
+
+        $request = \Drupal::request();
+        $ids = $request->get('fid');
+
+
         if ( $ids ) {
             $fids = explode(',', $ids);
             foreach( $fids as $fid ) {
@@ -615,6 +620,17 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                 }
             }
         }
+
+        /**
+         * 
+         */
+        $ids = $request->get('fid_delete');
+        if ( $ids ) {
+            $fids = explode(',', $ids);
+            foreach( $fids as $fid ) {
+                Library::file_delete($fid);
+            }
+        }
     }
 
 
@@ -625,22 +641,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      * @return array
      */
     public static function files($id) {
-        $result = db_select('file_usage')
-            ->fields(null, ['fid', 'type'])
-            ->condition('module', 'post')
-            ->condition('id', $id)
-            ->execute();
-        $files = [];
-        while ( $row = $result->fetchAssoc(\PDO::FETCH_ASSOC) ) {
-            $file = File::load($row['fid']);
-            $name = $file->filename->value;
-            $name = urldecode($name);
-            $file->dname = $name;
-            $file->type = $row['type'];
-            $files[] = $file;
-        }
-        // Library::log("Count: " . count($files));
-        return $files;
+        return Library::files_by_module_id('post', $id);
     }
 
 

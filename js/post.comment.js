@@ -25,10 +25,7 @@ $(function(){
     });
 });
 
-
 function callback_file_upload_complete($form, files) {
-
-
     var parent_id = $form.find("[name='parent_id']").val();
     console.log("callback_file_upload_complete() for comment. parent_id:" + parent_id);
     console.log(files);
@@ -43,7 +40,11 @@ function callback_file_upload_complete($form, files) {
         markup += "<span class='delete'>DELETE</span>";
         markup += "</div>";
         $(".uploaded-files[parent_id='"+parent_id+"']").append(markup);
-        console.log("CKEditorID: " + CKEditorID);
-        CKEditorArray[CKEditorID].insertHtml('<img src="'+file['url']+'"/>');
+        //console.log("CKEditorID: " + CKEditorID);
+
+
+        var insert = $form.attr('insert-image');
+        if ( insert != 'no' ) CKEditorArray[CKEditorID].insertHtml('<img src="'+file['url']+'"/>');
+
     }
 }

@@ -86,6 +86,15 @@
 
 
             {{
+            html.radio('list_under_view', 'Show Post List at bottom of View Page', [
+            {'id':'list_under_viewY', 'label': 'Yes', 'value': 'Y', 'default': config.list_under_view.value },
+            {'id':'list_under_viewN', 'label': 'No', 'value': 'N', 'default': config.list_under_view.value }
+            ])
+            }}
+
+
+
+            {{
             html.row({
                 'name':'widget_search_box',
                 'id':'post-widget_search_box',

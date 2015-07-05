@@ -69,6 +69,8 @@ class API extends ControllerBase {
     public static function fileUpload() {
 
         Library::log("fileUpload() begin");
+
+
         $uploads = self::fileUploadInfo();
         Library::log($uploads);
         file_prepare_directory($repo = DIR_POST_DATA, FILE_CREATE_DIRECTORY);

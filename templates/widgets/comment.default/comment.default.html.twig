@@ -44,12 +44,7 @@
         loadCKEditor(id);
     }
 </script>
-<div class='ajax-file-upload-progress-bar'>
-    <div class='bar'>
-        <div class="caption">Upload: 0%</div>
-        <div class='percent'></div>
-    </div>
-</div>
+{% include dir_post_elements ~ '/ajax-file-upload-progress-bar.html.twig' %}
 <section role="comment" class="post-comment">
     <div class="reply">
         <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">

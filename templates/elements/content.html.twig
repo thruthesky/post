@@ -1,0 +1,28 @@
+<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<div class="row data-set content">
+    <div class="caption">{{ ko ? '글 내용' : 'Content' }}</div>
+    <div class="text">
+        <textarea id="contentEditor" name="content" placeholder="{{ ko ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
+        <script>
+            var CKEDITOR_EDIT = CKEDITOR.replace( 'contentEditor', {
+                uiColor: '#f9f9f9',
+                height: '26em',
+                toolbar :
+                        [
+                            [
+                                'Bold', 'Italic', 'Underline', 'Strike', "TextColor", "BGColor",
+                                'NumberedList', 'BulletedList',
+                                'Cut', 'Copy', 'Paste', 'Undo', 'Redo',
+                                "Outdent", "Indent", "Blockquote", "Link", "Unlink", 'HorizontalRule',
+                                "Table",
+                                "Smiley",
+                                'Source',
+                                "Maximize",
+                                'Font', 'FontSize',
+                                'Format', 'Styles'
+                            ]
+                        ]
+            } );
+        </script>
+    </div>
+</div>

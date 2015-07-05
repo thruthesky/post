@@ -39,14 +39,14 @@ function ajax_file_upload($form, callback_function)
     var $upload_progress = $(".ajax-file-upload-progress-bar");
     $form.ajaxSubmit({
         beforeSend: function() {
-            console.log("seforeSend:");
+            //console.log("seforeSend:");
             $upload_progress.show();
             var percentVal = '0%';
             $upload_progress.find('.percent').width(percentVal);
             $upload_progress.find('.caption').html('Upload: 0%');
         },
         uploadProgress: function(event, position, total, percentComplete) {
-            console.log("while uploadProgress:" + percentComplete + '%');
+            //console.log("while uploadProgress:" + percentComplete + '%');
             var percentVal = percentComplete + '%';
             $upload_progress.find('.percent').width(percentVal);
             $upload_progress.find('.caption').html('Upload: ' + percentVal);

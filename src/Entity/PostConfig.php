@@ -93,6 +93,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
         $config->set('description', $request->get('description'));
         $config->set('no_of_items_per_page', $request->get('no_of_items_per_page',0));
         $config->set('no_of_pages_in_navigation_bar', $request->get('no_of_pages_in_navigation_bar', 0));
+        $config->set('list_under_view', $request->get('list_under_view', 'N'));
         $config->set('widget_list', $request->get('widget_list'));
         $config->set('widget_view', $request->get('widget_view'));
         $config->set('widget_edit', $request->get('widget_edit'));
@@ -229,6 +230,15 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
             ->setDescription(t('no_of_pages_in_navigation_bar for the forum'))
             ->setDefaultValue(0);
 
+
+        $fields['list_under_view'] = BaseFieldDefinition::create('string')
+            ->setLabel(t('List under view'))
+            ->setDescription(t('List under view option'))
+            ->setSettings(array(
+                'default_value' => 'N',
+                'max_length' => 1,
+            ));
+
         $fields['widget_list'] = BaseFieldDefinition::create('string')
             ->setLabel(t('List widget'))
             ->setDescription(t('List widget of Forum.'))
@@ -236,6 +246,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 64,
             ));
+
         $fields['widget_view'] = BaseFieldDefinition::create('string')
             ->setLabel(t('View widget'))
             ->setDescription(t('View widget of Forum.'))
@@ -243,6 +254,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 64,
             ));
+
         $fields['widget_edit'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Edit widget'))
             ->setDescription(t('Edit widget of Forum.'))
@@ -250,6 +262,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'default_value' => '',
                 'max_length' => 64,
             ));
+
         $fields['widget_comment'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Comment widget'))
             ->setDescription(t('Comment widget of Forum.'))
@@ -266,6 +279,7 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
                 'max_length' => 64,
             ));
         */
+
         $fields['widget_search_box'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Search Box widget'))
             ->setDescription(t('Search Box widget of Forum.'))

@@ -1,0 +1,76 @@
+{% import dir_macro ~ '/html.html.twig' as html %}
+<link type='text/css' href='{{ url_post_templates }}/widgets/edit.default/edit.default.css' rel='stylesheet' />
+{% include dir_post_elements ~ '/ajax-file-upload-progress-bar.html.twig' %}
+<script>
+    function callback_insert_image($form, files) {
+        console.log("callback_insert_image() begins");
+        console.log(files);
+        var fid = $form.find("[name='fid']").val();
+        for( var i in files ) {
+            var file = files[i];
+            console.log('form_name: ' + file.form_name);
+            var img = "<img src='"+file.url+"'>";
+            var $holder = $(".place-holder-" + file.form_name);
+            var old_fid = $holder.attr('fid');
+            if ( typeof old_fid != 'undefined' && old_fid != '' ) {
+                fid = fid.replace(old_fid, '');
+                $form.find("[name='fid']").val(fid);
+                // To delete old file from HDD.
+                var val = $form.find('[name="fid_delete"]').val();
+                val += ',' + old_fid;
+                $form.find('[name="fid_delete"]').val( val );
+            }
+            $holder.attr('fid', file.fid);
+            $holder.html(img);
+        }
+        fid = $form.find("[name='fid']").val();
+        console.log('new fid: ' + fid);
+    }
+</script>
+<section role="content">
+    <form name="edit" insert-image-callback='callback_insert_image' action="/post/{{ config.name.value }}/add" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="mode" value="submit">
+        <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
+        <input type="hidden" name="id" value="{{ post.id.value }}">
+        <input type="hidden" name="fid" value="">
+        <input type="hidden" name="fid_delete" value="">
+
+
+        {% include dir_post_elements ~ '/title.html.twig' %}
+
+        <div class="row data-set file-upload">
+            <div class="caption">Primary Photo</div>
+            <div class="text"><input type='file' name='primary' onchange="jQuery(this).parent().submit();"></div>
+        </div>
+        <div class="place-holder-primary" fid="{{ data.filesByType['primary'][0].id }}">
+            <img src="{{ data.filesByType['primary'][0].url }}">
+        </div>
+
+
+        <div class="row data-set file-upload">
+            <div class="caption">Second Photo</div>
+            <div class="text"><input type='file' name='second' onchange="jQuery(this).parent().submit();"></div>
+        </div>
+        <div class="place-holder-second" fid="{{ data.filesByType['second'][0].id }}">
+            <img src="{{ data.filesByType['second'][0].url }}">
+        </div>
+
+
+        <div class="row data-set file-upload">
+            <div class="caption">Third Photo</div>
+            <div class="text"><input type='file' name='third' onchange="jQuery(this).parent().submit();"></div>
+        </div>
+        <div class="place-holder-third" fid="{{ data.filesByType['third'][0].id }}">
+            <img src="{{ data.filesByType['third'][0].url }}">
+        </div>
+
+
+
+        <input type="submit" value="SUBMIT" style="position:absolute; top:-1024px; left:-1024px;">
+        <section class="grid buttons">
+            <div class="a"><span class="form-edit-submit">{{ ko ? '글 등록' : 'UPDATE' }}</span></div>
+            <div class="b"><a href="/post/{{ config.label }}"><span>{{ ko ? '취소' : 'CANCEL' }}</span></a></div>
+        </section>
+
+    </form>
+</section>
