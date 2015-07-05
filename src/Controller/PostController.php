@@ -72,13 +72,12 @@ class PostController extends ControllerBase {
 
     public static function postEdit($post_config_name=null, $id=null)
     {
-        if ( \Drupal::request()->get('submit') == 'post' ) {
+        if ( Library::isFromSubmit() ) {
             $id = PostData::submitPost();
             if ( $id ) {
                 $post = PostData::load($id);
                 $config = $post->get('config_id')->entity;
                 $config_name = $config->label();
-
                 if ( $post->parent_id->value ) {
                     $root_id = PostData::getRootID($id);
                     return new RedirectResponse("/post/$config_name/$root_id#$id");
@@ -98,34 +97,29 @@ class PostController extends ControllerBase {
         if ( is_numeric($id) ) {
             $post = PostData::load($id);
             if ( $post ) { // is Edit?
-                if ( Post::checkPermission($post) ) {
-                    $config = $post->get('config_id')->entity;
-                    return [
-                        '#theme' => 'post.layout',
-                        '#data' => [
-                            'page' => 'edit',
-                            'config' => $config,
-                            'post' => $post
-                        ]
-                    ];
-                }
+                $config = $post->get('config_id')->entity;
+                if ( Post::checkPermission($post) ) return self::getPostUploadTheme($post, $config);
                 else return self::errorPage(-94103, "You do not have permission to edit this post.");
             }
             else return self::errorPage(-94102, "No post exists by that ID.");
         }
         else { // is New Posting
-
             $config = PostConfig::loadByName($post_config_name);
-            return [
-                '#theme' => 'post.layout',
-                '#data' => [
-                    'page' => 'edit',
-                    'config' => $config,
-                    'post' => null
-                ]
-            ];
-            //return self::errorPage(-94101, "Post ID is not numeric.");
+            return self::getPostUploadTheme(null, $config);
         }
+    }
+    public static function getPostUploadTheme($post, $config)
+    {
+        $render_array = [
+            '#theme' => 'post.layout',
+            '#data' => [
+                'page' => 'edit',
+                'config' => $config,
+                'post' => $post
+            ]
+        ];
+        $render_array['#attached']['library'][] = 'post/edit';
+        return $render_array;
     }
 
 
@@ -148,6 +142,8 @@ class PostController extends ControllerBase {
         $conds = post::getSearchOptions($config->label());
         $list = PostData::collection($conds);
         $comments = PostData::comments($id);
+        $files = PostData::files($id);
+
 
 
         $render_array = [
@@ -156,6 +152,7 @@ class PostController extends ControllerBase {
                 'page' => 'view',
                 'config' => $config,
                 'post' => $post,
+                'files' => $files,
                 'comments' => $comments,
                 'list' => $list,
             ]

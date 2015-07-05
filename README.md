@@ -24,25 +24,30 @@
 ## 남은 기능
 
 
-* report. 나쁜 글을 리포팅하는 카운트 수. 찬/반 투표와 마찬가지로 로그를 가리고 두번 리포팅 못하도록 할 것.
-* 비밀게시판 ( secret ) : 두가지 옵션. 1. 사용자 선택. 2. 관리자가 무조건 해당 게시판을 비밀게시판을 지정.
-* 글 이동
 * 파일업로드/삭제
 * id of first images
-* PostReminder entity 를 만들고, 공지사항 번호를 기록해서 각 게시판 상단에 표시 할 것. 즉, post_data 테이블에 공지사항 표시를 따로 하지 않는다. 또는 공지사항 글은 post_data 에 저장하지 않고, post_reminder 에 따로 저장을 한다.
-* 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
-* domain, user_agent, referer
-* private title, content, content_stript is for secret post, blinded post, blocked post, deleted post( undelete may be )
+* 글 이동
+* 블라인드/차단 with reason.
+* 비밀게시판 ( secret ) : 두가지 옵션. 1. 사용자 선택. 2. 관리자가 무조건 해당 게시판을 비밀게시판을 지정.
+* 비밀 글, 블라인드, 차단 된 글을 private title, content, content_stript 로 변경.
+즉, 다시 되돌릴 수 있도록 한다.
+비밀글, 블라인드, 차단은 첨부 파일도 같이 할 것. 차단이 되면, 첨부파일도 같이 차단 할 것.
 * RSS
 * Web API For IFrame
-* 블라인드/차단 with reason.
+* 여기까지 하고 1차 작업 종료.
+
+### 아래의 기능은 (급하지 않은 것) 차후에 추가 할 것
+* 신고된 글 목록
+* PostReminder entity 를 만들고, 공지사항 번호를 기록해서 각 게시판 상단에 표시 할 것. 즉, post_data 테이블에 공지사항 표시를 따로 하지 않는다. 또는 공지사항 글은 post_data 에 저장하지 않고, post_reminder 에 따로 저장을 한다.
+* 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
+* domain, user_agent
 * shortcut 을 활용한 /reminder/short-cut-name 그리고 "/notice/숏컷이름" 과 같이 할 것.
-* 카테고리 기능. 카테고리 하나당 게시판 하나. 게시판 설정에 카테고리를 두는 것이 아니라, 여러 게시판을 library 의 category 기능으로 그룹으로 묶는 기능을 통해서 카테고리 관리를 한다.
-이 것은 카테고리 캐시가 필요하다.
-* browser_id 기록. 이것은 library 의 member entity 에서 browser_id 를 먼저 기록 해 주어야 한다. 
+* 카테고리 기능. 1차 ~ 10 차까지. library_category 랑 묶어서. 카테고리 하나당 게시판 하나. 게시판 설정에 카테고리를 두는 것이 아니라, 여러 게시판을 library 의 category 기능으로 그룹으로 묶는 기능을 통해서 카테고리 관리를 한다.
 * country, province, city 의 활용. 필리핀 데이터를 기본 저장.
 * browser_id 를 바탕으로 이중 아이디와 모든 글을 찾아 낼 것.
 * 쪽지기능. library 모듈에서 쪽지 기능이 되어야 함. 쪽지 기능은 핸드폰 문자로 연동을 할 것.
+
+
 
 ## 장기적으로 해결 해야 할 점.
 * 글 리스트 및 검색 속도 ( 인덱싱이 어떻게 타는지. )

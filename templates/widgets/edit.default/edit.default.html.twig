@@ -1,28 +1,23 @@
 {% import dir_macro ~ '/html.html.twig' as html %}
-<style>
-    .post.edit h2 {
-        margin:0;
-        padding:0;
-        font-size:1.5em;
-    }
-
-    .post.edit form [name='title'] {
-    }
-    .post.edit form [name='content'] {
-    }
-</style>
+<link type='text/css' href='{{ url_post_templates }}/widgets/edit.default/edit.default.css' rel='stylesheet' />
 <script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+
+<div class='ajax-file-upload-progress-bar'>
+    <div class='bar'>
+        <div class="caption">Upload: 0%</div>
+        <div class='percent'></div>
+    </div>
+</div>
 <section role='page'>
     <section role="header">
         <h2>{{ config.label }}</h2>
     </section>
     <section role="content">
-        <form method="post">
-            <fieldset>
-                <legend>POST UPDATE</legend>
-                <input type="hidden" name="submit" value="post">
+        <form name="edit" action="/post/{{ config.name.value }}/add" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="mode" value="submit">
                 <input type="hidden" name="post_config_name" value="{{ config.name.value }}">
-                <input type="hidden" name="id" value="{{ post.id.value }}">
+            <input type="hidden" name="id" value="{{ post.id.value }}">
+            <input type="hidden" name="fid" value="">
 
                 {% if post.parent_id.value == 0 %}
                     {{
@@ -37,9 +32,10 @@
                         })
                     }}
                 {% endif %}
-
+                <span class="file-upload-button">{{ ko ? '파일 업로드' : 'Attache Files' }}</span>
+                <input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
                 <div class="row data-set content">
-                    <div class="caption">Content</div>
+                    <div class="caption">{{ ko ? '글 내용' : 'Content' }}</div>
                     <div class="value">
                         <textarea id="contentEditor" name="content" placeholder="{{ ko ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
                         <script>
@@ -65,9 +61,23 @@
                         </script>
                     </div>
                 </div>
-                <input type="submit">
-                [ <a href="/post/{{ config.label }}">Cancel</a> ]
-            </fieldset>
+
+
+
+            photos:
+            <input type='file' name='photos[]' multiple onchange="jQuery(this).parent().submit();"><br>
+
+            text file:
+            <input type='file' name='text' onchange="jQuery(this).parent().submit();"><br>
+
+
+            <input type="submit" value="SUBMIT" style="position:absolute; top:-1024px; left:-1024px;">
+                <section class="grid buttons">
+                    <div class="a"><span class="form-edit-submit">{{ ko ? '글 등록' : 'UPDATE' }}</span></div>
+                    <div class="b"><a href="/post/{{ config.label }}"><span>{{ ko ? '취소' : 'CANCEL' }}</span></a></div>
+                </section>
+
+
         </form>
     </section>
     <section role="footer">

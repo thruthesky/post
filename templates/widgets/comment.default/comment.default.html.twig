@@ -32,7 +32,7 @@
     }
     function loadReplyCKEditor() {
         var $ = jQuery;
-        $(".reply form [type='submit']").show();
+        $(".show-on-click").show();
         loadCKEditor('contentEditor');
     }
     function loadCommentCKEditor(id) {
@@ -41,12 +41,22 @@
         loadCKEditor(id);
     }
 </script>
+<div class='ajax-file-upload-progress-bar'>
+    <div class='bar'>
+        <div class="caption">Upload: 0%</div>
+        <div class='percent'></div>
+    </div>
+</div>
 <section role="comment" class="post-comment">
     <div class="reply">
-        <form action="/post/comment/submit" method="post">
+        <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
             <input type="hidden" name="parent_id" value="{{ post.id.value }}">
+            <input type="hidden" name="fid" value="">
             <textarea id="contentEditor" name="content" onclick="loadReplyCKEditor();" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
-            <input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+
+            <input class="show-on-click" type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
+            <input class="show-on-click form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+
         </form>
     </div>
     <div class="list">
@@ -74,6 +84,19 @@
                 </div>
 
 
+
+
+                {% if data.files %}
+                    {% for file in comment.files %}
+                        <div>
+                            <img src="{{ file.url }}">
+                            {{ file.dname | convert_encoding(null, 'UTF-8') }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+
                 <div class="comment-footer">
                     <span class="comment-reply-button" onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
                         {{ ko ? '댓글달기' : 'Reply' }}
@@ -81,11 +104,14 @@
                 </div>
 
             </div>
-            <form action="/post/comment/submit" method="post">
+            <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
+                <input type="hidden" name="fid" value="">
                 <textarea id="contentEditor{{ comment.id.value }}" name="content">Reply To: {{ comment.user_id.entity.name.value }}...
 <p>&nbsp;</p></textarea>
-                <input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+                <input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
+                <input class="form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+
             </form>
         {% endfor %}
     </div>

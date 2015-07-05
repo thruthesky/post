@@ -8,7 +8,6 @@ default:
       css/post.component.error.css: {}
       css/post.component.button.css: {}
       css/post.component.navigator.css: {}
-      css/post.component.comment.css: {}
       css/post.state.css: {}
   js:
     js/post.js: {}
@@ -18,24 +17,36 @@ default:
 list:
   css:
     theme:
-      css/post.component.list.css: {}
+      css/post.list.css: {}
   js:
     js/post.list.js: {}
+
 edit:
+  css:
+    theme:
+      css/post.edit.css: {}
   js:
     js/post.edit.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.form
+
 view:
   css:
     theme:
-      css/post.component.view.css: {}
-      css/post.component.comment.css: {}
+      css/post.view.css: {}
+      css/post.comment.css: {}
   js:
-    js/post.list.js: {}
     js/post.view.js: {}
+    js/post.comment.js: {}
+    js/post.list.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.form
+
 search:
   css:
     theme:
-      css/post.component.search.css: {}
+      css/post.search.css: {}
   js:
     js/post.search.js: {}
-

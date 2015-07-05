@@ -1,4 +1,4 @@
-<link type='text/css' href='{{ url_post_templates }}/widgets/view.default.css' rel='stylesheet' />
+<link type='text/css' href='{{ url_post_templates }}/widgets/view.default/view.default.css' rel='stylesheet' />
 <section role='page'>
     <section role="header">
         <h2>{{ config.label }}</h2>
@@ -36,7 +36,11 @@
         {% endif %}
     </section>
     <section role="footer">
-
+        {% if data.files %}
+            {% for file in data.files %}
+                <div>{{ file.dname | convert_encoding(null, 'UTF-8') }}</div>
+            {% endfor %}
+        {% endif %}
     </section>
 </section>
 

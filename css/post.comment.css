@@ -7,12 +7,16 @@
 }
 
 
+.show-on-click {
+    display:none;
+}
+
 .post-comment .reply form [name='content'] {
     width:100%;
 }
 
+
 .post-comment .reply form [type='submit'] {
-    display:none;
     margin:1em 0;
     padding:1em;
     width:100%;

@@ -1,0 +1,51 @@
+.post.edit h2 {
+    margin:0;
+    padding:0;
+    font-size:1.5em;
+}
+
+
+.row.content .caption {
+    display:none;
+}
+
+
+.post section.grid.buttons {
+    margin:1em auto .4em;
+}
+.post section.grid.buttons span
+{
+    display:block;
+    margin-bottom:.4em;
+    padding:1em;
+    box-sizing: border-box;
+    border: 1px solid #eaeae2;
+    border-radius: 2px;
+    background-color: #f8f8ef;
+    width: 100%;
+    text-align: left;
+    cursor:pointer;
+}
+
+.post section.grid.buttons span:hover
+{
+    border:1px solid #cecec7;
+}
+
+
+
+.file-upload-button {
+    display:inline-block;
+    margin:1em  0;
+    padding:.4em .5em;
+    border:1px solid #d3e8f4;
+    border-radius: 2px;
+    background-color: white;
+}
+
+@media all and (min-width: 480px) {
+    .post section.grid.buttons a {
+        width:40%;
+        float:right;
+    }
+}

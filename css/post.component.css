@@ -2,6 +2,30 @@
 .post .caption > * {
     border:0;
 }
+.ajax-file-upload-progress-bar {
+    display: none;
+    position:fixed;
+    z-index: 1234;
+    bottom:1em;
+    left:25%;
+    right:25%;
+    background-color: #4d8e72;
+}
 
 
+.ajax-file-upload-progress-bar .bar {
+    position:relative;
+}
+.ajax-file-upload-progress-bar .bar .caption {
+    position:absolute;
+    padding:1em;
+    width:8em;
+    color:white;
+}
 
+.ajax-file-upload-progress-bar .percent {
+    padding:1em 0;
+    height:1.2em;
+    width:0;
+    background-color: #3fbd41;
+}

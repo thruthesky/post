@@ -8,6 +8,7 @@ define('DIR_POST', 'modules/post');
 define('DIR_POST_TEMPLATES', 'modules/post/templates');
 define('URL_POST', '/modules/post');
 define('URL_POST_TEMPLATES', '/modules/post/templates');
+define('DIR_POST_DATA', 'public://post/');
 
 function post_theme()
 {

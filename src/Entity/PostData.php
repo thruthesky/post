@@ -3,6 +3,7 @@ namespace Drupal\post\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\file\Entity\File;
 use Drupal\library\Library;
 use Drupal\post\Post;
 use Drupal\post\PostDataInterface;
@@ -279,6 +280,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('browser_id', Library::getBrowserID());
 
         $post->save();
+        self::updateUploadedFiles($post->id());
         return $post->id();
     }
 
@@ -330,9 +332,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('ip',  Library::clientIP());
         $post->set('browser_id', Library::getBrowserID());
 
-
-
-
         // post config
         if ( isset($p['post_config_name']) ) {
             $config = PostConfig::loadByName($p['post_config_name']);
@@ -376,6 +375,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         if ( ! empty($root_id) ) {
             self::updateRoot($root_id);
         }
+
+        self::updateUploadedFiles($post->id());
+
         return $post->id();
     }
 
@@ -432,6 +434,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $rows = [];
         foreach( $comments as $c ) {
             $c->depth = $depth;
+            $c->files = self::files($c->id());
             $rows[] = $c;
             $returns = self::comments( $c->id(), $depth + 1 );
             if( $returns ) $rows = array_merge($rows,$returns);
@@ -588,6 +591,40 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $ph->save();
         Library::log("return: $no");
         return ['message'=>'You have reported this post successfully.'];
+    }
+
+    private static function updateUploadedFiles($post_data_id) {
+        $ids = \Drupal::request()->get('fid');
+        if ( $ids ) {
+            $fids = explode(',', $ids);
+            foreach( $fids as $fid ) {
+                if ( empty($fid) || ! is_numeric($fid) ) continue;
+                $file = File::load($fid);
+                $file->set('status', 1)->save();
+                db_update('file_usage')
+                    ->fields(['id'=>$post_data_id])
+                    ->condition('fid', $fid)
+                    ->execute();
+            }
+        }
+    }
+
+    public static function files($id) {
+        $result = db_select('file_usage')
+            ->fields(null, ['fid'])
+            ->condition('module', 'post')
+            ->condition('id', $id)
+            ->execute();
+        $files = [];
+        while ( $row = $result->fetchAssoc(\PDO::FETCH_ASSOC) ) {
+            $file = File::load($row['fid']);
+            $name = $file->filename->value;
+            $name = urldecode($name);
+            $file->dname = $name;
+            $files[] = $file;
+        }
+        // Library::log("Count: " . count($files));
+        return $files;
     }
 
 
