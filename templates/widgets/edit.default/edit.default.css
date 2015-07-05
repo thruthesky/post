@@ -34,13 +34,12 @@
 
 
 
-.file-upload-button {
-    display:inline-block;
-    margin:1em  0;
-    padding:.4em .5em;
-    border:1px solid #d3e8f4;
-    border-radius: 2px;
-    background-color: white;
+.row.file-upload {
+    margin: .4em 0;
+}
+.file-upload .caption {
+    float:left;
+    padding:.2em 1em 0 0;
 }
 
 @media all and (min-width: 480px) {

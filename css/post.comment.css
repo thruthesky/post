@@ -29,6 +29,9 @@
     width:100%;
 }
 
+.post-comment .list .comment-content img {
+    max-width:100%;
+}
 
 .comment-reply-button {
     display:inline-block;

@@ -21,7 +21,7 @@ $(function(){
     });
 
 
-    $(".uploaded-files .delete").click(function(){
+    $('body').on('click', ".uploaded-files .delete", function(){
         var fid = $(this).parent().attr('fid');
         console.log('fid:'+fid);
         var url = "/post/api?call=fileDelete&fid="+fid;
@@ -52,13 +52,13 @@ function ajax_file_upload($form, callback_function)
             $upload_progress.find('.caption').html('Upload: ' + percentVal);
         },
         success: function() {
-            console.log("upload success:");
+            //console.log("upload success:");
             var percentVal = '100%';
             $upload_progress.find('.percent').width(percentVal);
             $upload_progress.find('.caption').html('Upload: ' + percentVal);
         },
         complete: function(xhr) {
-            console.log("Upload completed!!");
+            //console.log("Upload completed!!");
             var re;
             try {
                 re = JSON.parse(xhr.responseText);
@@ -101,4 +101,5 @@ function callback_ajax_file_upload($form, re)
         val += ',' + file['fid'];
         $form.find('[name="fid"]').val( val );
     }
+    if ( typeof callback_file_upload_complete == 'function' ) callback_file_upload_complete($form, data['files']);
 }

@@ -99,6 +99,7 @@ class API extends ControllerBase {
             }
             $re[] = $upload;
         }
+
         return ['files'=>$re];
     }
 

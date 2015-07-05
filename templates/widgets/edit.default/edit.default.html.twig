@@ -32,18 +32,21 @@
                         })
                     }}
                 {% endif %}
-                <span class="file-upload-button">{{ ko ? '파일 업로드' : 'Attache Files' }}</span>
-                <input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
+
+            <div class="row data-set file-upload">
+                <div class="caption">{{ ko ? '파일 업로드' : 'Attach Files' }}</div>
+                <div class="text"><input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();"></div>
+            </div>
 
             {% include dir_post_templates ~ '/elements/update-uploaded-files.html.twig' %}
 
 
             <div class="row data-set content">
                     <div class="caption">{{ ko ? '글 내용' : 'Content' }}</div>
-                    <div class="value">
+                    <div class="text">
                         <textarea id="contentEditor" name="content" placeholder="{{ ko ? "내용을 입력하십시오." : "Input Content..." }}">{{ post.content.value }}</textarea>
                         <script>
-                            CKEDITOR.replace( 'contentEditor', {
+                            var CKEDITOR_EDIT = CKEDITOR.replace( 'contentEditor', {
                                 uiColor: '#f9f9f9',
                                 height: '26em',
                                 toolbar :
@@ -68,19 +71,11 @@
 
 
 
-            photos:
-            <input type='file' name='photos[]' multiple onchange="jQuery(this).parent().submit();"><br>
-
-            text file:
-            <input type='file' name='text' onchange="jQuery(this).parent().submit();"><br>
-
-
             <input type="submit" value="SUBMIT" style="position:absolute; top:-1024px; left:-1024px;">
                 <section class="grid buttons">
                     <div class="a"><span class="form-edit-submit">{{ ko ? '글 등록' : 'UPDATE' }}</span></div>
                     <div class="b"><a href="/post/{{ config.label }}"><span>{{ ko ? '취소' : 'CANCEL' }}</span></a></div>
                 </section>
-
 
         </form>
     </section>

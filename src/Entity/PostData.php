@@ -606,11 +606,13 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             foreach( $fids as $fid ) {
                 if ( empty($fid) || ! is_numeric($fid) ) continue;
                 $file = File::load($fid);
-                $file->set('status', 1)->save();
-                db_update('file_usage')
-                    ->fields(['id'=>$post_data_id])
-                    ->condition('fid', $fid)
-                    ->execute();
+                if ( $file ) {
+                    $file->set('status', 1)->save();
+                    db_update('file_usage')
+                        ->fields(['id'=>$post_data_id])
+                        ->condition('fid', $fid)
+                        ->execute();
+                }
             }
         }
     }
@@ -624,7 +626,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function files($id) {
         $result = db_select('file_usage')
-            ->fields(null, ['fid'])
+            ->fields(null, ['fid', 'type'])
             ->condition('module', 'post')
             ->condition('id', $id)
             ->execute();
@@ -634,11 +636,14 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $name = $file->filename->value;
             $name = urldecode($name);
             $file->dname = $name;
+            $file->type = $row['type'];
             $files[] = $file;
         }
         // Library::log("Count: " . count($files));
         return $files;
     }
+
+
 
 
     /**

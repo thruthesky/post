@@ -1,17 +1,15 @@
-{% if data.files %}
-    <div class="uploaded-files">
-        {% if data.files %}
-            {% for file in data.files %}
-                <div fid="{{ file.id }}" class="file {{ 'image' in file.getMimeType ? 'image' : 'attachment'}}">
-                    <a href="{{ file.url }}" target="_blank">
-                        {% if 'image' in file.getMimeType %}
-                            <span class="photo"><img src="{{ file.url }}"></span>
-                        {% endif %}
-                        <span class='name'>{{ file.dname | convert_encoding(null, 'UTF-8') }}</span>
-                    </a>
-                    <span class='delete'>DELETE</span>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-{% endif %}
+<div class="uploaded-files">
+    {% if data.files %}
+        {% for file in data.files %}
+            <div fid="{{ file.id }}" class="file {{ 'image' in file.getMimeType ? 'image' : 'attachment'}}">
+                <a href="{{ file.url }}" target="_blank">
+                    {% if 'image' in file.getMimeType %}
+                        <span class="photo"><img src="{{ file.url }}"></span>
+                    {% endif %}
+                    <span class='name'>{{ file.dname | convert_encoding(null, 'UTF-8') }}</span>
+                </a>
+                <span class='delete'>DELETE</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

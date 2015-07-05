@@ -41,6 +41,7 @@
 * PostReminder entity 를 만들고, 공지사항 번호를 기록해서 각 게시판 상단에 표시 할 것. 즉, post_data 테이블에 공지사항 표시를 따로 하지 않는다. 또는 공지사항 글은 post_data 에 저장하지 않고, post_reminder 에 따로 저장을 한다.
 * 게시판 전체 관리자/부 관리자, 게시판 별 관리자/부관리자
 * domain, user_agent
+* 글 쓰기를 할 때, 본문에 삽입된 사진 또는 첨부 파일 중에 uuid 를 체크해서, DB 에 존재하지 않는다면, 해당 첨부 태그를 없앤다.
 * shortcut 을 활용한 /reminder/short-cut-name 그리고 "/notice/숏컷이름" 과 같이 할 것.
 * 카테고리 기능. 1차 ~ 10 차까지. library_category 랑 묶어서. 카테고리 하나당 게시판 하나. 게시판 설정에 카테고리를 두는 것이 아니라, 여러 게시판을 library 의 category 기능으로 그룹으로 묶는 기능을 통해서 카테고리 관리를 한다.
 * country, province, city 의 활용. 필리핀 데이터를 기본 저장.
