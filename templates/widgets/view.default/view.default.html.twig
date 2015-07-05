@@ -36,11 +36,8 @@
         {% endif %}
     </section>
     <section role="footer">
-        {% if data.files %}
-            {% for file in data.files %}
-                <div>{{ file.dname | convert_encoding(null, 'UTF-8') }}</div>
-            {% endfor %}
-        {% endif %}
+        {% set files = data.files %}
+        {% include dir_post_templates ~ '/elements/uploaded-files.html.twig' %}
     </section>
 </section>
 

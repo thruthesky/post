@@ -1,6 +1,8 @@
 <?php
 namespace Drupal\post\Controller;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\file\Entity\File;
 use Drupal\library\Library;
 use Drupal\post\Entity\PostData;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,6 +44,7 @@ class API extends ControllerBase {
         else {
             $re = ['result'=>$re];
         }
+        if ( !isset($re['code']) ) $re['code'] = 0;
         $re = json_encode($re);
         $response = new JsonResponse( $re );
         $response->headers->set('Access-Control-Allow-Origin', '*');
@@ -99,4 +102,31 @@ class API extends ControllerBase {
         return ['files'=>$re];
     }
 
+
+    public static function fileDelete() {
+        $request = \Drupal::request();
+        $fid = $request->get('fid', 0);
+        try {
+            $file = File::load($fid);
+            if ( $file ) {
+                $file->delete();
+                //\Drupal::service('file.usage')->delete($file);
+                return ['fid'=>$fid];
+            }
+            else {
+                return [
+                    'code' => '-2',
+                    'message'=>"Failed to delete file:$fid "
+                ];
+            }
+        }
+        catch ( EntityStorageException $e ) {
+            return [
+                'code' => '-1',
+                'message'=>"Failed to delete file:$fid "
+            ];
+        }
+    }
+
 }
+

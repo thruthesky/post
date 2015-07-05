@@ -85,15 +85,9 @@
 
 
 
+                {% set files = comment.files %}
+                {% include dir_post_templates ~ '/elements/uploaded-files.html.twig' %}
 
-                {% if data.files %}
-                    {% for file in comment.files %}
-                        <div>
-                            <img src="{{ file.url }}">
-                            {{ file.dname | convert_encoding(null, 'UTF-8') }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
 
 
 

@@ -25,6 +25,7 @@ edit:
   css:
     theme:
       css/post.edit.css: {}
+      css/post.component.uploaded-files.css: {}
   js:
     js/post.edit.js: {}
   dependencies:
@@ -36,6 +37,7 @@ view:
     theme:
       css/post.view.css: {}
       css/post.comment.css: {}
+      css/post.component.uploaded-files.css: {}
   js:
     js/post.view.js: {}
     js/post.comment.js: {}

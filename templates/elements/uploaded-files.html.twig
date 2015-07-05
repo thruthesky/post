@@ -1,0 +1,16 @@
+{% if files %}
+    <div class="uploaded-files">
+        {% if files %}
+        {% for file in files %}
+        <a href="{{ file.url }}" target="_blank">
+            <div class="file {{ 'image' in file.getMimeType ? 'image' : 'attachment'}}">
+                {% if 'image' in file.getMimeType %}
+                    <span class="photo"><img src="{{ file.url }}"></span>
+                {% endif %}
+                <span class='name'>{{ file.dname | convert_encoding(null, 'UTF-8') }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </a>
+    </div>
+{% endif %}

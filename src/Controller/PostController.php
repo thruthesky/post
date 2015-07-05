@@ -108,14 +108,30 @@ class PostController extends ControllerBase {
             return self::getPostUploadTheme(null, $config);
         }
     }
-    public static function getPostUploadTheme($post, $config)
+
+    /**
+     *
+     * Returns the theme information
+     *
+     * @param $post
+     * @param $config
+     * @return array
+     *
+     * @note if the post has files, then it add files here.
+     */
+    public static function getPostUploadTheme($post, PostConfig $config)
     {
+        $files = null;
+        if ( $post ) {
+            $files = PostData::files($post->id());
+        }
         $render_array = [
             '#theme' => 'post.layout',
             '#data' => [
                 'page' => 'edit',
                 'config' => $config,
-                'post' => $post
+                'post' => $post,
+                'files' => $files
             ]
         ];
         $render_array['#attached']['library'][] = 'post/edit';
@@ -260,21 +276,24 @@ class PostController extends ControllerBase {
     {
         if ( ! Post::exist($id) ) return self::errorPage();
 
-        PostData::deletePost($id);
         $post = PostData::load($id);
         if ( ! Post::checkPermission($post) ) return self::errorPage(-94109, "You cannot delete this post. You do not have permission.");
-        if ( $post ) {
-            $config = $post->get('config_id')->entity;
-            $config_name = $config->label();
-            if ( $post->parent_id->value ) {
-                $root_id = PostData::getRootID($id);
-                return new RedirectResponse("/post/$config_name/$root_id#$id");
-            }
-            else {
-                return new RedirectResponse("/post/$config_name/$id?" . $post->label());
+        if ( $post ) { // post exist
+            if ( $re = PostData::deletePost($id) ) return $re; // post delete. marked as delete or completely deleted?
+            $post = PostData::load($id);
+            if ( $post ) { // marked as deleted.
+                $config = $post->get('config_id')->entity;
+                $config_name = $config->label();
+                if ( $post->parent_id->value ) {
+                    $root_id = PostData::getRootID($id);
+                    return new RedirectResponse("/post/$config_name/$root_id#$id");
+                }
+                else {
+                    return new RedirectResponse("/post/$config_name/$id?" . $post->label());
+                }
             }
         }
-        return new RedirectResponse("/post/$post_config_name");
+        return new RedirectResponse("/post/$post_config_name"); // completely deleted.
     }
 
     /**

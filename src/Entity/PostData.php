@@ -456,7 +456,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function deletePost($id) {
         $post = self::load($id);
-        if ( empty($post) ) return Library::error(-94008, "No post to delete by that ID - $id in PostData::deletePost()");
+        if ( empty($post) ) return Library::error(-94008, "Post does not exists by that ID - $id in PostData::deletePost()");
         $post->set('title','');
         $post->set('content','');
         $post->set('content_stripped','');
@@ -464,6 +464,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->save();
         self::deleteFiles($id);
         PostData::deleteThreadIfAllDeleted($id);
+        return 0;
     }
 
     /**
@@ -524,6 +525,11 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      * @todo delete files.
      */
     private static function deleteFiles($id) {
+        $files = self::files($id);
+        foreach( $files as $file ) {
+            //\Drupal::service('file.usage')->delete($file);
+            $file->delete();
+        }
     }
 
     public static function updateRoot($root_id) {
@@ -609,6 +615,13 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         }
     }
 
+
+    /**
+     * Returns all files of the post/comment.
+     *
+     * @param $id - id of post/comment
+     * @return array
+     */
     public static function files($id) {
         $result = db_select('file_usage')
             ->fields(null, ['fid'])
