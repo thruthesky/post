@@ -83,10 +83,3 @@
     </section>
 </section>
 
-<div class="reply">
-	<form action="/post/comment/submit" method="post">
-		<input type="hidden" name="parent_id" value="{{ post.id.value }}">
-		<textarea id="contentEditor" name="content" onclick="loadReplyCKEditor();" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
-		<input type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
-	</form>
-</div>

@@ -65,6 +65,7 @@ function post_preprocess( &$variables, $hook )
     $variables['dir_post_templates'] = DIR_POST_TEMPLATES;
     $variables['dir_post_elements'] = DIR_POST_TEMPLATES . "/elements";
     $variables['dir_post_widgets'] = DIR_POST_TEMPLATES . "/widgets";
+    $variables['url_post_widgets'] = URL_POST_TEMPLATES . "/widgets";
     $variables['global_config'] = Post::getGlobalConfig();
     $variables['error'] = Library::getError();
 

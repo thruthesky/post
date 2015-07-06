@@ -1,0 +1,10 @@
+
+
+<div class='comment-content{{ comment.deleted.value ? ' deleted' }}'>
+    {% if comment.deleted.value %}
+        {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
+    {% else %}
+        {{ comment.content.value | raw }}
+    {% endif %}
+</div>
+

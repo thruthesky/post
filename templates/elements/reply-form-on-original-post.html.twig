@@ -1,0 +1,10 @@
+<div class="reply">
+    <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="parent_id" value="{{ post.id.value }}">
+        <input type="hidden" name="fid" value="">
+        <textarea id="contentEditor{{ post.id.value }}" name="content" onclick="loadReplyCKEditor('contentEditor{{ post.id.value }}');" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
+        <input class="show-on-click" type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
+        <div class="uploaded-files" parent_id="{{ post.id.value }}"></div>
+        <input class="show-on-click form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+    </form>
+</div>

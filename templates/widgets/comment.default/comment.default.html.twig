@@ -1,61 +1,9 @@
 <script src="/modules/post/etc/ckeditor/ckeditor.js"></script>
-<script>
-    var LastCKEditor;
-    var CKEditorArray = [];
-    function loadCKEditor(id) {
-        LastCKEditor = CKEDITOR.replace( id, {
-            uiColor: '#f9f9f9',
-            startupFocus : true,
-            height:'12em',
-            toolbar :
-                    [
-                        [
-                            'Bold', 'Italic', 'Underline', 'Strike', "TextColor", "BGColor",
-                            'NumberedList', 'BulletedList',
-                            'Cut', 'Copy', 'Paste', 'Undo', 'Redo',
-                            "Outdent", "Indent", "Blockquote", "Link", "Unlink", 'HorizontalRule',
-                            "Table",
-                            "Smiley",
-                            'Source',
-                            "Maximize",
-                            'Font', 'FontSize',
-                            'Format', 'Styles'
-                        ]
-                    ]
-        } );
-
-        CKEditorArray[id] = LastCKEditor;
-
-
-        CKEDITOR.on("instanceReady", function(event) {
-            var range = LastCKEditor.createRange();
-            range.moveToElementEditablePosition( LastCKEditor.editable(), true );
-            LastCKEditor.getSelection().selectRanges( [ range ] );
-        });
-    }
-    function loadReplyCKEditor(id) {
-        var $ = jQuery;
-        $(".show-on-click").show();
-        loadCKEditor(id);
-    }
-    function loadCommentCKEditor(id) {
-        var $ = jQuery;
-        $("#"+id).parent().show();
-        loadCKEditor(id);
-    }
-</script>
+<script src="{{ url_post_widgets }}/comment.default/comment.default.js"></script>
 {% include dir_post_elements ~ '/ajax-file-upload-progress-bar.html.twig' %}
 <section role="comment" class="post-comment">
-    <div class="reply">
-        <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="parent_id" value="{{ post.id.value }}">
-            <input type="hidden" name="fid" value="">
-            <textarea id="contentEditor{{ post.id.value }}" name="content" onclick="loadReplyCKEditor('contentEditor{{ post.id.value }}');" placeholder="{{ language=='ko' ? "덧글을 입력하시려면 이곳을 클릭하십시오." : "Please, click here to reply a comment." }}"></textarea>
-            <input class="show-on-click" type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
-            <div class="uploaded-files" parent_id="{{ post.id.value }}"></div>
-            <input class="show-on-click form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
-        </form>
-    </div>
+    {% include dir_post_elements ~ '/reply-form-on-original-post.html.twig' %}
+
     <div class="list">
         {% for comment in data.comments %}
             <a name="{{ comment.id.value }}"></a>
@@ -71,22 +19,11 @@
                 </div>
 
 
-
-                <div class='comment-content{{ comment.deleted.value ? ' deleted' }}'>
-                    {% if comment.deleted.value %}
-                        {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
-                    {% else %}
-                        {{ comment.content.value | raw }}
-                    {% endif %}
-                </div>
-
+                {% include dir_post_elements ~ '/comment-content.html.twig' %}
 
 
                 {% set files = comment.files %}
                 {% include dir_post_templates ~ '/elements/uploaded-files.html.twig' %}
-
-
-
 
                 <div class="comment-footer">
                     <span class="comment-reply-button" onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
@@ -95,15 +32,7 @@
                 </div>
 
             </div>
-            <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
-                <input type="hidden" name="fid" value="">
-                <textarea id="contentEditor{{ comment.id.value }}" name="content">Reply To: {{ comment.user_id.entity.name.value }}...
-<p>&nbsp;</p></textarea>
-                <input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
-                <div class="uploaded-files" parent_id="{{ comment.id.value }}"></div>
-                <input class="form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
-            </form>
+           {% include dir_post_elements ~ '/reply-form-on-comment.html.twig' %}
         {% endfor %}
     </div>
 </section>

@@ -1,0 +1,11 @@
+<div class="reply">
+    <form name="comment-add" action="/post/comment/submit" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="parent_id" value="{{ comment.id.value }}">
+        <input type="hidden" name="fid" value="">
+                <textarea id="contentEditor{{ comment.id.value }}" name="content">Reply To: {{ comment.user_id.entity.name.value }}...
+<p>&nbsp;</p></textarea>
+        <input type='file' name='files[]' multiple onchange="jQuery(this).parent().submit();">
+        <div class="uploaded-files" parent_id="{{ comment.id.value }}"></div>
+        <input class="form-comment-add-submit" type="submit" value="{{ ko ? '댓글 등록' : 'POST REPLY' }}">
+    </form>
+</div>
