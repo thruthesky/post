@@ -90,8 +90,6 @@ class Post {
         ];
 
 
-
-
         if ( empty($post_config_name) ) $post_config_name = $request->get('post_config_name');
 
         if ( $post_config_name ) {
@@ -101,6 +99,8 @@ class Post {
             }
             else {
                 $conds['post_config_name'] = $config->label();
+                $conds['no_of_items_per_page'] = $config->no_of_items_per_page->value;
+                $conds['no_of_pages_in_navigation_bar'] = $config->no_of_pages_in_navigation_bar->value;
             }
         }
 

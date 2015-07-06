@@ -241,6 +241,7 @@ class PostController extends ControllerBase {
     {
 
         $conds = post::getSearchOptions();
+        $conds['original_only'] = false;
         $list = PostData::collection($conds);
         $render_array = [
             '#theme' => 'post.layout',

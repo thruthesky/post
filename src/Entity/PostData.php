@@ -64,6 +64,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      * @param $conds
      *
      * @return \Drupal\Core\Database\Query\Select
+     *
+     * @refer buildguide
+     *
      */
     public static function getQueryOnConds($conds)
     {
@@ -79,6 +82,16 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                 $and[] = 'config_id=' . $config->id();
             }
         }
+
+
+
+        if ( ! isset($conds['original_only']) ) $and[] = 'parent_id=0';
+        else if ($conds['original_only']) $and[] = 'parent_id=0';
+
+
+        if ( isset($conds['fid_of_first_image']) && $conds['fid_of_first_image'] === true ) $and[] = 'fid_of_first_image>0';
+
+
 
         if ( ! empty($conds['q']) ) {
             if ( ! empty($conds['qn']) ) {
@@ -104,10 +117,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                     $and[] = '(' . implode(' OR ', $or) .')';
                 }
             }
+
         }
-        else {
-            $and[] = 'parent_id=0';
-        }
+
 
 
 
@@ -116,54 +128,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
 
 
-        /*
-         * $config = null;
-        //$db = \Drupal::entityQuery('post_data');
-         $db = db_select('post_data');
-
-
-        if ( isset($conds['post_config_name']) ) {
-            $config = PostConfig::loadByName($conds['post_config_name']);
-            $db->condition('config_id', $config->id());
-        }
-        else {
-            // is it error? or if it's a full search for all the forum?
-        }
-
-        if ( ! empty($conds['q']) ) {
-            if ( ! empty($conds['qn']) ) {
-                $user = user_load_by_name($conds['q']);
-                if ( $user ) {
-                    $uid = $user->id();
-                    $db->condition('user_id', $uid);
-                }
-            }
-            else if ( ! empty($conds['qt']) || ! empty($conds['qc']) ) {
-                $words = explode(' ', $conds['q'], 2);
-                foreach( $words as $word ) {
-                    $or = $db->orConditionGroup();
-                    if ( ! empty($conds['qt']) ) $or->condition('title', "%$word%", 'LIKE');
-                    if ( ! empty($conds['qc']) ) $or->condition('content_stripped__value', "%$word%", 'LIKE');
-                    $db->condition($or);
-                }
-            }
-            else {
-                // no filtering
-                $words = explode(' ', $conds['q'], 2);
-                foreach( $words as $word ) {
-                    $or = $db->orConditionGroup();
-                    $or->condition('title', "%$word%", 'LIKE');
-                    $or->condition('content_stripped__value', "%$word%", 'LIKE');
-                    $db->condition($or);
-                }
-            }
-        }
-        else {
-            $db->condition('parent_id', 0);
-        }
-
-        return $db;
-        */
     }
     /**
      * Returns the searched of posts
@@ -176,7 +140,13 @@ class PostData extends ContentEntityBase implements PostDataInterface {
     public static function search($conds) {
         $where = self::getQueryOnConds($conds);
 
-        $q = "SELECT `id` FROM post_data $where ORDER BY `id` DESC LIMIT $conds[offset],$conds[limit]";
+        // default
+        if ( empty($conds['order_field']) ) $conds['order_field'] = 'id';
+        if ( empty($conds['order_direction']) ) $conds['order_direction'] = 'DESC';
+        if ( empty($conds['offset']) ) $conds['offset'] = 0;
+        if ( empty($conds['limit']) ) $conds['limit'] = 10;
+
+        $q = "SELECT `id` FROM post_data $where ORDER BY `$conds[order_field]` $conds[order_direction] LIMIT $conds[offset],$conds[limit]";
         $result = db_query($q);
         Library::log("PostData::search : $q");
 
@@ -599,12 +569,17 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         return ['message'=>'You have reported this post successfully.'];
     }
 
+    /**
+     * @param $post_data_id
+     *
+     * 1. set file_managed.status to 1
+     * 2. delete files in 'fid_delete'
+     * 3. set post_data.fid_of_first_image
+     */
     private static function updateUploadedFiles($post_data_id) {
-
 
         $request = \Drupal::request();
         $ids = $request->get('fid');
-
 
         if ( $ids ) {
             $fids = explode(',', $ids);
@@ -622,7 +597,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         }
 
         /**
-         * 
+         * @refer https://docs.google.com/document/d/1koxonGQl20ER7HZqUfHd6L53YXT5fPlJxCEwrhRqsN4/edit#heading=h.dy4d1ae82vq4
          */
         $ids = $request->get('fid_delete');
         if ( $ids ) {
@@ -631,6 +606,20 @@ class PostData extends ContentEntityBase implements PostDataInterface {
                 Library::file_delete($fid);
             }
         }
+
+
+        //
+        $files = self::files($post_data_id);
+        $count = count($files);
+        Library::log("number of files in $post_data_id : $count");
+        foreach( $files as $file ) {
+            Library::log("type : " . $file->getMimeType());
+            if ( strpos($file->getMimeType(), 'image') !== false ) {
+                self::load($post_data_id)->set('fid_of_first_image', $file->id())->save();
+                break;
+            }
+        }
+
     }
 
 
