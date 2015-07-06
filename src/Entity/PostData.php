@@ -65,7 +65,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      *
      * @return \Drupal\Core\Database\Query\Select
      *
-     * @refer buildguide
+     * @refer buildguide : https://docs.google.com/document/d/1koxonGQl20ER7HZqUfHd6L53YXT5fPlJxCEwrhRqsN4/edit#heading=h.iijrsjoqv867
+     *
+     *
      *
      */
     public static function getQueryOnConds($conds)
