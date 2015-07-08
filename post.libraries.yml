@@ -13,6 +13,7 @@ default:
     js/post.js: {}
   dependencies:
     - core/jquery
+    - core/domready
 
 list:
   css:
