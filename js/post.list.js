@@ -1,4 +1,4 @@
-window.onload = function() {
+window.addEventListener("load", function(){
     $ = jQuery;
     $(function(){
         var $author = $(".post .list article.post .author");
@@ -8,4 +8,4 @@ window.onload = function() {
             alert(name + " clicked");
         });
     });
-}
+});
