@@ -29,6 +29,7 @@ class PostController extends ControllerBase {
     }
     public static function postList($post_config_name)
     {
+        //di('postList()');
         return self::postListPage($post_config_name);
     }
 

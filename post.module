@@ -69,6 +69,8 @@ function post_preprocess( &$variables, $hook )
     $variables['global_config'] = Post::getGlobalConfig();
     $variables['error'] = Library::getError();
 
+    //di('post.module');
+
     Library::parseErrorMessage($variables, "modules/post/templates/elements/error.html.twig");
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
 
