@@ -1,14 +1,18 @@
 <link type='text/css' href='{{ url_post_templates }}/widgets/list.default/list.default.css' rel='stylesheet' />
 <section role='page'>
     <section role="header">
-        <h2>{{ config.label }}</h2>
+        <h2>{{ config.title.value | default(config.label) }}</h2>
         <div class="post-list-menu">
             <div class="left">
                 Page: {{ input.page_no }}
                 No of Posts: {{ data.list.no_of_posts }}
             </div>
             <div class="right">
-                <a href="/post/{{ config.name.value }}/add"><span class="button">POST UPLOAD</span></a>
+                {% if is_admin %}
+                    <a href="/post"><span class="button">{{ ko ? '관리 페이지' : 'Admin Page' }}</span></a>
+                    <a href="/post/config/{{ config.name.value }}"><span class="button">{{ ko ? '게시판 관리' : 'Settings' }}</span></a>
+                {% endif %}
+                <a href="/post/{{ config.name.value }}/add"><span class="button">{{ ko ? '글 쓰기' : 'POST UPLOAD' }}</span></a>
             </div>
         </div>
     </section>
@@ -33,18 +37,18 @@
                                 {% endif %}
                                 {% if post.no_of_comment.value %}
                                     ({{ post.no_of_comment.value }})
-                                    {% endif %}
+                                {% endif %}
                             {% endif %}
                         </span>
                         <span class="date">
                             {% if 'now' | date ('Ymd') == post.created.value | date('Ymd') %}
-                                    {{ post.created.value | date('H:i') }}
-                                {% else %}
-                                    {{ post.created.value | date('m/d') }}
+                                {{ post.created.value | date('H:i') }}
+                            {% else %}
+                                {{ post.created.value | date('m/d') }}
                             {% endif %}
                         </span>
-                        <span class="no-of-view">{{ post.no_of_view.value }}</span>
-                        <span class="author">{{ post.user_id.entity.name.value }}</span>
+                    <span class="no-of-view">{{ post.no_of_view.value }}</span>
+                    <span class="author">{{ post.user_id.entity.name.value }}</span>
                 </a>
             </article>
         {% endfor %}
