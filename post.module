@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\post\Entity\PostData;
 use Drupal\post\Post;
 use Drupal\library\Library;
 
@@ -35,11 +36,18 @@ function post_preprocess( &$variables, $hook )
     $variables['global_config'] = Post::getGlobalConfig();
     $variables['error'] = Library::getError();
 
-    //di('post.module');
-    /*
-    Library::parseErrorMessage($variables, "modules/post/templates/elements/error.html.twig");
-    Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
-    */
+
+
+
+    if ( $hook == 'html' ) {
+        $seg = Library::getUriSegment();
+        if ( count($seg) == 3 && $seg[0] == 'post' && is_numeric($seg[2]) ) {
+            $post = PostData::load($seg[2]);
+            $variables['head_title'][] = $post->label();
+        }
+    }
+
+
 
     if ( post::isPostPage() ) {
         $variables['#attached']['library'][] = 'post/default';
