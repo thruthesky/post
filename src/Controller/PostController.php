@@ -36,7 +36,7 @@ class PostController extends ControllerBase {
     public static function postListPage($post_config_name)
     {
         $config = PostConfig::loadByName($post_config_name);
-        if ( empty($config) ) return self::errorPage(-94119, "Forum not exists by that name");
+        if ( empty($config) ) return self::errorPage(-94119, "Forum not exists by that name - $post_config_name");
 
         $conds = post::getSearchOptions($post_config_name);
         if ( Library::getError() ) {
