@@ -17,40 +17,6 @@ function post_theme()
             'variables' => [ 'data' => null ],
             'template' => 'post.layout'
         ],
-        /*
-        'post.index' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.index'
-        ],
-        'post.list' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.list'
-        ],
-        'post.edit' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.edit'
-        ],
-        'post.view' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.view'
-        ],
-        'post.config' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.config'
-        ],
-        'post.search' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.search'
-        ],
-        'post.admin' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.admin'
-        ],
-        'post.error' => [
-            'variables' => [ 'data' => null ],
-            'template' => 'post.error'
-        ],
-        */
     ];
 
 }
@@ -70,9 +36,10 @@ function post_preprocess( &$variables, $hook )
     $variables['error'] = Library::getError();
 
     //di('post.module');
-
+    /*
     Library::parseErrorMessage($variables, "modules/post/templates/elements/error.html.twig");
     Library::parseErrorMessage($variables, 'modules/post/templates/error.html.twig');
+    */
 
     if ( post::isPostPage() ) {
         $variables['#attached']['library'][] = 'post/default';
