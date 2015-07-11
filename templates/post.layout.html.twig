@@ -1,11 +1,9 @@
+{% import dir_macro ~ '/html.html.twig' as html %}
 <section class="post">
     <div class="{{ data.page }}">
         {% if data.page %}
-            {% if error %}
-                {% include dir_post_elements ~ '/error.html.twig' %}
-            {% else %}
-                {% include dir_post_templates ~ '/layouts/post.' ~ data.page ~ '.html.twig' %}
-            {% endif %}
+            {{ html.error(data) }}
+            {% include dir_post_templates ~ '/layouts/post.' ~ data.page ~ '.html.twig' %}
         {% else %}
             {{ ko ? '잘못된 접근 : 페이지 값이 없습니다.' : 'Wrong access : No page code.' }}
         {% endif %}

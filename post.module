@@ -34,7 +34,7 @@ function post_preprocess( &$variables, $hook )
     $variables['dir_post_widgets'] = DIR_POST_TEMPLATES . "/widgets";
     $variables['url_post_widgets'] = URL_POST_TEMPLATES . "/widgets";
     $variables['global_config'] = Post::getGlobalConfig();
-    $variables['error'] = Library::getError();
+    //$variables['error'] = Library::getError();
 
 
 

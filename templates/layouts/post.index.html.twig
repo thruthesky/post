@@ -1,5 +1,5 @@
 {% if is_admin %}
-    <a href="/post/admin/global"<div class="button">Global Configuration</div></a>
+    <a href="/post/admin/global"><div class="button">Global Configuration</div></a>
     <form>
         <input type="hidden" name="submit" value="config_create">
         Create a forum :
@@ -8,12 +8,14 @@
     </form>
 {% endif %}
 
-    <div class="list">
-        {% for config in data.configs %}
-            <div class="row">
-                {{ config.name.value }}
+<div class="list">
+    {% for config in data.configs %}
+        <div class="row">
+            {{ config.name.value }}
+            {% if is_admin %}
                 [<a href="/post/{{ config.name.value }}">LIST</a>]
                 [<a href="/post/config/{{ config.name.value }}">Config</a>]
-            </div>
-        {% endfor %}
-    </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

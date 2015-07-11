@@ -1,5 +1,4 @@
 {% set config = data.post_global_config %}
-
 <h1>ADMIN</h1>
 
 
@@ -7,13 +6,19 @@
 
 <form>
     <input type="hidden" name="mode" value="submit">
+    <fieldset>
+        <legend>Gloal Configuration Form</legend>
+        <div>
+            <div class="caption">Search</div>
+            <div class="text">{{ data.search | raw }}</div>
+        </div>
 
-    skin for search:
-    {{ data.search | raw }}<br>
-    no of items in list : <input type="text" name="no_of_items_per_page" value="{{ config.no_of_items_per_page }}"><br>
-    no of pages in navigator : <input type="text" name="no_of_pages_in_navigation_bar" value="{{ config.no_of_pages_in_navigation_bar }}"><br>
+        {{ html.textarea({'name':'search_domain_group', 'id':'search_domain_group', 'class':'search_domain_group', 'value': config.search_domain_group, 'label':'Domain Group for search', 'placeholder':'Input search_domain_group'}) }}
 
-    <input type="submit">
+        {{ html.input({'type':'text','name':'no_of_items_per_page', 'id':'no_of_items_per_page', 'class':'no_of_items_per_page', 'value': config.no_of_items_per_page, 'label':'No of items in list', 'placeholder':'Input no of items in list'}) }}
+        {{ html.input({'type':'text','name':'no_of_pages_in_navigation_bar', 'id':'no_of_pages_in_navigation_bar', 'class':'no_of_pages_in_navigation_bar', 'value': config.no_of_pages_in_navigation_bar, 'label':'No of pages in navigator', 'placeholder':'Input No of pages in navigator'}) }}
+        <input type="submit">
+    </fieldset>
 </form>
 
 

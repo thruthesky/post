@@ -26,6 +26,20 @@ use Drupal\user\UserInterface;
 class PostConfig extends ContentEntityBase implements PostConfigInterface {
 
 
+    /**
+     * Returns true if the post config exists Or return false.
+     *
+     * @param $name
+     * @return bool - true if exists.
+     *
+     * - true if exists.
+     * - false if not exists.
+     */
+    public static function exist($name) {
+        return self::loadByName($name) ? true : false;
+    }
+
+
     public static function loadByName($name)
     {
         $entities = \Drupal::entityManager()->getStorage('post_config')->loadByProperties(['name'=>$name]);
@@ -64,30 +78,37 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
 
     }
 
-    public static function createForum() {
+    public static function createForum(&$data) {
+        if ( ! Library::isAdmin() ) return $data['error'] = "You are not admin. Only admin can create a post group";
         $name = \Drupal::request()->get('name');
         if ( empty($name) ) {
-            return Library::error(-1234,'Input name');
+            $data['error'] = 'Input name';
         }
         $config = PostConfig::loadByName($name);
         if ( $config ) {
-            return Library::error(-9005, "Forum name exists.");
+            $data['error'] = "Forum name exists.";
         }
         else {
             $config = PostConfig::create();
             $config->set('name', $name);
-            return $config->save();
+            $config->save();
         }
     }
     public static function update() {
         $request = \Drupal::request();
         $name = $request->get('name');
-        if ( self::validateName($name) ) return Library::error(-9108, "Wrong forum name");
+        if ( self::validateName($name) ) return [-1, "Wrong forum name"];
+
+        if ( self::exist($name) ) return [-3, "Same forum name exists. Choose another."];
+
         $id = $request->get('id');
         $config = self::load($id);
-        if ( empty($config) ) {
-            return Library::error(-9107, "There is no forum by that ID.");
-        }
+        if ( empty($config) ) return [-2, "There is no forum by that ID."];
+
+
+
+
+
         $config->set('name', $name);
         $config->set('title', $request->get('title'));
         $config->set('description', $request->get('description'));

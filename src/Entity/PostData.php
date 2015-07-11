@@ -29,6 +29,24 @@ use Drupal\user\UserInterface;
 class PostData extends ContentEntityBase implements PostDataInterface {
 
 
+
+    /**
+     * Returns true if the post exists Or return false with error information.
+     *
+     * @param $id
+     * @return bool
+     *
+     *      - true if exists.
+     *      - false if not exists.
+     *
+     */
+    public static function exist($id) {
+        $post = PostData::load($id);
+        if ( $post ) return true;
+        else return false;
+    }
+
+
     /**
      *
      * @param $id
@@ -85,14 +103,21 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             }
         }
 
-
-
         if ( ! isset($conds['original_only']) ) $and[] = 'parent_id=0';
         else if ($conds['original_only']) $and[] = 'parent_id=0';
 
-
         if ( isset($conds['fid_of_first_image']) && $conds['fid_of_first_image'] === true ) $and[] = 'fid_of_first_image>0';
 
+        if ( isset($conds['domain']) ) {
+            if ( is_string($conds['domain'])) $and[] = "domain='$conds[domain]'";
+            else if ( is_array($conds['domain'])) {
+                $ors = [];
+                foreach( $conds['domain'] as $d ) {
+                    $ors[] = "domain='$d'";
+                }
+                $and[] = '(' . implode(' OR ', $ors) . ')';
+            }
+        }
 
 
         if ( ! empty($conds['q']) ) {
@@ -121,9 +146,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             }
 
         }
-
-
-
 
         if ( $and ) return "WHERE " . implode(' AND ', $and);
         else return null;
@@ -226,6 +248,9 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
         if ( $id && is_numeric($id) ) {
             $id = self::update($id, $p);
+            if ( $id == -1 ) {
+                return "Wrong post id.";
+            }
         }
         else if ( $config_name ) {
             $config = PostConfig::loadByName($config_name);
@@ -233,7 +258,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
             $id = self::insert($p);
         }
         else {
-            return Library::error(-9006, "No forum config or forum post id.");
+            return "Wrong post id.";
         }
 
         return $id;
@@ -241,6 +266,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
     private static function update($id, $p) {
         $post = self::load($id);
+        if ( ! $post ) return -1;
         foreach( $p as $k => $v ) {
             $post->set($k, $v);
             if ( $k == 'content' ) {
@@ -367,7 +393,6 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function collection($conds) {
         $list = [];
-        //        else eturn Library::error(-9100, "No post_config_name provided");
 
         if ( Post::isSearchPage() ) {
             $path = '/post/search';
@@ -432,7 +457,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      */
     public static function deletePost($id) {
         $post = self::load($id);
-        if ( empty($post) ) return Library::error(-94008, "Post does not exists by that ID - $id in PostData::deletePost()");
+        if ( empty($post) ) return "Post does not exists by that ID - $id in PostData::deletePost()";
         $post->set('title','');
         $post->set('content','');
         $post->set('content_stripped','');

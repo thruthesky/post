@@ -3,6 +3,7 @@ namespace Drupal\post;
 use Drupal\library\Library;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
+use Symfony\Component\Yaml\Yaml;
 
 
 /**
@@ -76,6 +77,14 @@ class Post {
         return \Drupal::request()->get('qc');
     }
 
+    /**
+     * Returns search option
+     *
+     * @param null $post_config_name
+     * @return array
+     *
+     *
+     */
     public static function getSearchOptions($post_config_name=null) {
 
         $request = \Drupal::request();
@@ -90,12 +99,27 @@ class Post {
         ];
 
 
+        if ( ! empty($g['search_domain_group']) ) {
+            $yml = Yaml::parse($g['search_domain_group']);
+
+            $domain = Library::domainNameWithoutWWW();
+            if ( isset($yml[$domain]) ) {
+                $conds['domain'] = $yml[$domain];
+            }
+            else if ( isset($yml['domain']) && $yml['domain'] == 'default' ) {
+                $conds['domain'] = $domain;
+            }
+        }
+
+        // di($conds['domain']);
+
+
         if ( empty($post_config_name) ) $post_config_name = $request->get('post_config_name');
 
         if ( $post_config_name ) {
             $config = PostConfig::loadByName($post_config_name);
             if ( empty($config) ) {
-                Library::error(-91017, "Forum name $post_config_name does not exists.");
+                return [-91017, "Forum name $post_config_name does not exists."];
             }
             else {
                 $conds['post_config_name'] = $config->label();
@@ -145,18 +169,7 @@ class Post {
         return $markup;
     }
 
-    /**
-     * Returns true if the post exists Or return false with error information.
-     *
-     * @param $id
-     * @return bool
-     */
-    public static function exist($id) {
-        $post = PostData::load($id);
-        if ( $post ) return true;
-        Library::error(-98001, "Post not found by that ID. The post may be deleted. Please search for what you want.");
-        return false;
-    }
+
 
     public static function getGlobalConfig() {
         $g = Library::getGroupConfig('post_global_config');

@@ -10,22 +10,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends ControllerBase {
     public static function postModuleIndex() {
-        if ( $submit = \Drupal::request()->get('submit') ) self::$submit();
+        $data = ['page'=>'index'];
+        if ( $submit = \Drupal::request()->get('submit') ) self::$submit($data);
 
         $configs = PostConfig::loadMultiple();
+        $data['configs'] = $configs;
 
         return [
             '#theme' => 'post.layout',
-            '#data' => [
-                'page' => 'index',
-                'configs' => $configs,
-            ]
+            '#data' => $data
         ];
     }
 
-    public static function config_create()
+    public static function config_create(&$data)
     {
-        PostConfig::createForum();
+        PostConfig::createForum($data);
     }
     public static function postList($post_config_name)
     {
@@ -36,10 +35,11 @@ class PostController extends ControllerBase {
     public static function postListPage($post_config_name)
     {
         $config = PostConfig::loadByName($post_config_name);
-        if ( empty($config) ) return self::errorPage(-94119, "Forum not exists by that name - $post_config_name");
+        if ( empty($config) ) return self::errorPage("Forum not exists by that name - $post_config_name");
+
 
         $conds = post::getSearchOptions($post_config_name);
-        if ( Library::getError() ) {
+        if ( Library::isError($conds)) {
             $list = [];
         }
         else $list = PostData::collection($conds);
@@ -57,12 +57,17 @@ class PostController extends ControllerBase {
     }
 
 
-    public static function errorPage($code=0, $message=null) {
-        Library::error($code, $message);
+    /**
+     * @param $error
+     * @return bool
+     *
+     */
+    public static function errorPage($error) {
         $render_array = [
             '#theme' => 'post.layout',
             '#data' => [
                 'page' => 'error',
+                'error' => $error
             ],
         ];
         //$render_array['#attached']['library'][] = 'post/error';
@@ -73,9 +78,10 @@ class PostController extends ControllerBase {
 
     public static function postEdit($post_config_name=null, $id=null)
     {
+        if ( ! Library::login() ) return self::errorPage("Please, sign in first before you create/edit a post.");
         if ( Library::isFromSubmit() ) {
             $id = PostData::submitPost();
-            if ( $id ) {
+            if ( is_numeric($id) && $id > 0 ) {
                 $post = PostData::load($id);
                 $config = $post->get('config_id')->entity;
                 $config_name = $config->label();
@@ -88,8 +94,10 @@ class PostController extends ControllerBase {
                 }
                 // return self::postListPage($config->label());
             }
+            else {
+                return self::errorPage($id);
+            }
         }
-
         return self::postEditPage($post_config_name, $id);
     }
 
@@ -100,9 +108,9 @@ class PostController extends ControllerBase {
             if ( $post ) { // is Edit?
                 $config = $post->get('config_id')->entity;
                 if ( Post::checkPermission($post) ) return self::getPostUploadTheme($post, $config);
-                else return self::errorPage(-94103, "You do not have permission to edit this post.");
+                else return self::errorPage("You do not have permission to edit this post.");
             }
-            else return self::errorPage(-94102, "No post exists by that ID.");
+            else return self::errorPage("No post exists by that ID.");
         }
         else { // is New Posting
             $config = PostConfig::loadByName($post_config_name);
@@ -145,7 +153,9 @@ class PostController extends ControllerBase {
 
     public static function postView($config_post_name, $id)
     {
-        if ( ! Post::exist($id) ) return self::errorPage();
+        if ( ! PostData::exist($id) ) {
+            return self::errorPage("Post not found by that ID - [ $id ]. The post may be deleted. Please search for what you want.");
+        }
         /**
          * Redirects to the root post if $id is a comment.
          */
@@ -186,37 +196,39 @@ class PostController extends ControllerBase {
 
     public function postConfig($post_config_name)
     {
-        $config = null;
+        $data = ['page'=>'config'];
         if ( Library::isFromSubmit() ) {
             if ( $re = PostConfig::update() ) {
                 if ( Library::isError($re) ) {
-                    $config = PostConfig::loadByName($post_config_name);
+                    $data['error'] = Library::readError($re);
+                    $data['config'] = PostConfig::loadByName($post_config_name);
                 }
                 else {
-                    $config = $re;
+                    $data['config'] = $re;
                 }
             }
         }
         else {
-
-            $config = PostConfig::loadByName($post_config_name);
+            $data['config'] = PostConfig::loadByName($post_config_name);
         }
-        $widgets = [];
-        if ( empty($config) ) Library::error(-91006, "No forum exists by that name - $post_config_name");
+
+
+        if ( empty( $data['config'] ) ) {
+            return self::errorPage("Post Config:: No forum exists by that forum name - $post_config_name");
+        }
         else {
+            $config = $data['config'];
+            $widgets = [];
             $widgets['list'] = Post::getWidgetSelectBox('list', $config->get('widget_list')->value);
             $widgets['search_box'] = Post::getWidgetSelectBox('search_box', $config->get('widget_search_box')->value);
             $widgets['view'] = Post::getWidgetSelectBox('view', $config->get('widget_view')->value);
             $widgets['edit'] = Post::getWidgetSelectBox('edit', $config->get('widget_edit')->value);
             $widgets['comment'] = Post::getWidgetSelectBox('comment', $config->get('widget_comment')->value);
+            $data['widgets'] = $widgets;
         }
         return [
             '#theme' => 'post.layout',
-            '#data' => [
-                'page' => 'config',
-                'config' => $config,
-                'widgets' => $widgets,
-            ]
+            '#data' => $data,
         ];
     }
 
@@ -240,16 +252,18 @@ class PostController extends ControllerBase {
 
     public static function postSearch()
     {
-
+        $data = ['page'=>'search'];
         $conds = post::getSearchOptions();
-        $conds['original_only'] = false;
-        $list = PostData::collection($conds);
+        $conds['original_only'] = false; // this must be placed only here.
+        if ( Library::isError($conds) ) {
+            $data['error'] = Library::readError($conds);
+        }
+        else {
+            $data['list'] = PostData::collection($conds);
+        }
         $render_array = [
             '#theme' => 'post.layout',
-            '#data' => [
-                'page' => 'search',
-                'list'=>$list
-            ]
+            '#data' => $data
         ];
         $render_array['#attached']['library'][] = 'post/search';
         return $render_array;
@@ -282,12 +296,14 @@ class PostController extends ControllerBase {
      */
     public static function postDelete($post_config_name=null, $id=null)
     {
-        if ( ! Post::exist($id) ) return self::errorPage();
+        if ( ! PostData::exist($id) ) {
+            return self::errorPage("Post not found by that ID - [ $id ]. The post may be deleted. Please search for what you want.");
+        }
 
         $post = PostData::load($id);
-        if ( ! Post::checkPermission($post) ) return self::errorPage(-94109, "You cannot delete this post. You do not have permission.");
+        if ( ! Post::checkPermission($post) ) return self::errorPage("You cannot delete this post. You do not have permission.");
         if ( $post ) { // post exist
-            if ( $re = PostData::deletePost($id) ) return $re; // post delete. marked as delete or completely deleted?
+            if ( $re = PostData::deletePost($id) ) return self::errorPage($re);
             $post = PostData::load($id);
             if ( $post ) { // marked as deleted.
                 $config = $post->get('config_id')->entity;
@@ -317,8 +333,7 @@ class PostController extends ControllerBase {
             return new RedirectResponse("/post/$post_config_name");
         }
         else {
-            Library::error(-94040, "You are not admin. Only admin can force-delete a whole thread.");
-            return self::errorPage();
+            return self::errorPage("You are not admin. Only admin can force-delete a whole thread.");
         }
     }
 
