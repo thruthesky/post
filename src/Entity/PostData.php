@@ -304,6 +304,10 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         $post->set('ip',  Library::clientIP());
         $post->set('browser_id', Library::getBrowserID());
 
+
+        $post->set('domain', Library::domainNameWithoutWWW());
+        $post->set('user_agent', Library::userAgent());
+
         // post config
         if ( isset($p['post_config_name']) ) {
             $config = PostConfig::loadByName($p['post_config_name']);
