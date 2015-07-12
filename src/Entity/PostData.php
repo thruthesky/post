@@ -158,7 +158,29 @@ class PostData extends ContentEntityBase implements PostDataInterface {
      *
      * @param $conds - is the condition array
      *
+     *      'order_field'       - is the order field
+     *      'order_direction'   - ASC or DESC
+     *      'offset'            - is the beginning record to extract
+     *      'limit'             - is the number of posts
+     *      'post_config_name'  - is the post group name(id)
+     *      'original_only'     - is the original(root) post only. If true, it only return root posts. if it is false, including all comments.
+     *                          ==> If it is not set, it is set to true.
+     *                          ==> So, it must be explicitly set to false to search comments.
+     *      'fid_of_first_image'    - if set true, it return only those posts that has image. it returns the first fid of attached images.
+     *      'domain'            - is the domain to extract. it can be string or array.
+     *      'q'                 - is the search query
+     *      'qt'                - if set, it searches title
+     *      'qc'                - if set, it searches comment
+     *      'qn'                - if set, it searches name
+     *                          ==> if q is set and qt,qc,qn is empty, then it searches title and comments.
+     *                          ==> if qn is set, qt and qc is ignored
+     *
+     *
+     *
+     *
      * @return static[]
+     *
+     *
      *
      */
     public static function search($conds) {
