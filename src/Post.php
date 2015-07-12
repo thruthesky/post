@@ -201,9 +201,11 @@ class Post {
      */
     public static function isAdmin() {
         if ( Library::isAdmin() ) return true;
-        $site = Library::getSubsiteInformation();
-        if ( $site['sub_admin'] == Library::myName() ) return true;
-        return false;
+        else if ( Library::isSiteAdmin() ) return TRUE;
+        else return false;
     }
+
+
+
 
 }

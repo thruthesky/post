@@ -44,10 +44,10 @@ function post_preprocess( &$variables, $hook )
 
     /**
      *
-     * @note $varaibles['site_admin'] comes from
+     * @note $varaibles['sub_admin'] comes from
      */
-    if ( isset($variables['site_admin']) ) {
-        if ( $variables['site_admin'] == Library::myName() ) $variables['is_post_admin'] = true;
+    if ( isset($variables['sub_admin']) ) {
+        if ( $variables['sub_admin'] == Library::myName() ) $variables['is_post_admin'] = true;
     }
 
     $variables['is_post_admin'] = Post::isAdmin();
