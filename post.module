@@ -36,7 +36,21 @@ function post_preprocess( &$variables, $hook )
     $variables['global_config'] = Post::getGlobalConfig();
     //$variables['error'] = Library::getError();
 
+    if ( isset($variables['data'] ) ) {
+        if ( isset($variables['data']['page']) && $variables['data']['page'] == 'view' &&isset($variables['data']['post']) ) {
+            // $post = $variables['data']['post'];
+        }
+    }
 
+    /**
+     *
+     * @note $varaibles['site_admin'] comes from
+     */
+    if ( isset($variables['site_admin']) ) {
+        if ( $variables['site_admin'] == Library::myName() ) $variables['is_post_admin'] = true;
+    }
+
+    $variables['is_post_admin'] = Post::isAdmin();
 
 
     if ( $hook == 'html' ) {
@@ -46,8 +60,6 @@ function post_preprocess( &$variables, $hook )
             $variables['head_title'][] = $post->label();
         }
     }
-
-
 
     if ( post::isPostPage() ) {
         $variables['#attached']['library'][] = 'post/default';

@@ -195,4 +195,15 @@ class Post {
         return $ret;
     }
 
+    /**
+     * @return bool
+     *  - true if admin
+     */
+    public static function isAdmin() {
+        if ( Library::isAdmin() ) return true;
+        $site = Library::getSubsiteInformation();
+        if ( $site['sub_admin'] == Library::myName() ) return true;
+        return false;
+    }
+
 }

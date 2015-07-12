@@ -328,7 +328,7 @@ class PostController extends ControllerBase {
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public static function postForceDelete($post_config_name, $id) {
-        if ( Library::isAdmin() ) {
+        if ( Post::isAdmin() ) {
             PostData::forceDeleteThread($id);
             return new RedirectResponse("/post/$post_config_name");
         }
