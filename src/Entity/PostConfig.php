@@ -30,13 +30,17 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
      * Returns true if the post config exists Or return false.
      *
      * @param $name
-     * @return bool - true if exists.
+     * @return bool
+     *  - config id if exists.
+     *  - false if not exists.
      *
      * - true if exists.
      * - false if not exists.
      */
     public static function exist($name) {
-        return self::loadByName($name) ? true : false;
+        $config = self::loadByName($name);
+        return $config ? $config->id() : false;
+        //return self::loadByName($name) ? true : false;
     }
 
 
@@ -99,11 +103,14 @@ class PostConfig extends ContentEntityBase implements PostConfigInterface {
         $name = $request->get('name');
         if ( self::validateName($name) ) return [-1, "Wrong forum name"];
 
-        if ( self::exist($name) ) return [-3, "Same forum name exists. Choose another."];
+
 
         $id = $request->get('id');
         $config = self::load($id);
         if ( empty($config) ) return [-2, "There is no forum by that ID."];
+
+        $cid = self::exist($name);
+        if ( $cid && $cid != $config->id() ) return [-3, "Same forum name exists. Choose another."];
 
 
 
