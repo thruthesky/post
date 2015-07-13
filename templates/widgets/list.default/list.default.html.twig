@@ -1,7 +1,7 @@
 <link type='text/css' href='{{ url_post_templates }}/widgets/list.default/list.default.css' rel='stylesheet' />
 <section role='page'>
     <section role="header">
-        <h2>{{ config.title.value | default(config.label) }}</h2>
+        {% include dir_post_elements ~'/post-config-title.html.twig' %}
         <div class="post-list-menu">
             <div class="left">
                 Page: {{ input.page_no }}
