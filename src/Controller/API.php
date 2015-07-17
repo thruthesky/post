@@ -67,9 +67,7 @@ class API extends ControllerBase {
 
 
     public static function fileUpload() {
-
         Library::log("fileUpload() begin");
-
 
         $uploads = self::fileUploadInfo();
         Library::log($uploads);
@@ -97,11 +95,9 @@ class API extends ControllerBase {
                 }
             }
             else {
-
             }
             $re[] = $upload;
         }
-
         return ['files'=>$re];
     }
 
