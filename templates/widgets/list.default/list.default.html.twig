@@ -48,7 +48,7 @@
                             {% endif %}
                         </span>
                     <span class="no-of-view">{{ post.no_of_view.value }}</span>
-                    <span class="author">{{ post.user_id.entity.name.value }}</span>
+                    <span class="author member-profile" uid="{{ post.user_id.target_id }}" target_id="{{ post.id.value }}">{{ post.user_id.entity.name.value }}</span>
                 </a>
             </article>
         {% endfor %}
