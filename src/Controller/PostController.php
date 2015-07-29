@@ -2,6 +2,7 @@
 namespace Drupal\post\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\library\Library;
+use Drupal\library\Member;
 use Drupal\post\Entity\PostConfig;
 use Drupal\post\Entity\PostData;
 use Drupal\post\Post;
@@ -171,6 +172,7 @@ class PostController extends ControllerBase {
         $comments = PostData::comments($id);
         $files = PostData::files($id);
         $filesByType = Post::filesByType($files);
+        $member = Member::load( $post->user_id->target_id );
 
         $list = null;
         if ( $config->list_under_view->value == 'Y' ) {
@@ -184,6 +186,7 @@ class PostController extends ControllerBase {
                 'page' => 'view',
                 'config' => $config,
                 'post' => $post,
+                'member' => $member,
                 'files' => $files,
                 'filesByType' => $filesByType,
                 'comments' => $comments,
