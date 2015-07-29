@@ -172,7 +172,7 @@ class PostController extends ControllerBase {
         $comments = PostData::comments($id);
         $files = PostData::files($id);
         $filesByType = Post::filesByType($files);
-        $member = Member::load( $post->user_id->target_id );
+        $post_member = Member::load( $post->user_id->target_id );
 
         $list = null;
         if ( $config->list_under_view->value == 'Y' ) {
@@ -186,7 +186,7 @@ class PostController extends ControllerBase {
                 'page' => 'view',
                 'config' => $config,
                 'post' => $post,
-                'member' => $member,
+                'post_member' => $post_member,
                 'files' => $files,
                 'filesByType' => $filesByType,
                 'comments' => $comments,

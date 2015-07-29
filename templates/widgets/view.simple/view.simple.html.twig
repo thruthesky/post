@@ -21,8 +21,8 @@
 			<td class='td-user-info' width='228'>
 				<div class='user-info'>
 					<div class='author'>
-						{% if data.member.photo %}
-							{% set temp_photo = data.member.photo.thumbnails['url_medium'] %}
+						{% if data.post_member.photo %}
+							{% set temp_photo = data.post_member.photo.thumbnails['url_medium'] %}
 						{% else %}
 							{% set temp_photo = url_post_templates ~ "/widgets/view.simple/no_primary_photo.png" %}
 						{% endif %}
