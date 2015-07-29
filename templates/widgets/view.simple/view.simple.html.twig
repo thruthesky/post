@@ -38,14 +38,15 @@
 					</div>
 					<div class='info'>
 						<table cellpadding=0 cellspacing=0 width="100%">
-							<tr>
+							<tr valign='top'>
 								<td width='80'>Join Date:</td>
 								<td>{{ post.user_id.entity.created.value | date('M Y') }}</td>
 							</tr>
-							<tr>
+							<tr valign='top'>
 								<td>Location:</td>
-								<td>XX</td>
+								<td>{{ data.post_member.extra.location }}</td>
 							</tr>
+							{#
 							<tr>
 								<td>Posts:</td>
 								<td>XX</td>
@@ -54,10 +55,12 @@
 								<td>Level:</td>
 								<td>XX</td>
 							</tr>
+							#}
 						</table>
 					</div>
 					<div class='send-message'>
-						<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Send a Message
+						<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>
+						<a href='/message/send?receiver={{ data.post_member.name.value }}'>Send a Message</a>
 					</div>
 				</div>				
 			</td>
