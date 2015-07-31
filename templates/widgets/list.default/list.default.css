@@ -23,6 +23,12 @@ section[role='page'] h2 {
     box-sizing: border-box;
     background-color:transparent;
 }
+
+.post .list article.post span.title {
+	height: 29px;
+    display:inline-block;	
+}
+
 .post .list article.post.caption {
     background-color:#f6f6fb;
 }

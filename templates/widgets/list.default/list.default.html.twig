@@ -30,8 +30,8 @@
                             {% if post.deleted.value %}
                                 {{ ko ? '삭제되었습니다.' : 'This post is deleted.' }}
                             {% else %}
-                                {% if post.label | length > 40 %}
-                                    {{ post.label | slice(0, 40) }} ...
+                                {% if post.label | length > 75 %}
+                                    {{ post.label | slice(0, 75) }} ...
                                 {% else %}
                                     {{ post.label }}
                                 {% endif %}
