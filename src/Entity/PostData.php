@@ -5,6 +5,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\file\Entity\File;
 use Drupal\library\Library;
+use Drupal\library\Member;
 use Drupal\post\Post;
 use Drupal\post\PostDataInterface;
 use Drupal\user\UserInterface;
@@ -458,6 +459,7 @@ class PostData extends ContentEntityBase implements PostDataInterface {
         foreach( $comments as $c ) {
             $c->depth = $depth;
             $c->files = self::files($c->id());
+			$c->post_member = Member::load( $c->user_id->target_id );
             $rows[] = $c;
             $returns = self::comments( $c->id(), $depth + 1 );
             if( $returns ) $rows = array_merge($rows,$returns);

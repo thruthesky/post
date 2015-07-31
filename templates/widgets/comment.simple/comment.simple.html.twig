@@ -1,6 +1,7 @@
 <script src="/modules/post/etc/ckeditor/ckeditor.js"></script>
 <script src="{{ url_post_widgets }}/comment.default/comment.default.js"></script>
 {% include dir_post_elements ~ '/ajax-file-upload-progress-bar.html.twig' %}
+
 <section role="comment" class="post-comment">
     {% include dir_post_elements ~ '/reply-form-on-original-post.html.twig' %}
     <div class="list">
@@ -11,8 +12,8 @@
                 <section role="comment" class="view-item"  depth="{{ comment.depth }}">
                     <section role="header" class='clearfix'>
                         <div class='left'>
-                            <span class='date'>{{ post.created.value | date('M d, Y H:i') }}</span>
-                            <span class='id'>No. {{ post.id.value }}</span>
+                            <span class='date'>{{ comment.created.value | date('M d, Y H:i') }}</span>
+                            {#<span class='id'>No. {{ comment.id.value }}</span>#}
                         </div>
                         <div class='right'>
                             <a href="/post/{{ config.label }}/edit/{{ comment.id.value }}">
@@ -26,55 +27,57 @@
                             </a>
                         </div>
                     </section>
-                    <table cellpadding=0 cellspacing=0 width='100%'>
-                        <tr valign='top'>
-                            <td class='td-user-info' width='228'>
+
                                 <div class='user-info'>
-                                    <div class='author'>
-                                        {% if post.user_id.entity.name.value %}
-                                            {% set name = post.user_id.entity.name.value %}
-                                            {% set temp_photo = "temp_primary_photo.png" %}
-                                        {% else %}
-                                            {% set name = "Anonymous User" %}
-                                            {% set temp_photo = "no_primary_photo.png" %}
-                                        {% endif %}
-                                        {{ name }}
+									{% if comment.post_member.photo %}
+										{% set primary_photo = comment.post_member.photo.thumbnails['url_medium']%}
+									{% else %}
+										{% set primary_photo = "no_primary_photo.png" %}
+									{% endif %}
+									<div class='photo'>
+                                        <img src="{{ url_post_templates }}/widgets/view.simple/{{ primary_photo }}"/>
                                     </div>
-                                    <div class='photo'>
-                                        <img src="{{ url_post_templates }}/widgets/view.simple/{{ temp_photo }}"/>
-                                    </div>
-                                    <div class='info'>
-                                        <table cellpadding=0 cellspacing=0 width="100%">
-                                            <tr>
-                                                <td width='80'>Join Date:</td>
-                                                <td>{{ comment.user_id.entity.created.value | date('M Y') }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Location:</td>
-                                                <td>XX</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Posts:</td>
-                                                <td>XX</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Level:</td>
-                                                <td>XX</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class='send-message'>
-                                        <img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Send a Message
-                                    </div>
+									{% if comment.user_id.entity.name.value %}
+										{% set name = comment.user_id.entity.name.value %}                                            
+									{% else %}
+										{% set name = "Anonymous User" %}                                            
+									{% endif %}
+									<div class='info-wrapper clearfix'>
+										<div class='left'>
+											<div class='author'>{{ name }}</div>                                   
+											<div class='info'>
+												<table cellpadding=0 cellspacing=0 width="100%">
+													<tr>
+														<td width='80'>Join Date:</td>
+														<td>{{ comment.user_id.entity.created.value | date('M Y') }}</td>
+													</tr>
+													<tr>
+														<td>Location:</td>
+														<td>{{ comment.post_member.extra.location | default('No Location Specified')}}</td>
+													</tr>
+													{#<tr>
+														<td>Posts:</td>
+														<td>XX</td>
+													</tr>
+													<tr>
+														<td>Level:</td>
+														<td>XX</td>
+													</tr>#}
+												</table>
+											</div>
+										</div>
+										<div class='right'>
+											<div class='send-message'>
+												<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Send a Message
+											</div>
+										</div>
+									</div>
                                 </div>
-                            </td>
-                            <td>
+
                                 {% include dir_post_elements ~ '/comment-content.html.twig' %}
                                 {% set files = comment.files %}
                                 {% include dir_post_templates ~ '/elements/uploaded-files.html.twig' %}
-                            </td>
-                        </tr>
-                    </table>
+
                     <section role="footer">
 				<span class="comment-reply-button button" onclick="loadCommentCKEditor('contentEditor{{ comment.id.value }}');">
 					{{ ko ? '댓글달기' : 'Reply' }}

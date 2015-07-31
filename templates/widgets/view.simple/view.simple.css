@@ -6,7 +6,7 @@
 
 section.view-item{
 	margin-bottom:5px;
-	border:1px solid #c2c2c2;	
+	border-bottom:1px solid #c2c2c2;
 }
 
 section.view-item.post{	
@@ -58,31 +58,46 @@ section.view-item table td.td-user-info{
 }
 
 section.view-item .user-info{
-	min-height:242px;
-	color:#2e2e2e;
+	/*min-height:242px;*/
+	padding:10px 5px;
+	border-bottom:1px solid #a9a9a9;
+	background-color:#f3f8f9;
+	color:#2e2e2e;	
 }
 
 section.view-item .user-info .author{
-	margin:15px 0 7px 0;
+	margin:5px 0;
 	font-size:1.2em;
 	font-weight:bold;
-	text-align:center;	
+	/*text-align:center;*/
 }
 
 section.view-item .user-info .photo{
+	float:left;
 	margin-bottom:10px;
 }
  
 section.view-item .user-info .photo img{
-	display:block;
-	width:80px;
-	margin:auto;
-	border:1px solid #b0b0b0;
-	border-radius:2px;
+	display: block;
+	width: 62px;
+	margin: auto;
+	/* border: 1px solid #b0b0b0; */
+	border-radius: 2px;
+}
+
+section.view-item .user-info .info-wrapper{
+	overflow:hidden;
+	padding-left:10px;
+}
+
+section.view-item .user-info .info-wrapper > div{
+	float:left;
+	width:50%;
 }
 
 section.view-item .user-info .info{
-	width:160px;
+	overflow:hidden;
+	/*width:160px;*/
 	margin:0 auto 5px auto;
 }
 
@@ -97,19 +112,19 @@ section.view-item .user-info .info table tr td:first-child{
 
 section.view-item .title{
 	padding:10px 5px;
-	margin:0 10px 5px 10px;
+	margin:0 10px 5px 10px;	
 	border-bottom:1px solid #a9a9a9;
 	font-size:1.2em;
 	font-weight:bold;
 	color:#2e2e2e;
 }
 
-section.view-item .content{	
-	padding:0 10px;		
+section.view-item .content, section.view-item .comment-content{	
+	padding:0 10px 10px 10px;		
 }
 
 section.view-item .send-message{
-	text-align:center;
+	/*text-align:center;*/
 }
 
 section.view-item .send-message img{
@@ -210,6 +225,10 @@ section.view-item section[role='footer'] > span.button:hover{
 
 .post-comment .reply form{
 	display:none;
+}
+
+.post-comment .reply.original form{
+	display:block;
 }
 /*eo reply*/
 
