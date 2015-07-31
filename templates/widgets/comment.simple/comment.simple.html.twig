@@ -12,7 +12,7 @@
                 <section role="comment" class="view-item"  depth="{{ comment.depth }}">
                     <section role="header" class='clearfix'>
                         <div class='left'>
-                            <span class='date'>{{ comment.created.value | date('M d, Y H:i') }}</span>
+                            <span class='date'>{{ comment.created.value | date('m-d-y H:i') }}</span>
                             {#<span class='id'>No. {{ comment.id.value }}</span>#}
                         </div>
                         <div class='right'>
@@ -67,9 +67,7 @@
 											</div>
 										</div>
 										<div class='right'>
-											<div class='send-message'>
-												<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Send a Message
-											</div>
+											<div class='send-message'><img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>Message</div>
 										</div>
 									</div>
                                 </div>

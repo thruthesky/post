@@ -2,7 +2,7 @@
 <section role='page' class='view-item post'>
 	<section role="header" class='clearfix'>
 		<div class='left'>
-			<span class='date'>{{ post.created.value | date('M d, Y H:i') }}</span>
+			<span class='date'>{{ post.created.value | date('m-d-y H:i') }}</span>
 		</div>
 		<div class='right'>
 			<a href="/post/{{ config.label }}/edit/{{ post.id.value }}">				
@@ -59,7 +59,7 @@
 						<div class='right'>
 						<div class='send-message'>
 							<img src="{{ url_post_templates }}/widgets/view.simple/message.png"/>
-							<a href='/message/send?receiver={{ data.post_member.name.value }}'>Send a Message</a>
+							<a href='/message/send?receiver={{ data.post_member.name.value }}'>Message</a>
 						</div>
 						</div>
 					</div>
