@@ -1,17 +1,28 @@
-
-<section role="search" class="search-box">
-    <form action="/post/search">
-        <input type="hidden" name="post_config_name" value="{{ config.label }}">
-        <input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
-        <label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label>,
-        <input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
-        <label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>,
-        <input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
-        <label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
-        <input type="text" name="q" value="{{ input.q }}">
-        <input type="submit">
-    </form>
-</section>
+<div class='wrapper clearfix'>
+	<section role="search" class="search-box">
+		<form class='clearfix' action="/post/search">
+			<input type="hidden" name="post_config_name" value="{{ config.label }}">
+			<div class='check-boxes'>
+				<input type="checkbox" id="qn" name="qn" value="y" {{ input.qn == 'y' ? 'checked=1' }}>
+				<label for="qn">{{ language == 'ko' ? '이름' : 'Username' }}</label>
+				<input type="checkbox" id='qt' name="qt" value="y" {{ input.qt == 'y' ? 'checked=1' }}>
+				<label for="qt"><span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</label>
+				<input type="checkbox" id='qc' name="qc" value="y" {{ input.qc == 'y' ? 'checked=1' }}>
+				<label for="qc"><span class="title">{{ language == 'ko' ? '내용' : 'Content' }}</label>
+			</div>
+			<div class='search-text-box'>
+				<table cellpadding=0 cellspacing=0 width='100%'>
+				<tr>
+					<td><input type="text" name="q" value="{{ input.q }}"></td>
+					<td width='46'><input type="image" src='/modules/post/templates/widgets/search_box.simple/simple_search_button.png'></td>
+				</tr>
+				</table>
+			</div>						
+		</form>
+	</section>
+	{{ data.list.navigation | raw }}	
+</div>
+{#
 <style>
     section.search-box label {
         display:inline;
@@ -23,4 +34,151 @@
         box-sizing: border-box;
         width:100%;
     }
+</style>
+#}
+
+<style>
+    .post section.search-box{				
+		padding:9px 10px;
+		color:#fff;
+		box-sizing:border-box;	
+	}
+	
+    .post section.search-box label {
+        display:inline;
+    }
+	
+    .post section.search-box .check-boxes {
+		margin:0 0 10px 0;		
+    }
+	
+    .post section.search-box [type='text'], .post section.search-box [type='image'] {
+		float:left;
+        display:inline-block;
+		height:30px;
+        margin:0;
+        padding:0 5px;
+		border:0;
+        box-sizing: border-box;
+    }
+	
+    .post section.search-box [type='checkbox'] {
+		position:relative;
+		top:2px;		
+    }
+	
+    .post section.search-box [type='text'] {
+		width:100%;
+		margin-left:0;
+		border-top-left-radius: 2px;
+		border-bottom-left-radius: 2px;
+    }
+	
+	.post.list .search-text-box{
+		width:100%;		
+	}
+	
+    .post section.search-box [type='image'] {
+		padding:5px 10px;		
+		width:41px;
+		border-left:1px solid #cbcaca;
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+		background-color:#fff;
+    }
+	
+	.post.list .wrapper{
+		background-color:#c0392b;
+		margin-bottom:10px;
+	}
+	
+	.post .navigation-bar{
+		padding:10px 10px 5px 10px;
+		margin-top:0;		
+		box-sizing:border-box;
+	}
+	
+	.post .navigation-bar a{
+		margin-bottom:5px;
+		background-color:#fff;
+		border:1px solid #dddddd;
+		border-radius:2px;		
+	}
+	
+	.post .navigation-bar a.selected{
+		background-color:#e74c3c;
+		color:#fff;
+	}
+	
+	.post .navigation-bar a:hover{
+		border:1px solid #e74c3c;
+	}
+    .post .navigation-bar .bno {
+        display:none;
+    }
+
+/*
+	@media all and (min-width: 300px) {
+		.post section.search-box [type='text']{
+			width:60%;
+		}
+	}
+	
+	@media all and (min-width: 400px) {
+		.post section.search-box [type='text']{
+			width:70%;
+			margin-left:11.5%;
+		}
+		
+		.post section.search-box .check-boxes{			
+			margin-left:11.5%;
+		}
+	}
+*/	
+	{# 
+	need to do something about having different break points when a side bar is present! 
+	THIS IS ONLY A TEMPORARY SOLUTION...
+	#}
+	{% if "mall_sonub" in dir_sub_theme %}
+		{% set first_min_width = "960px" %}
+	{% else %}
+		{% set first_min_width = "880px" %}
+	{% endif %}
+	
+	@media all and (min-width: {{ first_min_width }}) {
+		.post section.search-box{
+			float:left;
+			width:350px;
+		}
+		
+		.post .navigation-bar{
+			float:right;
+			padding-bottom:10px;
+		}
+		
+		.post .navigation-bar a{
+			margin-bottom:0;	
+		}
+		
+		.post section.search-box [type='text'] {			
+			margin-left:0;			
+		}
+		
+		.post.list .search-text-box{
+			float:left;
+			width:216px
+		}
+		
+		.post section.search-box .check-boxes {
+			float:right;
+			width:114px;
+			margin:0;		
+		}
+
+		.post.list .check-boxes label[for='qn']:after{
+			content:'';
+			margin-right:20px;
+		}
+	}
+
 </style>

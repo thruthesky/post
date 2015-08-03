@@ -1,21 +1,19 @@
 <link type='text/css' href='{{ url_post_templates }}/widgets/list.default/list.default.css' rel='stylesheet' />
 <section role='page'>
-    <section role="header">
-        {% include dir_post_elements ~'/post-config-title.html.twig' %}
-        <div class="post-list-menu">
-            <div class="left">
-                Page: {{ input.page_no }}
-                No of Posts: {{ data.list.no_of_posts }}
-            </div>
-            <div class="right">
-                {% if is_admin %}
-                    <a href="/post"><span class="button">{{ ko ? '관리 페이지' : 'Admin Page' }}</span></a>
-                    <a href="/post/config/{{ config.name.value }}"><span class="button">{{ ko ? '게시판 관리' : 'Settings' }}</span></a>
-                {% endif %}
-                <a href="/post/{{ config.name.value }}/add"><span class="button">{{ ko ? '글 쓰기' : 'POST UPLOAD' }}</span></a>
-            </div>
-        </div>
+    <section class='clearfix' role="header">
+		<div class='left'>
+			<div class='label'>{{ config.label }}</div>
+		</div>
+		<div class="right">			
+			<a href="/post/{{ config.name.value }}/add">			
+				<span class="button">	<img src='/modules/post/templates/widgets/list.default/post.png'/>POST</span>
+			</a>
+		</div>        
     </section>
+	<div class="post-list-menu">            
+		Page: {{ input.page_no }}
+		No of Posts: {{ data.list.no_of_posts }}
+	</div>
     <section role="content" class="list">
         <article class="post caption">
             <span class="title">{{ language == 'ko' ? '제목' : 'Title' }}</span>
@@ -52,7 +50,6 @@
                 </a>
             </article>
         {% endfor %}
-        {{ data.list.navigation | raw }}
     </section>
     <section role="footer">
 
