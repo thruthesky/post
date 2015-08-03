@@ -9,6 +9,10 @@ nav.navigation-bar a {
     background-color: #d3e8f4;
     border-radius: 2px;
 }
+nav.navigation-bar .one-page{
+	padding:.4em .7em .5em .7em;
+	background-color:#d3e8f4;
+}
 nav.navigation-bar a.selected {
     background-color: #f0f0ff;
 }
