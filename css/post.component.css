@@ -29,3 +29,8 @@
     width:0;
     background-color: #3fbd41;
 }
+
+/*added by benjamin*/
+.post > .view > .page{
+	line-height:200%;
+}
