@@ -138,6 +138,7 @@ section.view-item section[role='footer']{
 	border-top:1px solid #c2c2c2;
 	background-color:#f2f2f2;
 	text-align:right;
+	overflow:hidden;
 }
 
 section.view-item section[role='footer'] a span, section.view-item section[role='footer'] .button{
