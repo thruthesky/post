@@ -441,8 +441,8 @@ class PostData extends ContentEntityBase implements PostDataInterface {
 
     public static function view($id) {
         $post = PostData::load($id);
-        $no = $post->get('no_of_view')->value;
-        $post->set('no_of_view', $no + 1);
+        $no = $post->get('no_of_view')->value;		
+		if( $post->user_id->target_id != Library::myUid() ) $post->set('no_of_view', $no + 1);		
         $post->save();
         return $post;
     }
