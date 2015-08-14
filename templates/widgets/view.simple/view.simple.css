@@ -123,6 +123,7 @@ section.view-item .content, section.view-item .comment-content{
 
 section.view-item .send-message{
 	/*text-align:center;*/
+	margin:5px 0 7px 0;
 }
 
 section.view-item .send-message img{
